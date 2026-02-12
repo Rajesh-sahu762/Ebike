@@ -1,0 +1,115 @@
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY IDENTITY(1,1),
+
+    -- Role system (No separate Roles table)
+    Role NVARCHAR(20) NOT NULL,  -- Admin / Dealer / Customer
+
+    FullName NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(100) UNIQUE NOT NULL,
+    Mobile NVARCHAR(15),
+    PasswordHash NVARCHAR(500),
+
+    -- Dealer specific fields (NULL for others)
+    ShopName NVARCHAR(150) NULL,
+    GSTNo NVARCHAR(50) NULL,
+    City NVARCHAR(100) NULL,
+    Address NVARCHAR(500) NULL,
+
+    -- Approval system (for Dealer)
+    IsApproved BIT DEFAULT 1,  -- Dealer default 0, Admin auto 1
+    ApprovedAt DATETIME NULL,
+
+    IsActive BIT DEFAULT 1,
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+
+CREATE TABLE Brands (
+    BrandID INT PRIMARY KEY IDENTITY(1,1),
+    BrandName NVARCHAR(100) NOT NULL,
+    IsActive BIT DEFAULT 1
+);
+
+ALTER TABLE Users ADD ProfileImage NVARCHAR(300) NULL;
+
+
+
+CREATE TABLE Bikes (
+    BikeID INT PRIMARY KEY IDENTITY(1,1),
+
+    DealerID INT FOREIGN KEY REFERENCES Users(UserID),
+
+    BrandID INT FOREIGN KEY REFERENCES Brands(BrandID),
+    ModelName NVARCHAR(150) NOT NULL,
+
+    Slug NVARCHAR(200) UNIQUE,  -- SEO Friendly URL
+
+    Price DECIMAL(18,2),
+    RangeKM INT,
+    BatteryType NVARCHAR(100),
+    MotorPower NVARCHAR(100),
+    TopSpeed INT,
+    ChargingTime NVARCHAR(50),
+
+    Description NVARCHAR(MAX),
+
+    Image1 NVARCHAR(300),
+    Image2 NVARCHAR(300),
+    Image3 NVARCHAR(300),
+
+    IsApproved BIT DEFAULT 0,
+    ApprovedAt DATETIME NULL,
+
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+
+
+ALTER TABLE Bikes
+ADD CONSTRAINT UQ_Dealer_Bike UNIQUE (DealerID, BrandID, ModelName);
+
+
+CREATE TABLE Leads (
+    LeadID INT PRIMARY KEY IDENTITY(1,1),
+
+    BikeID INT FOREIGN KEY REFERENCES Bikes(BikeID),
+    CustomerID INT FOREIGN KEY REFERENCES Users(UserID),
+
+    Message NVARCHAR(1000),
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    IsViewed BIT DEFAULT 0
+);
+
+
+CREATE TABLE Wishlist (
+    WishlistID INT PRIMARY KEY IDENTITY(1,1),
+
+    CustomerID INT FOREIGN KEY REFERENCES Users(UserID),
+    BikeID INT FOREIGN KEY REFERENCES Bikes(BikeID),
+
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+
+CREATE TABLE DealerRatings (
+    RatingID INT PRIMARY KEY IDENTITY(1,1),
+
+    DealerID INT FOREIGN KEY REFERENCES Users(UserID),
+    CustomerID INT FOREIGN KEY REFERENCES Users(UserID),
+
+    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    Review NVARCHAR(1000),
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+
+INSERT INTO Users (Role, FullName, Email, Mobile, PasswordHash, IsApproved)
+VALUES ('Admin', 'Super Admin', 'admin@ebikes.com', '9999999999', 'admin123', 1);
+
+
+
+CREATE INDEX IX_Bikes_Price ON Bikes(Price);
+CREATE INDEX IX_Bikes_Brand ON Bikes(BrandID);
+CREATE INDEX IX_Bikes_Approved ON Bikes(IsApproved);
+CREATE INDEX IX_Users_Role ON Users(Role);
+CREATE INDEX IX_Users_Approved ON Users(IsApproved);
