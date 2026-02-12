@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Net.Mail;
 using System.Net;
+using System.Web.UI.WebControls;
 
 
 public partial class Admin_ApproveDealers : System.Web.UI.Page
