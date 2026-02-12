@@ -8,6 +8,10 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 
+    <link rel="stylesheet"
+ href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+
     <style>
         body {
             background: linear-gradient(135deg, #6d28d9, #06b6d4);
@@ -73,6 +77,50 @@
             border-radius: 15px;
             margin-bottom: 20px;
         }
+
+        .notif-item {
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.notif-item:hover {
+    background: #7c3aed;
+}
+
+.custom-input {
+    background: #25215a !important;
+    border: 1px solid #3b357a !important;
+    color: white !important;
+    height: 45px;
+    border-radius: 10px;
+}
+
+.custom-input:focus {
+    box-shadow: 0 0 8px #7c3aed;
+    border-color: #7c3aed;
+}
+
+.btn-gradient {
+    background: linear-gradient(135deg, #7c3aed, #06b6d4);
+    border: none;
+    height: 45px;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+}
+
+.btn-gradient:hover {
+    opacity: 0.9;
+}
+
+select option {
+    background: #1e1b4b;
+    color: white;
+}
+
+
     </style>
 
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
@@ -80,6 +128,7 @@
 
 <body>
     <form id="Form1" runat="server">
+         <asp:ScriptManager ID="ScriptManager1" runat="server" />
 
         <div class="admin-wrapper d-flex">
 
@@ -102,14 +151,150 @@
 
             <!-- Main Content -->
             <div class="content w-100">
-                <div class="topbar text-white">
-                    Welcome, Admin
-                </div>
+               <div class="topbar d-flex justify-content-between align-items-center text-white">
+
+    <div>
+        Welcome, Admin
+    </div>
+
+   <div style="position:relative;">
+
+    <div id="bellIcon" style="cursor:pointer; position:relative;">
+        <i class="bi bi-bell" style="font-size:22px;"></i>
+
+        <span id="notifBadge"
+              style="position:absolute; top:-5px; right:-8px;
+                     background:red; color:white;
+                     border-radius:50%;
+                     padding:3px 7px;
+                     font-size:12px;">
+            0
+        </span>
+    </div>
+
+    <!-- Dropdown Panel -->
+    <div id="notifPanel"
+         style="display:none;
+                position:absolute;
+                right:0;
+                top:35px;
+                width:300px;
+                background:#25215a;
+                border-radius:15px;
+                padding:15px;
+                box-shadow:0 10px 30px rgba(0,0,0,0.4);
+                z-index:999;">
+
+        <h6 class="text-white mb-3">Notifications</h6>
+
+        <div id="notifContent" style="max-height:250px; overflow:auto; color:white;">
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
 
                 <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
             </div>
 
         </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $("#bellIcon").click(function () {
+        $("#notifPanel").toggle();
+    });
+
+    function loadNotifications() {
+        $.ajax({
+            type: "POST",
+            url: "AdminDashboard.aspx/GetNotifications",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+
+                var data = response.d;
+                var total = data.Total;
+                $("#notifBadge").text(total);
+
+                var html = "";
+
+                if (data.PendingDealers > 0)
+                    html += "<div class='notif-item' onclick=\"goTo('ApproveDealers.aspx')\">🧑 Pending Dealers: " + data.PendingDealers + "</div>";
+
+                if (data.PendingBikes > 0)
+                    html += "<div class='notif-item' onclick=\"goTo('ApproveBikes.aspx')\">🚲 Pending Bikes: " + data.PendingBikes + "</div>";
+
+                if (data.UnreadLeads > 0)
+                    html += "<div class='notif-item' onclick=\"goTo('ViewLeads.aspx')\">📩 Unread Leads: " + data.UnreadLeads + "</div>";
+
+                function goTo(page) {
+                    window.location.href = page;
+                }
+
+
+                if (html === "")
+                    html = "<div>No new notifications</div>";
+
+                $("#notifContent").html(html);
+            }
+        });
+    }
+
+    loadNotifications();
+
+    function longPoll() {
+
+        $.ajax({
+            type: "POST",
+            url: "AdminDashboard.aspx/GetNotifications",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+
+                var data = response.d;
+                var total = data.Total;
+
+                $("#notifBadge").text(total);
+
+                var html = "";
+
+                if (data.PendingDealers > 0)
+                    html += "<div class='notif-item' onclick=\"goTo('ApproveDealers.aspx')\">🧑 Pending Dealers: " + data.PendingDealers + "</div>";
+
+                if (data.PendingBikes > 0)
+                    html += "<div class='notif-item' onclick=\"goTo('ApproveBikes.aspx')\">🚲 Pending Bikes: " + data.PendingBikes + "</div>";
+
+                if (data.UnreadLeads > 0)
+                    html += "<div class='notif-item' onclick=\"goTo('ViewLeads.aspx')\">📩 Unread Leads: " + data.UnreadLeads + "</div>";
+
+                if (html === "")
+                    html = "<div>No new notifications</div>";
+
+                $("#notifContent").html(html);
+
+                // Immediately call again (continuous connection feel)
+                longPoll();
+            },
+            error: function () {
+                setTimeout(longPoll, 3000);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        longPoll();
+    });
+
+</script>
+
+
 
     </form>
 </body>
