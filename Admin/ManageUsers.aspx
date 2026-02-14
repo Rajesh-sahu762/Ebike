@@ -37,68 +37,133 @@
     </div>
 
     <!-- Grid -->
-    <asp:GridView ID="gvUsers" runat="server"
-        CssClass="table table-dark table-striped"
-        AutoGenerateColumns="false"
-        OnRowCommand="gvUsers_RowCommand">
+ <asp:GridView ID="gvUsers" runat="server"
+    CssClass="table table-dark table-striped"
+    AutoGenerateColumns="false"
+    AllowPaging="true"
+    AllowSorting="true"
+    PageSize="5"
+    OnPageIndexChanging="gvUsers_PageIndexChanging"
+    OnSorting="gvUsers_Sorting"
+    OnRowCommand="gvUsers_RowCommand">
 
-        <Columns>
+    <Columns>
 
-            <asp:TemplateField HeaderText="Profile">
-                <ItemTemplate>
-                    <img src='<%# Eval("ProfileImage") %>'
-                         style="width:50px; height:50px; border-radius:50%; object-fit:cover;" />
-                </ItemTemplate>
-            </asp:TemplateField>
+        <asp:TemplateField HeaderText="Profile">
+            <ItemTemplate>
+                <img src='<%# Eval("ProfileImage") %>'
+                     style="width:50px; height:50px; border-radius:50%; object-fit:cover;" />
+            </ItemTemplate>
+        </asp:TemplateField>
 
-            <asp:BoundField DataField="FullName" HeaderText="Name" />
-            <asp:BoundField DataField="Email" HeaderText="Email" />
-            <asp:BoundField DataField="Role" HeaderText="Role" />
-            <asp:BoundField DataField="IsActive" HeaderText="Active" />
+        <asp:BoundField DataField="FullName" HeaderText="Name" SortExpression="FullName" />
+        <asp:BoundField DataField="Email" HeaderText="Email" SortExpression="Email" />
+        <asp:BoundField DataField="Role" HeaderText="Role" SortExpression="Role" />
+        <asp:BoundField DataField="IsActive" HeaderText="Active" SortExpression="IsActive" />
 
-            <asp:TemplateField>
-                <ItemTemplate>
+        <asp:TemplateField>
+            <ItemTemplate>
 
-                    <asp:Button ID="Button1" runat="server"
-                        Text="View"
-                        CssClass="btn btn-info btn-sm"
-                        CommandName="ViewUser"
-                        CommandArgument='<%# Eval("UserID") %>' />
+                <asp:Button ID="Button1" runat="server"
+                    Text="View"
+                    CssClass="btn btn-info btn-sm"
+                    CommandName="ViewUser"
+                    CommandArgument='<%# Eval("UserID") %>' />
 
-                    <asp:Button ID="Button2" runat="server"
-                        Text="Toggle"
-                        CssClass="btn btn-warning btn-sm"
-                        CommandName="ToggleUser"
-                        CommandArgument='<%# Eval("UserID") %>' />
+                <asp:Button ID="Button2" runat="server"
+                    Text="Toggle"
+                    CssClass="btn btn-warning btn-sm"
+                    CommandName="ToggleUser"
+                    CommandArgument='<%# Eval("UserID") %>' />
 
-                    <asp:Button ID="Button3" runat="server"
-                        Text="Delete"
-                        CssClass="btn btn-danger btn-sm"
-                        CommandName="DeleteUser"
-                        CommandArgument='<%# Eval("UserID") %>' />
+                <asp:Button ID="Button3" runat="server"
+                    Text="Delete"
+                    CssClass="btn btn-danger btn-sm"
+                    CommandName="DeleteUser"
+                    CommandArgument='<%# Eval("UserID") %>' />
 
-                </ItemTemplate>
-            </asp:TemplateField>
+            </ItemTemplate>
+        </asp:TemplateField>
 
-        </Columns>
+    </Columns>
 
-    </asp:GridView>
+</asp:GridView>
+
 
 </div>
 
-<!-- User Detail Modal -->
+<!-- Premium User Detail Modal -->
 <div class="modal fade" id="userModal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content" style="background:#1e1b4b; color:white;">
-      <div class="modal-header">
-        <h5 class="modal-title">User Details</h5>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content custom-modal">
+
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold">User Details</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
+
       <div class="modal-body">
-        <asp:Literal ID="litUserDetails" runat="server"></asp:Literal>
+        <div class="row align-items-center">
+
+          <!-- Left Side Image -->
+          <div class="col-md-4 text-center mb-3">
+            <img id="modalUserImage"
+                 src=""
+                 class="modal-profile-img" />
+          </div>
+
+          <!-- Right Side Details -->
+          <div class="col-md-8">
+            <div id="modalUserContent"></div>
+          </div>
+
+        </div>
       </div>
+
     </div>
   </div>
 </div>
+
+
+    <style>
+        .custom-modal {
+    background: linear-gradient(135deg, #1e1b4b, #25215a);
+    color: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.modal-profile-img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #7c3aed;
+    box-shadow: 0 0 20px rgba(124,58,237,0.6);
+}
+
+.badge-role {
+    background: #7c3aed;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.badge-active {
+    background: #16a34a;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.badge-inactive {
+    background: #dc2626;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+    </style>
 
 </asp:Content>

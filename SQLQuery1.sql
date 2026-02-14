@@ -30,7 +30,36 @@ CREATE TABLE Brands (
     IsActive BIT DEFAULT 1
 );
 
+
+ALTER TABLE Brands ADD LogoPath NVARCHAR(300), CreatedAt DATETIME DEFAULT GETDATE()
+
 ALTER TABLE Users ADD ProfileImage NVARCHAR(300) NULL;
+
+
+
+CREATE TABLE SiteSettings
+(
+    SettingID INT PRIMARY KEY,
+    SiteTitle NVARCHAR(200),
+    Tagline NVARCHAR(300),
+    AdminEmail NVARCHAR(150),
+    SupportPhone NVARCHAR(20),
+    LogoPath NVARCHAR(300),
+    SMTPHost NVARCHAR(150),
+    SMTPPort INT,
+    SMTPEmail NVARCHAR(150),
+    SMTPPassword NVARCHAR(200),
+    EnableSSL BIT,
+    LeadPrice DECIMAL(18,2),
+    CommissionPercent DECIMAL(5,2),
+    MaintenanceMode BIT,
+    MaintenanceMessage NVARCHAR(MAX),
+    CreatedAt DATETIME DEFAULT GETDATE()
+)
+
+INSERT INTO SiteSettings (SettingID)
+VALUES (1)
+
 
 
 
@@ -113,3 +142,7 @@ CREATE INDEX IX_Bikes_Brand ON Bikes(BrandID);
 CREATE INDEX IX_Bikes_Approved ON Bikes(IsApproved);
 CREATE INDEX IX_Users_Role ON Users(Role);
 CREATE INDEX IX_Users_Approved ON Users(IsApproved);
+
+ALTER TABLE Leads ADD IsSpam BIT DEFAULT 0;
+
+ALTER TABLE Leads ADD LeadAmount DECIMAL(18,2) DEFAULT 0;
