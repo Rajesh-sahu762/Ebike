@@ -24,6 +24,17 @@ CREATE TABLE Users (
 );
 
 
+ALTER TABLE Users ADD
+IsEmailVerified BIT DEFAULT 0,
+OTPCode NVARCHAR(10),
+OTPExpiry DATETIME,
+FailedLoginAttempts INT DEFAULT 0,
+LockoutEndTime DATETIME NULL;
+
+
+select * from Users
+
+delete from Users where UserID=3
 
 
 
