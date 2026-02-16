@@ -97,7 +97,7 @@ body{
     <a href="VendorDashboard.aspx"><i class="fa fa-home"></i> Dashboard</a>
     <a href="AddBike.aspx"><i class="fa fa-plus"></i> Add Bike</a>
     <a href="ManageBikes.aspx"><i class="fa fa-motorcycle"></i> Manage Bikes</a>
-    <a href="ManageLeads.aspx"><i class="fa fa-envelope"></i> Leads</a>
+    <a href="VendorManageLeads.aspx"><i class="fa fa-envelope"></i> Leads</a>
     <a href="VendorProfile.aspx"><i class="fa fa-user"></i> Profile</a>
 </div>
 
