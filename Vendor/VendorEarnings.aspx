@@ -6,40 +6,45 @@
 
 <h4 class="mb-4">COD Earnings</h4>
 
-<!-- SUMMARY -->
 <div class="row mb-4">
 
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card p-3 text-center shadow-sm">
             <h6>Total Revenue</h6>
-            ₹ <asp:Label ID="lblRevenue" runat="server" Font-Size="20px"></asp:Label>
+            ₹ <asp:Label ID="lblRevenue" runat="server" />
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card p-3 text-center shadow-sm">
-            <h6>Commission</h6>
-            ₹ <asp:Label ID="lblCommission" runat="server" Font-Size="20px"></asp:Label>
+            <h6>Platform Fee</h6>
+            ₹ <asp:Label ID="lblCommission" runat="server" />
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card p-3 text-center shadow-sm">
             <h6>Net Earnings</h6>
-            ₹ <asp:Label ID="lblNet" runat="server" Font-Size="20px"></asp:Label>
+            ₹ <asp:Label ID="lblNet" runat="server" />
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="card p-3 text-center shadow-sm">
-            <h6>This Month</h6>
-            ₹ <asp:Label ID="lblMonth" runat="server" Font-Size="20px"></asp:Label>
+        <div class="card p-3 text-center shadow-sm bg-success text-white">
+            <h6>Settled</h6>
+            ₹ <asp:Label ID="lblSettled" runat="server" />
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card p-3 text-center shadow-sm bg-warning">
+            <h6>Pending Settlement</h6>
+            ₹ <asp:Label ID="lblPending" runat="server" />
         </div>
     </div>
 
 </div>
 
-<!-- GRID -->
 <asp:GridView ID="gvEarnings" runat="server"
     CssClass="table table-bordered"
     AutoGenerateColumns="false"
@@ -54,29 +59,29 @@
         <asp:BoundField DataField="FullName" HeaderText="Customer" />
         <asp:BoundField DataField="ModelName" HeaderText="Bike" />
         <asp:BoundField DataField="LeadAmount" HeaderText="Amount (₹)" />
-
-        <asp:TemplateField HeaderText="Commission">
-            <ItemTemplate>
-                ₹ <%# Eval("Commission") %>
-            </ItemTemplate>
-        </asp:TemplateField>
-
-        <asp:TemplateField HeaderText="Net">
-            <ItemTemplate>
-                ₹ <%# Eval("NetAmount") %>
-            </ItemTemplate>
-        </asp:TemplateField>
-
+        <asp:BoundField DataField="Commission" HeaderText="Platform Fee (₹)" />
+        <asp:BoundField DataField="NetAmount" HeaderText="Net (₹)" />
         <asp:BoundField DataField="CreatedAt" HeaderText="Date" />
+
+        <asp:TemplateField HeaderText="Status">
+            <ItemTemplate>
+                <%# (Convert.ToBoolean(Eval("IsSettled")) ? 
+                "<span class='badge bg-success'>Settled</span>" :
+                (Convert.ToBoolean(Eval("SettlementRequested")) ?
+                "<span class='badge bg-warning'>Requested</span>" :
+                "<span class='badge bg-secondary'>Not Requested</span>")) %>
+            </ItemTemplate>
+        </asp:TemplateField>
 
         <asp:TemplateField HeaderText="Action">
             <ItemTemplate>
-                <asp:Button ID="btnMark"
+                <asp:Button ID="btnRequest"
                     runat="server"
-                    Text="Mark Paid"
-                    CssClass="btn btn-success btn-sm"
-                    CommandName="MarkPaid"
-                    CommandArgument='<%# Eval("LeadID") %>' />
+                    Text="Request Settlement"
+                    CssClass="btn btn-primary btn-sm"
+                    CommandName="RequestSettlement"
+                    CommandArgument='<%# Eval("LeadID") %>'
+                    Visible='<%# !(Convert.ToBoolean(Eval("SettlementRequested")) || Convert.ToBoolean(Eval("IsSettled"))) %>' />
             </ItemTemplate>
         </asp:TemplateField>
 
@@ -85,3 +90,4 @@
 </asp:GridView>
 
 </asp:Content>
+

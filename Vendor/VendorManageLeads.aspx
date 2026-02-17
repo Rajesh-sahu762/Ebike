@@ -85,14 +85,32 @@
 
         <asp:BoundField DataField="FullName" HeaderText="Customer" />
         <asp:BoundField DataField="ModelName" HeaderText="Bike" />
-        <asp:BoundField DataField="LeadAmount" HeaderText="Amount" />
+        <asp:BoundField DataField="LeadAmount" HeaderText="Amount (₹)" />
+        <asp:BoundField DataField="CommissionAmount" HeaderText="Platform Fee (₹)" />
+
+        <asp:TemplateField HeaderText="Net (₹)">
+            <ItemTemplate>
+                <%# Convert.ToDecimal(Eval("LeadAmount")) - Convert.ToDecimal(Eval("CommissionAmount")) %>
+            </ItemTemplate>
+        </asp:TemplateField>
+
         <asp:BoundField DataField="CreatedAt" HeaderText="Date" />
 
-        <asp:TemplateField HeaderText="Status">
+        <asp:TemplateField HeaderText="Lead Status">
             <ItemTemplate>
                 <%# Convert.ToBoolean(Eval("IsViewed")) ?
                 "<span class='badge bg-success'>Viewed</span>" :
                 "<span class='badge bg-warning'>Unread</span>" %>
+            </ItemTemplate>
+        </asp:TemplateField>
+
+        <asp:TemplateField HeaderText="Settlement">
+            <ItemTemplate>
+                <%# Convert.ToBoolean(Eval("IsSettled")) ?
+                "<span class='badge bg-success'>Settled</span>" :
+                (Convert.ToBoolean(Eval("SettlementRequested")) ?
+                "<span class='badge bg-warning'>Requested</span>" :
+                "<span class='badge bg-secondary'>Not Requested</span>") %>
             </ItemTemplate>
         </asp:TemplateField>
 
@@ -105,6 +123,13 @@
                     CommandName="MarkViewed"
                     CommandArgument='<%# Eval("LeadID") %>' />
 
+                <asp:Button ID="btnRequestSettlement" runat="server"
+                    Text="Request"
+                    CssClass="btn btn-sm btn-primary"
+                    CommandName="RequestSettlement"
+                    CommandArgument='<%# Eval("LeadID") %>'
+                    Visible='<%# !(Convert.ToBoolean(Eval("SettlementRequested")) || Convert.ToBoolean(Eval("IsSettled"))) %>' />
+
                 <asp:Button ID="btnDelete" runat="server"
                     Text="Delete"
                     CssClass="btn btn-sm btn-danger"
@@ -116,5 +141,6 @@
 
     </Columns>
 </asp:GridView>
+
 
 </asp:Content>

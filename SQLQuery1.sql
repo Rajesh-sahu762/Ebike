@@ -24,6 +24,10 @@ CREATE TABLE Users (
 );
 
 
+
+
+
+
 ALTER TABLE Users ADD
 IsEmailVerified BIT DEFAULT 0,
 OTPCode NVARCHAR(10),
@@ -124,6 +128,17 @@ CREATE TABLE Leads (
 );
 
 
+ALTER TABLE Leads ADD
+IsSettled BIT DEFAULT 0,
+SettlementRequested BIT DEFAULT 0,
+SettlementDate DATETIME NULL,
+SettlementApprovedBy INT NULL,
+SettlementApprovedAt DATETIME NULL;
+
+ALTER TABLE Leads ADD CommissionAmount DECIMAL(18,2) NULL;
+
+
+
 CREATE TABLE Wishlist (
     WishlistID INT PRIMARY KEY IDENTITY(1,1),
 
@@ -160,3 +175,21 @@ CREATE INDEX IX_Users_Approved ON Users(IsApproved);
 ALTER TABLE Leads ADD IsSpam BIT DEFAULT 0;
 
 ALTER TABLE Leads ADD LeadAmount DECIMAL(18,2) DEFAULT 0;
+
+
+
+CREATE TABLE Settlements (
+    SettlementID INT PRIMARY KEY IDENTITY(1,1),
+
+    DealerID INT FOREIGN KEY REFERENCES Users(UserID),
+
+    TotalRevenue DECIMAL(18,2),
+    CommissionAmount DECIMAL(18,2),
+    NetAmount DECIMAL(18,2),
+
+    IsApproved BIT DEFAULT 0,
+    ApprovedBy INT NULL,  -- AdminID
+    ApprovedAt DATETIME NULL,
+
+    CreatedAt DATETIME DEFAULT GETDATE()
+);

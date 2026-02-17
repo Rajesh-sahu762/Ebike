@@ -21,7 +21,6 @@ public partial class Vendor_VendorManageLeads : System.Web.UI.Page
         }
     }
 
-    // ===== LOAD BIKE FILTER =====
     void LoadBikeFilter()
     {
         using (SqlConnection con = new SqlConnection(constr))
@@ -38,19 +37,17 @@ public partial class Vendor_VendorManageLeads : System.Web.UI.Page
             ddlBikeFilter.DataValueField = "BikeID";
             ddlBikeFilter.DataBind();
 
-            ddlBikeFilter.Items.Insert(0,
-                new ListItem("All Bikes", ""));
+            ddlBikeFilter.Items.Insert(0, new ListItem("All Bikes", ""));
         }
     }
 
-    // ===== SUMMARY =====
     void LoadSummary()
     {
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
 
-            string dealerId = Session["VendorID"].ToString();
+            int dealerId = Convert.ToInt32(Session["VendorID"]);
 
             SqlCommand cmdToday = new SqlCommand(
                 @"SELECT COUNT(*) FROM Leads L
@@ -80,7 +77,8 @@ public partial class Vendor_VendorManageLeads : System.Web.UI.Page
             lblUnread.Text = cmdUnread.ExecuteScalar().ToString();
 
             SqlCommand cmdRevenue = new SqlCommand(
-                @"SELECT ISNULL(SUM(LeadAmount),0) FROM Leads L
+                @"SELECT ISNULL(SUM(LeadAmount - ISNULL(CommissionAmount,0)),0)
+                  FROM Leads L
                   INNER JOIN Bikes B ON L.BikeID=B.BikeID
                   WHERE B.DealerID=@d AND L.IsSpam=0", con);
 
@@ -89,7 +87,6 @@ public partial class Vendor_VendorManageLeads : System.Web.UI.Page
         }
     }
 
-    // ===== LOAD LEADS =====
     void LoadLeads()
     {
         using (SqlConnection con = new SqlConnection(constr))
@@ -97,9 +94,15 @@ public partial class Vendor_VendorManageLeads : System.Web.UI.Page
             con.Open();
 
             string query = @"
-            SELECT L.LeadID, U.FullName, B.ModelName,
-                   L.LeadAmount, L.CreatedAt,
-                   L.IsViewed
+            SELECT L.LeadID,
+                   U.FullName,
+                   B.ModelName,
+                   L.LeadAmount,
+                   ISNULL(L.CommissionAmount,0) AS CommissionAmount,
+                   L.CreatedAt,
+                   L.IsViewed,
+                   L.SettlementRequested,
+                   L.IsSettled
             FROM Leads L
             INNER JOIN Bikes B ON L.BikeID=B.BikeID
             INNER JOIN Users U ON L.CustomerID=U.UserID
@@ -169,6 +172,21 @@ public partial class Vendor_VendorManageLeads : System.Web.UI.Page
             {
                 SqlCommand cmd = new SqlCommand(
                     "DELETE FROM Leads WHERE LeadID=@id AND IsSpam=0", con);
+
+                cmd.Parameters.AddWithValue("@id", leadId);
+                cmd.ExecuteNonQuery();
+            }
+
+            if (e.CommandName == "RequestSettlement")
+            {
+                SqlCommand cmd = new SqlCommand(@"
+                UPDATE Leads
+                SET CommissionAmount =
+                ISNULL(CommissionAmount,
+                (LeadAmount *
+                (SELECT CommissionPercent FROM SiteSettings WHERE SettingID=1) / 100)),
+                SettlementRequested=1
+                WHERE LeadID=@id AND IsSettled=0", con);
 
                 cmd.Parameters.AddWithValue("@id", leadId);
                 cmd.ExecuteNonQuery();

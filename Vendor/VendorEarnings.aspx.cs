@@ -25,52 +25,58 @@ public partial class Vendor_VendorEarnings : System.Web.UI.Page
         {
             con.Open();
 
-            decimal commissionPercent = 0;
+            int vendorId = Convert.ToInt32(Session["VendorID"]);
 
-            // SAFE Commission Fetch
-            SqlCommand comCmd = new SqlCommand(
-                "SELECT CommissionPercent FROM SiteSettings WHERE SettingID=1", con);
-
-            object comObj = comCmd.ExecuteScalar();
-
-            if (comObj != DBNull.Value && comObj != null)
-                commissionPercent = Convert.ToDecimal(comObj);
-            else
-                commissionPercent = 0;  // Default 0%
-
-            // SAFE Revenue Fetch
-            SqlCommand revCmd = new SqlCommand(@"
-            SELECT ISNULL(SUM(L.LeadAmount),0)
+            // Total Revenue
+            SqlCommand totalCmd = new SqlCommand(@"
+            SELECT ISNULL(SUM(LeadAmount),0)
             FROM Leads L
             INNER JOIN Bikes B ON L.BikeID=B.BikeID
-            WHERE B.DealerID=@d AND L.LeadAmount>0", con);
+            WHERE B.DealerID=@d AND LeadAmount>0", con);
 
-            revCmd.Parameters.AddWithValue("@d", Session["VendorID"]);
+            totalCmd.Parameters.AddWithValue("@d", vendorId);
+            decimal totalRevenue = Convert.ToDecimal(totalCmd.ExecuteScalar());
 
-            decimal revenue = Convert.ToDecimal(revCmd.ExecuteScalar());
+            // Total Commission (Frozen)
+            SqlCommand comCmd = new SqlCommand(@"
+            SELECT ISNULL(SUM(CommissionAmount),0)
+            FROM Leads L
+            INNER JOIN Bikes B ON L.BikeID=B.BikeID
+            WHERE B.DealerID=@d", con);
 
-            decimal commission = revenue * commissionPercent / 100;
-            decimal net = revenue - commission;
+            comCmd.Parameters.AddWithValue("@d", vendorId);
+            decimal totalCommission = Convert.ToDecimal(comCmd.ExecuteScalar());
 
-            lblRevenue.Text = revenue.ToString("0.00");
-            lblCommission.Text = commission.ToString("0.00");
+            // Net
+            decimal net = totalRevenue - totalCommission;
+
+            // Settled
+            SqlCommand settledCmd = new SqlCommand(@"
+            SELECT ISNULL(SUM(LeadAmount - CommissionAmount),0)
+            FROM Leads L
+            INNER JOIN Bikes B ON L.BikeID=B.BikeID
+            WHERE B.DealerID=@d AND L.IsSettled=1", con);
+
+            settledCmd.Parameters.AddWithValue("@d", vendorId);
+            decimal settled = Convert.ToDecimal(settledCmd.ExecuteScalar());
+
+            // Pending Settlement
+            SqlCommand pendingCmd = new SqlCommand(@"
+            SELECT ISNULL(SUM(LeadAmount - CommissionAmount),0)
+            FROM Leads L
+            INNER JOIN Bikes B ON L.BikeID=B.BikeID
+            WHERE B.DealerID=@d AND L.SettlementRequested=1 AND L.IsSettled=0", con);
+
+            pendingCmd.Parameters.AddWithValue("@d", vendorId);
+            decimal pending = Convert.ToDecimal(pendingCmd.ExecuteScalar());
+
+            lblRevenue.Text = totalRevenue.ToString("0.00");
+            lblCommission.Text = totalCommission.ToString("0.00");
             lblNet.Text = net.ToString("0.00");
-
-            // THIS MONTH SAFE
-            SqlCommand monthCmd = new SqlCommand(@"
-            SELECT ISNULL(SUM(L.LeadAmount),0)
-            FROM Leads L
-            INNER JOIN Bikes B ON L.BikeID=B.BikeID
-            WHERE B.DealerID=@d
-            AND MONTH(L.CreatedAt)=MONTH(GETDATE())
-            AND YEAR(L.CreatedAt)=YEAR(GETDATE())", con);
-
-            monthCmd.Parameters.AddWithValue("@d", Session["VendorID"]);
-
-            lblMonth.Text = monthCmd.ExecuteScalar().ToString();
+            lblSettled.Text = settled.ToString("0.00");
+            lblPending.Text = pending.ToString("0.00");
         }
     }
-
 
     void LoadEarnings()
     {
@@ -79,14 +85,18 @@ public partial class Vendor_VendorEarnings : System.Web.UI.Page
             con.Open();
 
             string query = @"
-            SELECT L.LeadID, U.FullName, B.ModelName, L.LeadAmount,
-            L.CreatedAt,
-            (L.LeadAmount * S.CommissionPercent / 100) AS Commission,
-            (L.LeadAmount - (L.LeadAmount * S.CommissionPercent / 100)) AS NetAmount
+            SELECT L.LeadID,
+                   U.FullName,
+                   B.ModelName,
+                   L.LeadAmount,
+                   ISNULL(L.CommissionAmount,0) AS Commission,
+                   (L.LeadAmount - ISNULL(L.CommissionAmount,0)) AS NetAmount,
+                   L.CreatedAt,
+                   L.SettlementRequested,
+                   L.IsSettled
             FROM Leads L
             INNER JOIN Bikes B ON L.BikeID=B.BikeID
             INNER JOIN Users U ON L.CustomerID=U.UserID
-            CROSS JOIN SiteSettings S
             WHERE B.DealerID=@d AND L.LeadAmount>0
             ORDER BY L.CreatedAt DESC";
 
@@ -105,7 +115,7 @@ public partial class Vendor_VendorEarnings : System.Web.UI.Page
     protected void gvEarnings_RowCommand(object sender,
         System.Web.UI.WebControls.GridViewCommandEventArgs e)
     {
-        if (e.CommandName == "MarkPaid")
+        if (e.CommandName == "RequestSettlement")
         {
             int leadId = Convert.ToInt32(e.CommandArgument);
 
@@ -113,10 +123,18 @@ public partial class Vendor_VendorEarnings : System.Web.UI.Page
             {
                 con.Open();
 
-                SqlCommand cmd = new SqlCommand(
-                    "UPDATE Leads SET LeadAmount=LeadAmount WHERE LeadID=@id", con);
-                cmd.Parameters.AddWithValue("@id", leadId);
-                cmd.ExecuteNonQuery();
+                // Freeze Commission if not already frozen
+                SqlCommand freezeCmd = new SqlCommand(@"
+                UPDATE Leads
+                SET CommissionAmount =
+                ISNULL(CommissionAmount,
+                (LeadAmount *
+                (SELECT CommissionPercent FROM SiteSettings WHERE SettingID=1) / 100)),
+                SettlementRequested=1
+                WHERE LeadID=@id AND IsSettled=0", con);
+
+                freezeCmd.Parameters.AddWithValue("@id", leadId);
+                freezeCmd.ExecuteNonQuery();
             }
 
             LoadSummary();

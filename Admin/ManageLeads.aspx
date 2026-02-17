@@ -69,61 +69,81 @@
         OnClick="btnBulkDelete_Click" />
 
     <!-- Grid -->
-    <asp:GridView ID="gvLeads" runat="server"
-        CssClass="table table-dark table-striped"
-        AutoGenerateColumns="false"
-        AllowPaging="true"
-        AllowSorting="true"
-        PageSize="6"
-        DataKeyNames="LeadID"
-        OnPageIndexChanging="gvLeads_PageIndexChanging"
-        OnSorting="gvLeads_Sorting"
-        OnRowCommand="gvLeads_RowCommand">
+  <asp:GridView ID="gvLeads" runat="server"
+    CssClass="table table-dark table-striped"
+    AutoGenerateColumns="false"
+    AllowPaging="true"
+    AllowSorting="true"
+    PageSize="6"
+    DataKeyNames="LeadID"
+    OnPageIndexChanging="gvLeads_PageIndexChanging"
+    OnSorting="gvLeads_Sorting"
+    OnRowCommand="gvLeads_RowCommand">
 
-        <Columns>
+    <Columns>
 
-            
-            <asp:TemplateField>
-                <HeaderTemplate>
-                    <input type="checkbox" onclick="toggleAll(this)" />
-                </HeaderTemplate>
-                <ItemTemplate>
-                    <asp:CheckBox ID="chkSelect" runat="server" />
-                </ItemTemplate>
-            </asp:TemplateField>
+        <asp:TemplateField>
+            <HeaderTemplate>
+                <input type="checkbox" onclick="toggleAll(this)" />
+            </HeaderTemplate>
+            <ItemTemplate>
+                <asp:CheckBox ID="chkSelect" runat="server" />
+            </ItemTemplate>
+        </asp:TemplateField>
 
-            <asp:BoundField DataField="FullName" HeaderText="Customer" SortExpression="FullName" />
-            <asp:BoundField DataField="ModelName" HeaderText="Bike" SortExpression="ModelName" />
-            <asp:BoundField DataField="DealerName" HeaderText="Dealer" SortExpression="DealerName" />
-            <asp:BoundField DataField="CreatedAt" HeaderText="Date" SortExpression="CreatedAt" />
+        <asp:BoundField DataField="FullName" HeaderText="Customer" SortExpression="FullName" />
+        <asp:BoundField DataField="ModelName" HeaderText="Bike" SortExpression="ModelName" />
+        <asp:BoundField DataField="DealerName" HeaderText="Dealer" SortExpression="DealerName" />
 
-            <asp:TemplateField>
-                <ItemTemplate>
+        <asp:BoundField DataField="LeadAmount" HeaderText="Amount (₹)" />
+        <asp:BoundField DataField="CommissionAmount" HeaderText="Commission (₹)" />
 
-                    <asp:Button ID="Button1" runat="server"
-                        Text="View"
-                        CssClass="btn btn-info btn-sm"
-                        CommandName="ViewLead"
-                        CommandArgument='<%# Eval("LeadID") %>' />
+        <asp:TemplateField HeaderText="Net (₹)">
+            <ItemTemplate>
+                <%# Convert.ToDecimal(Eval("LeadAmount")) - Convert.ToDecimal(Eval("CommissionAmount")) %>
+            </ItemTemplate>
+        </asp:TemplateField>
 
-                    <asp:Button ID="Button2" runat="server"
-                        Text="Mark"
-                        CssClass="btn btn-warning btn-sm"
-                        CommandName="MarkLead"
-                        CommandArgument='<%# Eval("LeadID") %>' />
+        <asp:TemplateField HeaderText="Settlement">
+            <ItemTemplate>
+                <%# Convert.ToBoolean(Eval("IsSettled")) ?
+                "<span class='badge bg-success'>Settled</span>" :
+                (Convert.ToBoolean(Eval("SettlementRequested")) ?
+                "<span class='badge bg-warning'>Requested</span>" :
+                "<span class='badge bg-secondary'>Pending</span>") %>
+            </ItemTemplate>
+        </asp:TemplateField>
 
-                    <asp:Button ID="Button3" runat="server"
-                        Text="Delete"
-                        CssClass="btn btn-danger btn-sm"
-                        CommandName="DeleteLead"
-                        CommandArgument='<%# Eval("LeadID") %>' />
+        <asp:BoundField DataField="CreatedAt" HeaderText="Date" SortExpression="CreatedAt" />
 
-                </ItemTemplate>
-            </asp:TemplateField>
+        <asp:TemplateField>
+            <ItemTemplate>
 
-        </Columns>
+                <asp:Button ID="Button1" runat="server"
+                    Text="View"
+                    CssClass="btn btn-info btn-sm"
+                    CommandName="ViewLead"
+                    CommandArgument='<%# Eval("LeadID") %>' />
 
-    </asp:GridView>
+                <asp:Button ID="Button2" runat="server"
+                    Text="Approve"
+                    CssClass="btn btn-success btn-sm"
+                    CommandName="ApproveSettlement"
+                    CommandArgument='<%# Eval("LeadID") %>'
+                    Visible='<%# Convert.ToBoolean(Eval("SettlementRequested")) && !Convert.ToBoolean(Eval("IsSettled")) %>' />
+
+                <asp:Button ID="Button3" runat="server"
+                    Text="Delete"
+                    CssClass="btn btn-danger btn-sm"
+                    CommandName="DeleteLead"
+                    CommandArgument='<%# Eval("LeadID") %>' />
+
+            </ItemTemplate>
+        </asp:TemplateField>
+
+    </Columns>
+</asp:GridView>
+
 
 </div>
 
