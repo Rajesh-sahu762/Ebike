@@ -1,0 +1,259 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true"
+    CodeFile="ClientMaster.master.cs"
+    Inherits="Client_ClientMaster" %>
+
+<!DOCTYPE html>
+<html>
+<head id="Head1" runat="server">
+    <title>EBikes Duniya</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+<style>
+
+html{scroll-behavior:smooth;}
+
+body{
+    margin:0;
+    font-family:'Segoe UI';
+    background:#f1f5f9;
+}
+
+/* ===== NAVBAR ===== */
+
+.navbar-custom{
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:1000;
+    padding:15px 50px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(255,255,255,0.8);
+    backdrop-filter:blur(12px);
+    box-shadow:0 5px 25px rgba(0,0,0,0.05);
+}
+
+.nav-left strong{
+    font-size:20px;
+    color:#0f172a;
+}
+
+.nav-links a{
+    margin:0 12px;
+    text-decoration:none;
+    color:#0f172a;
+    font-weight:600;
+    position:relative;
+}
+
+.nav-links a::after{
+    content:'';
+    height:2px;
+    width:0;
+    background:#2dd4bf;
+    position:absolute;
+    left:0;
+    bottom:-5px;
+    transition:0.3s;
+}
+
+.nav-links a:hover::after{
+    width:100%;
+}
+
+/* ===== SEARCH ===== */
+
+.search-box{
+    position:relative;
+}
+
+.search-box input{
+    border-radius:30px;
+    padding:8px 35px 8px 15px;
+    border:1px solid #ddd;
+}
+
+.search-box i{
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#2dd4bf;
+}
+
+/* ===== BUTTONS ===== */
+
+.gradient-btn{
+    background:linear-gradient(45deg,#2dd4bf,#0ea5e9);
+    border:none;
+    color:white;
+    padding:8px 20px;
+    border-radius:30px;
+    font-weight:600;
+    transition:0.4s;
+}
+
+.gradient-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* ===== ICON BADGE ===== */
+
+.icon-badge{
+    position:relative;
+    margin-left:15px;
+    cursor:pointer;
+}
+
+.icon-badge span{
+    position:absolute;
+    top:-5px;
+    right:-8px;
+    background:#ef4444;
+    color:white;
+    font-size:10px;
+    padding:2px 6px;
+    border-radius:50%;
+}
+
+/* ===== CONTENT ===== */
+
+.main-content{
+    padding-top:100px;
+    min-height:80vh;
+}
+
+/* ===== FOOTER ===== */
+
+.footer{
+    background:#0f172a;
+    color:white;
+    padding:40px 60px;
+}
+
+.footer a{
+    color:#2dd4bf;
+    text-decoration:none;
+}
+
+.footer a:hover{
+    text-decoration:underline;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<form id="Form1" runat="server">
+
+<!-- ===== NAVBAR ===== -->
+
+<div class="navbar-custom">
+
+    <div class="nav-left">
+        <i class="fa fa-motorcycle"></i>
+        <strong>EBikes Duniya</strong>
+    </div>
+
+    <div class="nav-links">
+        <a href="Home.aspx">Home</a>
+        <a href="Bikes.aspx">Buy Bike</a>
+        <a href="SellBike.aspx">Sell Bike</a>
+        <a href="Rental.aspx">Rental</a>
+        <a href="Compare.aspx">Compare</a>
+    </div>
+
+    <div style="display:flex; align-items:center;">
+
+        <div class="search-box">
+            <asp:TextBox ID="txtSearch" runat="server"
+                placeholder="Search bikes..."></asp:TextBox>
+            <i class="fa fa-search"></i>
+        </div>
+
+        <div class="icon-badge">
+            <a href="Wishlist.aspx">
+                <i class="fa fa-heart fa-lg"></i>
+                <span id="wishCount" runat="server">0</span>
+            </a>
+        </div>
+
+        <div class="icon-badge">
+            <a href="Compare.aspx">
+                <i class="fa fa-balance-scale fa-lg"></i>
+            </a>
+        </div>
+
+        <asp:Panel ID="pnlLogin" runat="server">
+            <a href="Login.aspx" class="gradient-btn ms-3">
+                Login
+            </a>
+        </asp:Panel>
+
+        <asp:Panel ID="pnlUser" runat="server" Visible="false">
+            <div class="dropdown ms-3">
+                <a class="gradient-btn dropdown-toggle"
+                    data-bs-toggle="dropdown">
+                    <asp:Label ID="lblUserName" runat="server"></asp:Label>
+                </a>
+
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="MyProfile.aspx">Profile</a></li>
+                    <li><a class="dropdown-item" href="MyLeads.aspx">My Leads</a></li>
+                    <li><a class="dropdown-item" href="MyWishlist.aspx">Wishlist</a></li>
+                    <li><a class="dropdown-item" href="MyRentals.aspx">My Rentals</a></li>
+                    <li><a class="dropdown-item" href="Logout.aspx">Logout</a></li>
+                </ul>
+            </div>
+        </asp:Panel>
+
+    </div>
+
+</div>
+
+<!-- ===== CONTENT ===== -->
+<div class="main-content">
+    <asp:ContentPlaceHolder ID="ContentPlaceHolder1"
+        runat="server"></asp:ContentPlaceHolder>
+</div>
+
+<!-- ===== FOOTER ===== -->
+
+<div class="footer">
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <h5>EBikes Duniya</h5>
+            <p>India's Smart EV Marketplace</p>
+        </div>
+
+        <div class="col-md-4">
+            <h6>Quick Links</h6>
+            <a href="#">About</a><br />
+            <a href="#">Contact</a><br />
+            <a href="#">Terms</a>
+        </div>
+
+        <div class="col-md-4">
+            <h6>Contact</h6>
+            support@ebikes.com<br />
+            +91 9999999999
+        </div>
+
+    </div>
+
+</div>
+
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
