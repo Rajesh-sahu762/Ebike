@@ -54,7 +54,7 @@
 
             <asp:TemplateField HeaderText="Image">
                 <ItemTemplate>
-                    <img src='<%# Eval("Image1") %>'
+                    <img src='../Uploads/Bikes/<%# Eval("Image1") %>'
                          style="width:70px;height:50px;object-fit:cover;" />
                 </ItemTemplate>
             </asp:TemplateField>

@@ -74,16 +74,34 @@ public partial class Admin_ApproveBikes : System.Web.UI.Page
                 details += "<b>Battery:</b> " + dr["BatteryType"] + "<br/>";
                 details += "<b>Description:</b><br/>" + dr["Description"] + "<br/><br/>";
 
-                details += "<img src='" + dr["Image1"] + "' style='width:200px; margin-right:10px;' />";
-                details += "<img src='" + dr["Image2"] + "' style='width:200px; margin-right:10px;' />";
-                details += "<img src='" + dr["Image3"] + "' style='width:200px;' />";
+                string img1 = dr["Image1"] == DBNull.Value ? "" : dr["Image1"].ToString();
+                string img2 = dr["Image2"] == DBNull.Value ? "" : dr["Image2"].ToString();
+                string img3 = dr["Image3"] == DBNull.Value ? "" : dr["Image3"].ToString();
+
+                string gallery = "";
+
+                if (!string.IsNullOrEmpty(img1))
+                    gallery += "<img src='/Uploads/Bikes/" + img1 + "' style=\"width:100%;margin-bottom:10px;border-radius:10px;\" />";
+
+                if (!string.IsNullOrEmpty(img2))
+                    gallery += "<img src='/Uploads/Bikes/" + img2 + "' style=\"width:100%;margin-bottom:10px;border-radius:10px;\" />";
+
+                if (!string.IsNullOrEmpty(img3))
+                    gallery += "<img src='/Uploads/Bikes/" + img3 + "' style=\"width:100%;border-radius:10px;\" />";
+
+                dr.Close();
 
                 litBikeDetails.Text = details;
 
                 ClientScript.RegisterStartupScript(this.GetType(),
-                    "Popup", "$('#bikeModal').modal('show');", true);
+                    "ShowModal",
+                    "document.getElementById('bikeGallery').innerHTML = \"" + gallery.Replace("\"", "\\\"") + "\";" +
+                    "var myModal = new bootstrap.Modal(document.getElementById('bikeModal')); myModal.show();",
+                    true);
             }
         }
+
+
 
         con.Close();
 

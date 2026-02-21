@@ -173,9 +173,12 @@ body{
                 panel.style.display === "none" ? "block" : "none";
         }
 
-        setInterval(function () {
-            location.reload();
-        }, 20000);
+        if (window.location.pathname.toLowerCase().includes("vendordashboard")) {
+            setInterval(function () {
+                location.reload();
+            }, 20000);
+        }
+
 </script>
 
 

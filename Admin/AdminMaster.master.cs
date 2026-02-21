@@ -20,7 +20,7 @@ public partial class Admin_AdminMaster : System.Web.UI.MasterPage
     }
 
     [WebMethod]
-    public static int GetNotificationCount()
+    public static object GetNotifications()
     {
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
@@ -28,18 +28,25 @@ public partial class Admin_AdminMaster : System.Web.UI.MasterPage
         {
             con.Open();
 
-            string query = @"SELECT 
-                        (SELECT COUNT(*) FROM Users WHERE Role='Dealer' AND IsApproved=0) +
-                        (SELECT COUNT(*) FROM Bikes WHERE IsApproved=0) +
-                        (SELECT COUNT(*) FROM Leads WHERE IsViewed=0)";
+            int pendingDealers = Convert.ToInt32(new SqlCommand(
+                "SELECT COUNT(*) FROM Users WHERE Role='Dealer' AND IsApproved=0", con).ExecuteScalar());
 
-            SqlCommand cmd = new SqlCommand(query, con);
+            int pendingBikes = Convert.ToInt32(new SqlCommand(
+                "SELECT COUNT(*) FROM Bikes WHERE IsApproved=0", con).ExecuteScalar());
 
-            int total = Convert.ToInt32(cmd.ExecuteScalar());
+            int unreadLeads = Convert.ToInt32(new SqlCommand(
+                "SELECT COUNT(*) FROM Leads WHERE IsViewed=0", con).ExecuteScalar());
 
-            return total;
+            return new
+            {
+                PendingDealers = pendingDealers,
+                PendingBikes = pendingBikes,
+                UnreadLeads = unreadLeads,
+                Total = pendingDealers + pendingBikes + unreadLeads
+            };
         }
     }
+
 
     protected void btnLogout_Click(object sender, EventArgs e)
     {

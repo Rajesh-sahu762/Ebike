@@ -88,13 +88,35 @@ public partial class Vendor_AddBike : System.Web.UI.Page
             cmd.Parameters.AddWithValue("@BrandID", ddlBrand.SelectedValue);
             cmd.Parameters.AddWithValue("@ModelName", txtModel.Text.Trim());
             cmd.Parameters.AddWithValue("@Slug", slug);
-            cmd.Parameters.AddWithValue("@Price", txtPrice.Text == "" ? (object)DBNull.Value : txtPrice.Text);
-            cmd.Parameters.AddWithValue("@RangeKM", txtRange.Text == "" ? (object)DBNull.Value : txtRange.Text);
-            cmd.Parameters.AddWithValue("@BatteryType", txtBattery.Text);
-            cmd.Parameters.AddWithValue("@MotorPower", txtMotor.Text);
-            cmd.Parameters.AddWithValue("@TopSpeed", txtSpeed.Text == "" ? (object)DBNull.Value : txtSpeed.Text);
-            cmd.Parameters.AddWithValue("@ChargingTime", txtCharge.Text);
-            cmd.Parameters.AddWithValue("@Description", txtDesc.Text);
+            decimal price;
+            if (decimal.TryParse(txtPrice.Text, out price))
+                cmd.Parameters.AddWithValue("@Price", price);
+            else
+                cmd.Parameters.AddWithValue("@Price", DBNull.Value);
+
+            // ===== RANGE SAFE PARSE =====
+            int range;
+            string rangeText = Regex.Match(txtRange.Text, @"\d+").Value;
+
+            if (int.TryParse(rangeText, out range))
+                cmd.Parameters.AddWithValue("@RangeKM", range);
+            else
+                cmd.Parameters.AddWithValue("@RangeKM", DBNull.Value);
+
+            // ===== SPEED SAFE PARSE =====
+            int speed;
+            string speedText = Regex.Match(txtSpeed.Text, @"\d+").Value;
+
+            if (int.TryParse(speedText, out speed))
+                cmd.Parameters.AddWithValue("@TopSpeed", speed);
+            else
+                cmd.Parameters.AddWithValue("@TopSpeed", DBNull.Value);
+
+
+            cmd.Parameters.AddWithValue("@BatteryType", txtBattery.Text.Trim());
+            cmd.Parameters.AddWithValue("@MotorPower", txtMotor.Text.Trim());
+            cmd.Parameters.AddWithValue("@ChargingTime", txtCharge.Text.Trim());
+            cmd.Parameters.AddWithValue("@Description", txtDesc.Text.Trim());
             cmd.Parameters.AddWithValue("@Image1", img1);
             cmd.Parameters.AddWithValue("@Image2", img2);
             cmd.Parameters.AddWithValue("@Image3", img3);
@@ -103,8 +125,27 @@ public partial class Vendor_AddBike : System.Web.UI.Page
 
             lblMsg.Text = "Bike submitted successfully. Waiting for admin approval.";
             lblMsg.ForeColor = System.Drawing.Color.Green;
+
+            ClearForm(); 
+
         }
     }
+
+    void ClearForm()
+    {
+        ddlBrand.SelectedIndex = 0;
+        txtModel.Text = "";
+        txtPrice.Text = "";
+        txtRange.Text = "";
+        txtBattery.Text = "";
+        txtMotor.Text = "";
+        txtSpeed.Text = "";
+        txtCharge.Text = "";
+        txtDesc.Text = "";
+
+        lblMsg.Text = "";
+    }
+
 
     string SaveImage(System.Web.UI.WebControls.FileUpload fu)
     {
@@ -119,23 +160,46 @@ public partial class Vendor_AddBike : System.Web.UI.Page
                 return null;
 
             string folder = Server.MapPath("~/Uploads/Bikes/");
+
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
 
-            string fileName = Guid.NewGuid().ToString() + ext;
-            fu.SaveAs(Path.Combine(folder, fileName));
+            // ✅ ORIGINAL FILE NAME
+            string fileName = Path.GetFileName(fu.FileName);
+            string fullPath = Path.Combine(folder, fileName);
 
-            return "~/Uploads/Bikes/" + fileName;
+            // 🔒 Prevent overwrite
+            int count = 1;
+            string nameOnly = Path.GetFileNameWithoutExtension(fileName);
+            string extension = Path.GetExtension(fileName);
+
+            while (File.Exists(fullPath))
+            {
+                fileName = nameOnly + "_" + count + extension;
+                fullPath = Path.Combine(folder, fileName);
+                count++;
+            }
+
+            fu.SaveAs(fullPath);
+
+            return fileName;   // ✅ ONLY FILE NAME
         }
 
         return null;
     }
+
 
     string GenerateSlug(string text)
     {
         text = text.ToLower();
         text = Regex.Replace(text, @"[^a-z0-9\s-]", "");
         text = Regex.Replace(text, @"\s+", "-");
+        text = text.Trim('-');
+
+        if (text.Length > 200)
+            text = text.Substring(0, 200);
+
         return text;
     }
+
 }

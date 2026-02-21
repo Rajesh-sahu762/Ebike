@@ -89,6 +89,13 @@
     background: #7c3aed;
 }
 
+
+.custom-input::placeholder {
+    color: #6c757d; /* Bootstrap muted gray */
+    opacity: 1;     /* Ensure visibility */
+}
+
+
 .custom-input {
     background: #25215a !important;
     border: 1px solid #3b357a !important;
@@ -190,8 +197,14 @@ select option {
 
         <h6 class="text-white mb-3">Notifications</h6>
 
-        <div id="notifContent" style="max-height:250px; overflow:auto; color:white;">
-        </div>
+        <div id="notifContent" style="max-height:250px; overflow:auto; color:white;"></div>
+
+<button id="clearNotifBtn"
+        class="btn btn-sm btn-danger w-100 mt-2">
+    Clear Notifications
+</button>
+
+
 
     </div>
 
@@ -208,94 +221,59 @@ select option {
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
 
-<script>
-    $("#bellIcon").click(function () {
-        $("#notifPanel").toggle();
-    });
+            function loadNotifications() {
+                $.ajax({
+                    type: "POST",
+                    url: "AdminMaster.master/GetNotifications",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
 
-    function loadNotifications() {
-        $.ajax({
-            type: "POST",
-            url: "AdminDashboard.aspx/GetNotifications",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
+                        var data = response.d;
+                        $("#notifBadge").text(data.Total);
 
-                var data = response.d;
-                var total = data.Total;
-                $("#notifBadge").text(total);
+                        var html = "";
 
-                var html = "";
+                        if (data.PendingDealers > 0)
+                            html += "<div class='notif-item' onclick=\"window.location='ApproveDealers.aspx'\">🧑 Pending Dealers: " + data.PendingDealers + "</div>";
 
-                if (data.PendingDealers > 0)
-                    html += "<div class='notif-item' onclick=\"goTo('ApproveDealers.aspx')\">🧑 Pending Dealers: " + data.PendingDealers + "</div>";
+                        if (data.PendingBikes > 0)
+                            html += "<div class='notif-item' onclick=\"window.location='ApproveBikes.aspx'\">🚲 Pending Bikes: " + data.PendingBikes + "</div>";
 
-                if (data.PendingBikes > 0)
-                    html += "<div class='notif-item' onclick=\"goTo('ApproveBikes.aspx')\">🚲 Pending Bikes: " + data.PendingBikes + "</div>";
+                        if (data.UnreadLeads > 0)
+                            html += "<div class='notif-item' onclick=\"window.location='ManageLeads.aspx'\">📩 Unread Leads: " + data.UnreadLeads + "</div>";
 
-                if (data.UnreadLeads > 0)
-                    html += "<div class='notif-item' onclick=\"goTo('ViewLeads.aspx')\">📩 Unread Leads: " + data.UnreadLeads + "</div>";
+                        if (html === "")
+                            html = "<div>No new notifications</div>";
 
-                function goTo(page) {
-                    window.location.href = page;
-                }
-
-
-                if (html === "")
-                    html = "<div>No new notifications</div>";
-
-                $("#notifContent").html(html);
+                        $("#notifContent").html(html);
+                    }
+                });
             }
-        });
-    }
 
-    loadNotifications();
+            // Toggle panel
+            $("#bellIcon").click(function () {
+                $("#notifPanel").toggle();
+            });
 
-    function longPoll() {
+            // Clear button
+            $("#clearNotifBtn").click(function () {
+                $("#notifContent").html("<div>No new notifications</div>");
+                $("#notifBadge").text("0");
+            });
 
-        $.ajax({
-            type: "POST",
-            url: "AdminDashboard.aspx/GetNotifications",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
+            // Poll every 5 seconds (safe)
+            setInterval(loadNotifications, 5000);
 
-                var data = response.d;
-                var total = data.Total;
-
-                $("#notifBadge").text(total);
-
-                var html = "";
-
-                if (data.PendingDealers > 0)
-                    html += "<div class='notif-item' onclick=\"goTo('ApproveDealers.aspx')\">🧑 Pending Dealers: " + data.PendingDealers + "</div>";
-
-                if (data.PendingBikes > 0)
-                    html += "<div class='notif-item' onclick=\"goTo('ApproveBikes.aspx')\">🚲 Pending Bikes: " + data.PendingBikes + "</div>";
-
-                if (data.UnreadLeads > 0)
-                    html += "<div class='notif-item' onclick=\"goTo('ViewLeads.aspx')\">📩 Unread Leads: " + data.UnreadLeads + "</div>";
-
-                if (html === "")
-                    html = "<div>No new notifications</div>";
-
-                $("#notifContent").html(html);
-
-                // Immediately call again (continuous connection feel)
-                longPoll();
-            },
-            error: function () {
-                setTimeout(longPoll, 3000);
-            }
-        });
-    }
-
-    $(document).ready(function () {
-        longPoll();
-    });
+            // Initial load
+            $(document).ready(function () {
+                loadNotifications();
+            });
 
 </script>
+
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
