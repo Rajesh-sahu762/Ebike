@@ -84,40 +84,63 @@ public partial class Admin_ManageBrands : System.Web.UI.Page
 
     protected void btnSave_Click(object sender, EventArgs e)
     {
-        SqlConnection con = new SqlConnection(constr);
-        con.Open();
-
-        SqlCommand check = new SqlCommand("SELECT COUNT(*) FROM Brands WHERE BrandName=@name", con);
-        check.Parameters.AddWithValue("@name", txtBrand.Text.Trim());
-
-        if (Convert.ToInt32(check.ExecuteScalar()) > 0)
+        using (SqlConnection con = new SqlConnection(constr))
         {
-            con.Close();
-            return;
+            con.Open();
+
+            SqlCommand check = new SqlCommand(
+                "SELECT COUNT(*) FROM Brands WHERE BrandName=@name", con);
+
+            check.Parameters.AddWithValue("@name", txtBrand.Text.Trim());
+
+            if (Convert.ToInt32(check.ExecuteScalar()) > 0)
+            {
+                return;
+            }
+
+            string logoFileName = "";
+
+            if (fuLogo.HasFile)
+            {
+                string folder = Server.MapPath("~/Uploads/Brands/");
+
+                if (!Directory.Exists(folder))
+                    Directory.CreateDirectory(folder);
+
+                // ✅ ONLY FILE NAME
+                logoFileName = Path.GetFileName(fuLogo.FileName);
+
+                string fullPath = Path.Combine(folder, logoFileName);
+
+                // 🔒 Prevent overwrite
+                int count = 1;
+                string nameOnly = Path.GetFileNameWithoutExtension(logoFileName);
+                string ext = Path.GetExtension(logoFileName);
+
+                while (File.Exists(fullPath))
+                {
+                    logoFileName = nameOnly + "_" + count + ext;
+                    fullPath = Path.Combine(folder, logoFileName);
+                    count++;
+                }
+
+                fuLogo.SaveAs(fullPath);
+            }
+
+            SqlCommand cmd = new SqlCommand(
+                "INSERT INTO Brands (BrandName, LogoPath, IsActive) VALUES (@name,@logo,@active)", con);
+
+            cmd.Parameters.AddWithValue("@name", txtBrand.Text.Trim());
+            cmd.Parameters.AddWithValue("@logo", logoFileName);  // ✅ ONLY FILE NAME
+            cmd.Parameters.AddWithValue("@active", chkActive.Checked);
+
+            cmd.ExecuteNonQuery();
         }
-
-        string logoPath = "";
-
-        if (fuLogo.HasFile)
-        {
-            string ext = Path.GetExtension(fuLogo.FileName);
-            string fileName = Guid.NewGuid().ToString() + ext;
-            logoPath = "/Uploads/Brands/" + fileName;
-            fuLogo.SaveAs(Server.MapPath(logoPath));
-        }
-
-        SqlCommand cmd = new SqlCommand(
-            "INSERT INTO Brands (BrandName,LogoPath,IsActive) VALUES (@name,@logo,@active)", con);
-
-        cmd.Parameters.AddWithValue("@name", txtBrand.Text.Trim());
-        cmd.Parameters.AddWithValue("@logo", logoPath);
-        cmd.Parameters.AddWithValue("@active", chkActive.Checked);
-
-        cmd.ExecuteNonQuery();
-        con.Close();
 
         LoadBrands();
     }
+
+
 
     protected void gvBrands_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
     {
