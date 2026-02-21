@@ -11,53 +11,85 @@ public partial class Client_Home : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            LoadBrands();
-            LoadBikes();
+            LoadBrowseBrands();
+            LoadFeaturedBikes(null, null);
         }
     }
 
-    void LoadBrands()
-    {
-        using (SqlConnection con = new SqlConnection(constr))
-        {
-            con.Open();
-            SqlCommand cmd = new SqlCommand("SELECT BrandID,BrandName FROM Brands WHERE IsActive=1", con);
-            ddlBrand.DataSource = cmd.ExecuteReader();
-            ddlBrand.DataTextField = "BrandName";
-            ddlBrand.DataValueField = "BrandID";
-            ddlBrand.DataBind();
-
-            ddlBrand.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Select Brand", ""));
-        }
-    }
-
-    void LoadBikes()
+    void LoadBrowseBrands()
     {
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
 
-            string query = @"SELECT BikeID,ModelName,Price,RangeKM,Image1,Slug
+            // TOP 10
+            SqlCommand cmdTop = new SqlCommand(
+                "SELECT TOP 10 BrandID, BrandName, LogoPath FROM Brands WHERE IsActive=1 ORDER BY BrandID",
+                con);
+
+            SqlDataAdapter daTop = new SqlDataAdapter(cmdTop);
+            DataTable dtTop = new DataTable();
+            daTop.Fill(dtTop);
+
+            rptBrandsTop.DataSource = dtTop;
+            rptBrandsTop.DataBind();
+
+            // ALL
+            SqlCommand cmdAll = new SqlCommand(
+                "SELECT BrandID, BrandName, LogoPath FROM Brands WHERE IsActive=1 ORDER BY BrandID",
+                con);
+
+            SqlDataAdapter daAll = new SqlDataAdapter(cmdAll);
+            DataTable dtAll = new DataTable();
+            daAll.Fill(dtAll);
+
+            rptBrandsAll.DataSource = dtAll;
+            rptBrandsAll.DataBind();
+        }
+    }
+
+
+
+    void LoadFeaturedBikes(string budget, string brandId)
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            string query = @"SELECT TOP 6 BikeID, ModelName, Price,
+                             RangeKM, Image1, Slug
                              FROM Bikes
                              WHERE IsApproved=1";
 
-            if (ddlBudget.SelectedValue != "")
-                query += " AND Price <= " + ddlBudget.SelectedValue;
+            if (!string.IsNullOrEmpty(budget))
+                query += " AND Price <= @budget";
 
-            if (ddlBrand.SelectedValue != "")
-                query += " AND BrandID = " + ddlBrand.SelectedValue;
+            if (!string.IsNullOrEmpty(brandId))
+                query += " AND BrandID = @brand";
 
-            SqlDataAdapter da = new SqlDataAdapter(query, con);
+            query += " ORDER BY BikeID DESC";
+
+            SqlCommand cmd = new SqlCommand(query, con);
+
+            if (!string.IsNullOrEmpty(budget))
+                cmd.Parameters.AddWithValue("@budget", budget);
+
+            if (!string.IsNullOrEmpty(brandId))
+                cmd.Parameters.AddWithValue("@brand", brandId);
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
-            rptBikes.DataSource = dt;
-            rptBikes.DataBind();
+            rptFeatured.DataSource = dt;
+            rptFeatured.DataBind();
         }
     }
 
     protected void btnSearch_Click(object sender, EventArgs e)
     {
-        LoadBikes();
+        LoadFeaturedBikes(
+            ddlBudget.SelectedValue,
+            ddlBrand.SelectedValue);
     }
 }

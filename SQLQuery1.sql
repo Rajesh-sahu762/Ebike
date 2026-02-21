@@ -48,6 +48,8 @@ CREATE TABLE Brands (
     IsActive BIT DEFAULT 1
 );
 
+select * from Brands
+
 
 ALTER TABLE Brands ADD LogoPath NVARCHAR(300), CreatedAt DATETIME DEFAULT GETDATE()
 
@@ -83,33 +85,36 @@ VALUES (1)
 
 CREATE TABLE Bikes (
     BikeID INT PRIMARY KEY IDENTITY(1,1),
-
     DealerID INT FOREIGN KEY REFERENCES Users(UserID),
-
     BrandID INT FOREIGN KEY REFERENCES Brands(BrandID),
     ModelName NVARCHAR(150) NOT NULL,
-
     Slug NVARCHAR(200) UNIQUE,  -- SEO Friendly URL
-
     Price DECIMAL(18,2),
     RangeKM INT,
     BatteryType NVARCHAR(100),
     MotorPower NVARCHAR(100),
     TopSpeed INT,
     ChargingTime NVARCHAR(50),
-
     Description NVARCHAR(MAX),
-
     Image1 NVARCHAR(300),
     Image2 NVARCHAR(300),
     Image3 NVARCHAR(300),
-
     IsApproved BIT DEFAULT 0,
     ApprovedAt DATETIME NULL,
-
-    CreatedAt DATETIME DEFAULT GETDATE()
+	CreatedAt DATETIME DEFAULT GETDATE()
 );
 
+
+
+UPDATE Bikes SET Image1 = 'RoadsterX+.jpg', Image2 = 'RoadsterX+front.jpg', Image3 = 'RoadsterX+front.jpg' WHERE BikeID = 11;
+
+
+
+
+ALTER TABLE Bikes ALTER COLUMN BatteryType NVARCHAR(255);
+ALTER TABLE Bikes ALTER COLUMN MotorPower NVARCHAR(255);
+ALTER TABLE Bikes ALTER COLUMN ChargingTime NVARCHAR(255);
+ALTER TABLE Bikes ALTER COLUMN Slug NVARCHAR(255);
 
 
 ALTER TABLE Bikes
