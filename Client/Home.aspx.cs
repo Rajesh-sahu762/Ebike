@@ -11,10 +11,35 @@ public partial class Client_Home : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
+            LoadHeroBrands();
             LoadBrowseBrands();
             LoadFeaturedBikes(null, null);
         }
     }
+
+
+    void LoadHeroBrands()
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand(
+                "SELECT BrandID, BrandName FROM Brands WHERE IsActive=1 ORDER BY BrandName",
+                con);
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            ddlBrand.DataSource = dr;
+            ddlBrand.DataTextField = "BrandName";
+            ddlBrand.DataValueField = "BrandID";
+            ddlBrand.DataBind();
+
+            ddlBrand.Items.Insert(0,
+                new System.Web.UI.WebControls.ListItem("Select Brand", ""));
+        }
+    }
+
 
     void LoadBrowseBrands()
     {
@@ -22,31 +47,37 @@ public partial class Client_Home : System.Web.UI.Page
         {
             con.Open();
 
-            // TOP 10
-            SqlCommand cmdTop = new SqlCommand(
-                "SELECT TOP 10 BrandID, BrandName, LogoPath FROM Brands WHERE IsActive=1 ORDER BY BrandID",
+            // Get ALL active brands
+            SqlCommand cmd = new SqlCommand(
+                "SELECT BrandID, BrandName, LogoPath FROM Brands WHERE IsActive=1 ORDER BY BrandID",
                 con);
 
-            SqlDataAdapter daTop = new SqlDataAdapter(cmdTop);
-            DataTable dtTop = new DataTable();
-            daTop.Fill(dtTop);
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            // TOP 10 only
+            DataTable dtTop = dt.Clone();
+            for (int i = 0; i < dt.Rows.Count && i < 10; i++)
+            {
+                dtTop.ImportRow(dt.Rows[i]);
+            }
+
+            // REMAINING brands
+            DataTable dtMore = dt.Clone();
+            for (int i = 10; i < dt.Rows.Count; i++)
+            {
+                dtMore.ImportRow(dt.Rows[i]);
+            }
 
             rptBrandsTop.DataSource = dtTop;
             rptBrandsTop.DataBind();
 
-            // ALL
-            SqlCommand cmdAll = new SqlCommand(
-                "SELECT BrandID, BrandName, LogoPath FROM Brands WHERE IsActive=1 ORDER BY BrandID",
-                con);
-
-            SqlDataAdapter daAll = new SqlDataAdapter(cmdAll);
-            DataTable dtAll = new DataTable();
-            daAll.Fill(dtAll);
-
-            rptBrandsAll.DataSource = dtAll;
+            rptBrandsAll.DataSource = dtMore;
             rptBrandsAll.DataBind();
         }
     }
+
 
 
 

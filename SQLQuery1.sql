@@ -28,6 +28,8 @@ CREATE TABLE Users (
 
 
 
+
+
 ALTER TABLE Users ADD
 IsEmailVerified BIT DEFAULT 0,
 OTPCode NVARCHAR(10),
@@ -106,7 +108,7 @@ CREATE TABLE Bikes (
 
 
 
-UPDATE Bikes SET Image1 = 'RoadsterX+.jpg', Image2 = 'RoadsterX+front.jpg', Image3 = 'RoadsterX+front.jpg' WHERE BikeID = 11;
+UPDATE Users SET IsEmailVerified = 1, IsApproved =1  WHERE UserID = 4;
 
 
 
