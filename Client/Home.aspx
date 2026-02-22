@@ -382,101 +382,261 @@
     line-height: 1.6;
 }
 
-
 .review-section {
-    background: #111827;
+    background: #ffffff;
     padding: 100px 0;
-    color: white;
 }
 
 .review-title {
     font-size: 32px;
     font-weight: 700;
+    margin-bottom: 40px;
 }
 
-.review-subtitle {
-    color: #9ca3af;
-    margin-bottom: 25px;
+.review-slider-wrapper {
+    position: relative;
 }
 
-.review-search-box input {
-    width: 100%;
-    max-width: 500px;
-    padding: 12px 15px;
-    background: #1f2937;
-    border: 1px solid #374151;
-    border-radius: 12px;
-    color: white;
-}
-
-.review-divider {
-    border-color: #374151;
-    margin: 40px 0;
-}
-
-.recent-title {
-    margin-bottom: 30px;
-}
-
-.review-cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
+.review-slider {
+    display: flex;
+    gap: 20px;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 .review-card {
-    background: #1f2937;
-    padding: 25px;
+    min-width: 350px;
+    background: #f9fafb;
     border-radius: 20px;
-    transition: 0.3s;
-}
-
-.review-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    padding: 25px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.05);
 }
 
 .review-user {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-weight: 600;
 }
 
-.user-avatar {
+.user-img {
     width: 40px;
     height: 40px;
-    background: #374151;
     border-radius: 50%;
 }
 
-.review-bike {
+.verified {
+    background: #dcfce7;
+    color: #16a34a;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    margin-left: 5px;
+}
+
+.review-bike-info {
     display: flex;
     gap: 15px;
     margin: 20px 0;
 }
 
-.review-bike img {
+.review-bike-info img {
     width: 90px;
     height: 60px;
     object-fit: cover;
 }
 
-.stars {
-    color: #22c55e;
+.stars span {
+    color: #facc15;
+    font-size: 16px;
 }
 
-.review-text {
-    color: #d1d5db;
-    font-size: 14px;
+.review-arrow {
+    position: absolute;
+    top: 40%;
+    background: #111827;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.review-arrow.left { left: -20px; }
+.review-arrow.right { right: -20px; }
+
+
+.compare-cta {
+    padding: 90px 0;
+    background: linear-gradient(135deg,#f1f5f9,#ffffff);
+}
+
+.compare-box {
+    background: #111827;
+    color: white;
+    border-radius: 30px;
+    padding: 60px;
+    text-align: center;
+}
+
+.compare-content h2 {
+    font-size: 32px;
+    font-weight: 700;
     margin-bottom: 15px;
 }
 
-.review-card a {
-    color: #06b6d4;
-    text-decoration: none;
-    font-weight: 500;
+.compare-content p {
+    color: #d1d5db;
+    max-width: 600px;
+    margin: auto;
+    margin-bottom: 30px;
 }
+
+.compare-btn {
+    display: inline-block;
+    background: linear-gradient(135deg,#06b6d4,#7c3aed);
+    padding: 12px 30px;
+    border-radius: 30px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.why-section {
+    background: #ffffff;
+    padding: 100px 0;
+}
+
+.why-title {
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.why-subtitle {
+    color: #6b7280;
+    margin-bottom: 50px;
+}
+
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+.why-card {
+    position: relative;
+    background: radial-gradient(circle at top left, #0b1f3a, #0f172a);
+    padding: 45px 30px;
+    border-radius: 30px;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    transition: 0.4s ease;
+    border: 1px solid #0ea5e9;
+}
+
+/* INNER LAYER EFFECT */
+.why-card::before {
+    content: "";
+    position: absolute;
+    inset: 15px;
+    border-radius: 25px;
+    border: 1px solid rgba(14,165,233,0.5);
+    pointer-events: none;
+    transition: 0.4s;
+}
+
+/* OUTER GLOW HOVER */
+.why-card:hover {
+    transform: translateY(-8px);
+    box-shadow:
+        0 0 30px rgba(14,165,233,0.5),
+        0 0 60px rgba(14,165,233,0.2);
+}
+
+/* Stronger inner border on hover */
+.why-card:hover::before {
+    border-color: #22d3ee;
+}
+
+.why-icon {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #22d3ee;
+}
+
+.why-card h5 {
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.why-card p {
+    font-size: 14px;
+    color: #cbd5e1;
+}
+
+.ultimate-cta {
+    background: #ffffff;
+    padding: 140px 0;
+}
+
+.ultimate-box {
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    border-radius: 40px;
+    padding: 80px 60px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.15);
+}
+
+.ultimate-box h2 {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.ultimate-box p {
+    color: #cbd5e1;
+    max-width: 600px;
+    margin: auto;
+    margin-bottom: 40px;
+}
+
+.ultimate-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.ultimate-btn {
+    padding: 14px 32px;
+    border-radius: 40px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.ultimate-btn.primary {
+    background: linear-gradient(135deg,#06b6d4,#7c3aed);
+    color: white;
+}
+
+.ultimate-btn.secondary {
+    background: #111827;
+    color: white;
+}
+
+.ultimate-btn.outline {
+    border: 2px solid #06b6d4;
+    color: #06b6d4;
+}
+
+.ultimate-btn:hover {
+    transform: translateY(-4px);
+}
+
 
 
     </style>
@@ -559,7 +719,6 @@
 </div>
 </section>
 
-
 <!-- FEATURED BIKES SLIDER -->
 <section class="featured-section">
 <div class="container">
@@ -614,8 +773,6 @@
 </div>
 </section>
 
-
-    <!-- BROWSE BIKES BY -->
 <!-- BROWSE BIKES BY -->
 <section class="browse-section">
 <div class="container">
@@ -761,7 +918,6 @@
 </div>
 </section>
 
-
     <section class="battery-section">
     <div class="container">
         <div class="row align-items-center">
@@ -822,102 +978,53 @@
     </div>
 </section>
 
-
-    <section class="review-section">
+    <section class="why-section">
 <div class="container">
 
-    <h2 class="review-title">User Reviews</h2>
-    <p class="review-subtitle">
-        3000+ unbiased, verified reviews from bike owners.
-        Know the pros and cons of 200+ bike models from real owners.
+    <h2 class="why-title text-center">
+        Why Choose EBikes Duniya?
+    </h2>
+
+    <p class="why-subtitle text-center">
+        India’s trusted EV marketplace connecting buyers with verified dealers.
     </p>
 
-    <div class="review-search-box">
-        <input type="text" placeholder="Search bike e.g. Bajaj Dominar 400" />
-    </div>
+    <div class="why-grid">
 
-    <hr class="review-divider" />
-
-    <h4 class="recent-title">Recently Added Reviews</h4>
-
-    <div class="review-cards">
-
-        <!-- Card 1 -->
-        <div class="review-card">
-            <div class="review-header">
-                <div class="review-user">
-                    <div class="user-avatar"></div>
-                    <span>Arun Garg</span>
-                </div>
-            </div>
-
-            <div class="review-bike">
-                <img src="../Uploads/Bikes/sample1.png" />
-                <div>
-                    <small>Review on</small>
-                    <h6>Bajaj Pulsar N160</h6>
-                    <div class="stars">★★★★★</div>
-                    <small>1 week ago</small>
-                </div>
-            </div>
-
-            <p class="review-text">
-                I am using Bajaj Pulsar N160 from last 3 years and overall experience is very good...
+        <div class="why-card">
+            <div class="why-icon">✔</div>
+            <h5>Verified Dealers</h5>
+            <p>
+                All dealers go through approval and verification
+                to ensure genuine listings and safe transactions.
             </p>
-
-            <a href="#">Read Full Review</a>
         </div>
 
-        <!-- Card 2 -->
-        <div class="review-card">
-            <div class="review-header">
-                <div class="review-user">
-                    <div class="user-avatar"></div>
-                    <span>Shivraj</span>
-                </div>
-            </div>
-
-            <div class="review-bike">
-                <img src="../Uploads/Bikes/sample2.png" />
-                <div>
-                    <small>Review on</small>
-                    <h6>Bajaj Pulsar NS400Z</h6>
-                    <div class="stars">★★★★★</div>
-                    <small>1 day ago</small>
-                </div>
-            </div>
-
-            <p class="review-text">
-                Recently got the Bajaj Pulsar NS400Z and my overall experience has been amazing...
+        <div class="why-card">
+            <div class="why-icon">💰</div>
+            <h5>Transparent Pricing</h5>
+            <p>
+                Compare prices, range, charging time and
+                specifications before making a decision.
             </p>
-
-            <a href="#">Read Full Review</a>
         </div>
 
-        <!-- Card 3 -->
-        <div class="review-card">
-            <div class="review-header">
-                <div class="review-user">
-                    <div class="user-avatar"></div>
-                    <span>Deba Das</span>
-                </div>
-            </div>
-
-            <div class="review-bike">
-                <img src="../Uploads/Bikes/sample3.png" />
-                <div>
-                    <small>Review on</small>
-                    <h6>KTM 250 Adventure</h6>
-                    <div class="stars">★★★★★</div>
-                    <small>1 day ago</small>
-                </div>
-            </div>
-
-            <p class="review-text">
-                Unbelievable bike of all time. I ride this bike 1900 km and never feel any issue...
+        <div class="why-card">
+            <div class="why-icon">⚡</div>
+            <h5>EV Focused Platform</h5>
+            <p>
+                Dedicated to electric vehicles only —
+                no noise, no petrol clutter.
             </p>
+        </div>
 
-            <a href="#">Read Full Review</a>
+        <div class="why-card">
+            <div class="why-icon">⭐</div>
+            <h5>Trusted by Thousands</h5>
+            <p>
+                Real user reviews, real ratings and
+                unbiased feedback from EV owners.
+            </p>
         </div>
 
     </div>
@@ -925,8 +1032,117 @@
 </div>
 </section>
 
+    <section class="compare-cta">
+<div class="container">
+    <div class="compare-box">
 
+        <div class="compare-content">
+            <h2>Confused Between Two EV Bikes?</h2>
+            <p>
+                Compare specifications, price, range, charging time and features side-by-side.
+                Make smarter decisions before you buy.
+            </p>
 
+            <a href="Compare.aspx" class="compare-btn">
+                Compare Bikes Now →
+            </a>
+        </div>
+
+    </div>
+</div>
+</section>
+
+     <section class="review-section">
+<div class="container">
+
+<h2 class="review-title">User Reviews</h2>
+
+<div class="review-slider-wrapper">
+
+    <button class="review-arrow left" onclick="slideReview(-1)">&#10094;</button>
+
+    <div class="review-slider" id="reviewSlider">
+
+        <asp:Repeater ID="rptReviews" runat="server">
+        <ItemTemplate>
+
+        <div class="review-card">
+
+            <div class="review-user">
+                <img src='<%# Eval("ProfileImage") == DBNull.Value ? "../images/user.png" : "/Uploads/Profile/" + Eval("ProfileImage") %>' class="user-img" />
+                <div>
+                    <strong><%# Eval("FullName") %></strong>
+                    <%# (bool)Eval("IsVerified") ? "<span class='verified'>✔ Verified</span>" : "" %>
+                </div>
+            </div>
+
+            <div class="review-bike-info">
+                <img src='/Uploads/Bikes/<%# Eval("Image1") %>' />
+                <div>
+                    <small>Review on</small>
+                    <h6><%# Eval("ModelName") %></h6>
+
+                    <div class="stars">
+                        <%# GenerateStars(Convert.ToInt32(Eval("Rating"))) %>
+                    </div>
+
+                    <small><%# Eval("CreatedAt","{0:dd MMM yyyy}") %></small>
+                </div>
+            </div>
+
+            <p class="review-text">
+                <%# Eval("ReviewText") %>
+            </p>
+
+            <a href='BikeDetails.aspx?slug=<%# Eval("Slug") %>'>
+                Read Full Review
+            </a>
+
+        </div>
+
+        </ItemTemplate>
+        </asp:Repeater>
+
+    </div>
+
+    <button class="review-arrow right" onclick="slideReview(1)">&#10095;</button>
+
+</div>
+
+</div>
+</section>
+
+    <section class="ultimate-cta">
+<div class="container">
+
+    <div class="ultimate-box">
+
+        <h2>Ready to Switch to Electric?</h2>
+        <p>
+            Discover verified EV bikes, compare smartly and
+            connect with trusted dealers across India.
+        </p>
+
+        <div class="ultimate-buttons">
+
+            <a href="Bikes.aspx" class="ultimate-btn primary">
+                Browse All Bikes
+            </a>
+
+            <a href="SellBike.aspx" class="ultimate-btn secondary">
+                Sell Your Bike
+            </a>
+
+            <a href="DealerRegister.aspx" class="ultimate-btn outline">
+                Become a Dealer
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+</section>
 
 
 

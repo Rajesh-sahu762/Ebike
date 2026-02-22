@@ -11,9 +11,35 @@ public partial class Client_Home : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
+            LoadReviews();
             LoadHeroBrands();
             LoadBrowseBrands();
             LoadFeaturedBikes(null, null);
+        }
+    }
+
+
+    void LoadReviews()
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            string query = @"
+        SELECT TOP 10 R.*, U.FullName, U.ProfileImage,
+               B.ModelName, B.Image1, B.Slug
+        FROM BikeReviews R
+        INNER JOIN Users U ON R.CustomerID = U.UserID
+        INNER JOIN Bikes B ON R.BikeID = B.BikeID
+        WHERE R.IsApproved=1
+        ORDER BY R.CreatedAt DESC";
+
+            SqlDataAdapter da = new SqlDataAdapter(query, con);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            rptReviews.DataSource = dt;
+            rptReviews.DataBind();
         }
     }
 
@@ -116,6 +142,20 @@ public partial class Client_Home : System.Web.UI.Page
             rptFeatured.DataBind();
         }
     }
+
+    public string GenerateStars(int rating)
+    {
+        string stars = "";
+        for (int i = 1; i <= 5; i++)
+        {
+            if (i <= rating)
+                stars += "<span>★</span>";
+            else
+                stars += "<span style='color:#e5e7eb'>★</span>";
+        }
+        return stars;
+    }
+
 
     protected void btnSearch_Click(object sender, EventArgs e)
     {
