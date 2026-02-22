@@ -168,6 +168,40 @@ CREATE TABLE DealerRatings (
 );
 
 
+CREATE TABLE BikeReviews (
+    ReviewID INT PRIMARY KEY IDENTITY(1,1),
+
+    BikeID INT FOREIGN KEY REFERENCES Bikes(BikeID),
+    CustomerID INT FOREIGN KEY REFERENCES Users(UserID),
+
+    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    ReviewTitle NVARCHAR(200),
+    ReviewText NVARCHAR(2000),
+
+    IsVerified BIT DEFAULT 1,
+    IsApproved BIT DEFAULT 1,
+
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+
+INSERT INTO BikeReviews (BikeID, CustomerID, Rating, ReviewTitle, ReviewText)
+VALUES
+(1, 4, 5, 'Best EV Scooter',
+ 'Amazing pickup and smooth ride. Battery backup is excellent and charging time is decent.'),
+
+(2, 4, 4, 'Great Performance',
+ 'Good range and solid build quality. Suspension could be better but overall worth the price.'),
+
+(3, 4, 5, 'Super Comfortable',
+ 'Very comfortable for city rides. Low maintenance and stylish look.'),
+
+(1, 4, 3, 'Average Experience',
+ 'Range is good but charging takes longer than expected. Could improve on service network.');
+
+ SELECT COUNT(*) FROM Bikes WHERE IsApproved = 1
+
+
 INSERT INTO Users (Role, FullName, Email, Mobile, PasswordHash, IsApproved)
 VALUES ('Admin', 'Super Admin', 'admin@ebikes.com', '9999999999', 'admin123', 1);
 
