@@ -195,21 +195,73 @@ body{
 }
 
 /* ===== FOOTER ===== */
-
-.footer{
-    background:#0f172a;
-    color:white;
-    padding:40px 60px;
+.premium-footer {
+    background: #0f172a;
+    color: #cbd5e1;
+    padding: 80px 0 30px 0;
 }
 
-.footer a{
-    color:#2dd4bf;
-    text-decoration:none;
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 40px;
+    margin-bottom: 40px;
 }
 
-.footer a:hover{
-    text-decoration:underline;
+.footer-col h4,
+.footer-col h5 {
+    color: white;
+    margin-bottom: 20px;
 }
+
+.footer-col p {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 10px;
+}
+
+.footer-col ul li a {
+    text-decoration: none;
+    color: #94a3b8;
+    transition: 0.3s;
+}
+
+.footer-col ul li a:hover {
+    color: #06b6d4;
+}
+
+.footer-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 10px;
+}
+
+.footer-btn {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg,#06b6d4,#7c3aed);
+    border: none;
+    color: white;
+    border-radius: 8px;
+}
+
+.footer-bottom {
+    border-top: 1px solid #1e293b;
+    padding-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
 
 </style>
 
@@ -218,6 +270,10 @@ body{
 <body>
 
 <form id="Form1" runat="server">
+
+    <asp:ScriptManager ID="ScriptManager1" runat="server"
+    EnablePageMethods="true" />
+
 
 <!-- ===== NAVBAR ===== -->
 
@@ -292,31 +348,57 @@ body{
 
 <!-- ===== FOOTER ===== -->
 
-<div class="footer">
+<footer class="premium-footer">
+<div class="container">
 
-    <div class="row">
+    <div class="footer-grid">
 
-        <div class="col-md-4">
-            <h5>EBikes Duniya</h5>
-            <p>India's Smart EV Marketplace</p>
+        <!-- Logo + About -->
+        <div class="footer-col">
+            <h4>EBikes Duniya</h4>
+            <p>
+                India’s trusted EV marketplace connecting buyers
+                with verified dealers. Compare smartly and switch electric.
+            </p>
         </div>
 
-        <div class="col-md-4">
-            <h6>Quick Links</h6>
-            <a href="#">About</a><br />
-            <a href="#">Contact</a><br />
-            <a href="#">Terms</a>
+        <!-- Quick Links -->
+        <div class="footer-col">
+            <h5>Quick Links</h5>
+            <ul>
+                <li><a href="Bikes.aspx">Browse Bikes</a></li>
+                <li><a href="Compare.aspx">Compare Bikes</a></li>
+                <li><a href="Reviews.aspx">User Reviews</a></li>
+                <li><a href="Contact.aspx">Contact Us</a></li>
+            </ul>
         </div>
 
-        <div class="col-md-4">
-            <h6>Contact</h6>
-            support@ebikes.com<br />
-            +91 9999999999
+        <!-- Dealers -->
+        <div class="footer-col">
+            <h5>For Dealers</h5>
+            <ul>
+                <li><a href="DealerRegister.aspx">Become Dealer</a></li>
+                <li><a href="DealerLogin.aspx">Dealer Login</a></li>
+                <li><a href="#">Commission Policy</a></li>
+            </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="footer-col">
+            <h5>Stay Updated</h5>
+            <input type="email" placeholder="Enter your email" class="footer-input">
+            <button class="footer-btn">Subscribe</button>
         </div>
 
     </div>
 
+    <div class="footer-bottom">
+        © 2026 EBikes Duniya. All rights reserved.
+    </div>
+
 </div>
+</footer>
+
 
 </form>
 

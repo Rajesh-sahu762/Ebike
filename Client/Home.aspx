@@ -1,4 +1,7 @@
 ﻿
+<%@ OutputCache Duration="120" VaryByParam="none" %>
+
+
 <%@ Page Title="Home" Language="C#" MasterPageFile="~/Client/ClientMaster.master"
     AutoEventWireup="true" CodeFile="Home.aspx.cs"
     Inherits="Client_Home" %>
@@ -636,6 +639,16 @@
 .ultimate-btn:hover {
     transform: translateY(-4px);
 }
+.fade-section {
+    opacity: 0;
+    transform: translateY(60px);
+    transition: all 0.8s ease;
+}
+
+.fade-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
 
 
 
@@ -643,7 +656,7 @@
 
 
 <!-- HERO SECTION -->
-<section class="hero-wrapper">
+<section class="hero-wrapper fade-section">
 <div class="container">
 <div class="row align-items-center">
 
@@ -687,15 +700,18 @@
     <div class="hero-slider">
 
         <div class="hero-slide active">
-            <img src="../Uploads/Banner/banner1.jpg" />
+            <img src="../Uploads/Banner/banner1.jpg" loading="lazy"
+ />
         </div>
 
         <div class="hero-slide">
-            <img src="../Uploads/Banner/banner2.jpg" />
+            <img src="../Uploads/Banner/banner2.jpg" loading="lazy"
+ />
             </div>
 
         <div class="hero-slide">
-            <img src="../Uploads/Banner/banner3.jpg" />
+            <img src="../Uploads/Banner/banner3.jpg" loading="lazy"
+ />
             </div>
 
         <!-- Arrow -->
@@ -720,7 +736,7 @@
 </section>
 
 <!-- FEATURED BIKES SLIDER -->
-<section class="featured-section">
+<section class="featured-section fade-section">
 <div class="container">
 
 <h3 class="section-title">Featured Electric Bikes</h3>
@@ -737,7 +753,8 @@
             <div class="featured-card">
 
                 <div class="card-image">
-                    <img src='/Uploads/Bikes/<%# Eval("Image1") %>' />
+                    <img src='/Uploads/Bikes/<%# Eval("Image1") %>' loading="lazy"
+ />
                 </div>
 
                 <div class="card-body">
@@ -774,7 +791,7 @@
 </section>
 
 <!-- BROWSE BIKES BY -->
-<section class="browse-section">
+<section class="browse-section fade-section">
 <div class="container">
 
 <h3 class="browse-title">Browse Bikes By</h3>
@@ -796,7 +813,8 @@
             <div class="brand-card">
              <a href='Bikes.aspx?brand=<%# Eval("BrandID") %>' class="brand-card">
     <div class="brand-logo">
-        <img src='/Uploads/Brands/<%# Eval("LogoPath") %>' />
+        <img src='/Uploads/Brands/<%# Eval("LogoPath") %>' loading="lazy"
+ />
     </div>
     <div class="brand-name">
         <%# Eval("BrandName") %>
@@ -817,7 +835,8 @@
                 <div class="brand-card">
                     <a href='Bikes.aspx?brand=<%# Eval("BrandID") %>' class="brand-card">
                         <div class="brand-logo">
-                            <img src='/Uploads/Brands/<%# Eval("LogoPath") %>' />
+                            <img src='/Uploads/Brands/<%# Eval("LogoPath") %>' loading="lazy"
+ />
                         </div>
                         <div class="brand-name">
                             <%# Eval("BrandName") %>
@@ -918,14 +937,15 @@
 </div>
 </section>
 
-    <section class="battery-section">
+    <section class="battery-section fade-section">
     <div class="container">
         <div class="row align-items-center">
 
             <!-- Left Image -->
             <div class="col-lg-6">
                 <div class="battery-image-box">
-                    <img src="../Uploads/Banner/maintain.png" class="img-fluid" />
+                    <img src="../Uploads/Banner/maintain.png" class="img-fluid" loading="lazy"
+ />
                 </div>
             </div>
 
@@ -978,7 +998,7 @@
     </div>
 </section>
 
-    <section class="why-section">
+    <section class="why-section fade-section">
 <div class="container">
 
     <h2 class="why-title text-center">
@@ -1032,7 +1052,7 @@
 </div>
 </section>
 
-    <section class="compare-cta">
+    <section class="compare-cta fade-section">
 <div class="container">
     <div class="compare-box">
 
@@ -1052,7 +1072,7 @@
 </div>
 </section>
 
-     <section class="review-section">
+     <section class="review-section fade-section">
 <div class="container">
 
 <h2 class="review-title">User Reviews</h2>
@@ -1069,7 +1089,8 @@
         <div class="review-card">
 
             <div class="review-user">
-                <img src='<%# Eval("ProfileImage") == DBNull.Value ? "../images/user.png" : "/Uploads/Profile/" + Eval("ProfileImage") %>' class="user-img" />
+                <img src='<%# Eval("ProfileImage") == DBNull.Value ? "../images/user.png" : "/Uploads/Profile/" + Eval("ProfileImage") %>' loading="lazy"
+ class="user-img" />
                 <div>
                     <strong><%# Eval("FullName") %></strong>
                     <%# (bool)Eval("IsVerified") ? "<span class='verified'>✔ Verified</span>" : "" %>
@@ -1077,7 +1098,8 @@
             </div>
 
             <div class="review-bike-info">
-                <img src='/Uploads/Bikes/<%# Eval("Image1") %>' />
+                <img src='/Uploads/Bikes/<%# Eval("Image1") %>' loading="lazy"
+ />
                 <div>
                     <small>Review on</small>
                     <h6><%# Eval("ModelName") %></h6>
@@ -1112,7 +1134,7 @@
 </div>
 </section>
 
-    <section class="ultimate-cta">
+    <section class="ultimate-cta fade-section">
 <div class="container">
 
     <div class="ultimate-box">
@@ -1144,6 +1166,29 @@
 </div>
 </section>
 
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const sections = document.querySelectorAll(".fade-section");
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+        }
+        });
+        }, {
+            threshold: 0.2
+        });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        });
+</script>
 
 
     <script>
