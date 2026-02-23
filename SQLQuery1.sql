@@ -25,7 +25,7 @@ CREATE TABLE Users (
 
 
 
-
+select * from Wishlist
 
 
 
