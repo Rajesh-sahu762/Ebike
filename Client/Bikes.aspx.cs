@@ -55,8 +55,11 @@ public partial class Client_Bikes : System.Web.UI.Page
                 html.Append("<div class='bike-card'>");
                 html.Append("<div class='bike-img'>");
                 html.Append("<img src='/Uploads/Bikes/" + dr["Image1"] + "'/>");
-                html.Append("<div class='wishlist' onclick='addWishlist(this," + dr["BikeID"] + ")'>♥</div>");
-                html.Append("<label class='compare-label'><input type='checkbox' onclick='toggleCompare(" + dr["BikeID"] + ")'/> Compare</label>");
+                html.Append("<div class='wishlist' onclick='toggleWishlist(this," + dr["BikeID"] + ")'>♥</div>");
+                html.Append("<label class='compare-label'>");
+                html.Append("<input type='checkbox' onchange='toggleCompare(this," + dr["BikeID"] + ")'/> Compare");
+                html.Append("</label>");
+               
                 html.Append("</div>");
                 html.Append("<div class='bike-body'>");
                 html.Append("<h6>" + dr["ModelName"] + "</h6>");
@@ -90,15 +93,43 @@ public partial class Client_Bikes : System.Web.UI.Page
     }
 
     [WebMethod]
-    public static void AddWishlist(int bikeId)
+    public static string ToggleWishlist(int bikeId)
     {
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
-            SqlCommand cmd = new SqlCommand("INSERT INTO Wishlist(CustomerID,BikeID) VALUES(1,@b)", con);
-            cmd.Parameters.AddWithValue("@b", bikeId);
-            cmd.ExecuteNonQuery();
+
+            // TODO: Replace 1 with actual logged-in session user later
+            int userId = 1;
+
+            SqlCommand check = new SqlCommand(
+                "SELECT COUNT(*) FROM Wishlist WHERE CustomerID=@u AND BikeID=@b", con);
+            check.Parameters.AddWithValue("@u", userId);
+            check.Parameters.AddWithValue("@b", bikeId);
+
+            int exists = Convert.ToInt32(check.ExecuteScalar());
+
+            if (exists > 0)
+            {
+                SqlCommand delete = new SqlCommand(
+                    "DELETE FROM Wishlist WHERE CustomerID=@u AND BikeID=@b", con);
+                delete.Parameters.AddWithValue("@u", userId);
+                delete.Parameters.AddWithValue("@b", bikeId);
+                delete.ExecuteNonQuery();
+                return "removed";
+            }
+            else
+            {
+                SqlCommand insert = new SqlCommand(
+                    "INSERT INTO Wishlist(CustomerID,BikeID) VALUES(@u,@b)", con);
+                insert.Parameters.AddWithValue("@u", userId);
+                insert.Parameters.AddWithValue("@b", bikeId);
+                insert.ExecuteNonQuery();
+                return "added";
+            }
         }
     }
+
 }
