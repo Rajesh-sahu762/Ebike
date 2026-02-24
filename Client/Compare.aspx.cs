@@ -12,29 +12,28 @@ public partial class Compare : System.Web.UI.Page
         if (!IsPostBack)
         {
             LoadSelectors();
+            LoadPopular();   // 🔥 THIS WAS MISSING
 
             string b1 = Request.QueryString["b1"];
             string b2 = Request.QueryString["b2"];
 
             if (!string.IsNullOrEmpty(b1) &&
-     !string.IsNullOrEmpty(b2) &&
-     b1 != b2)
+                !string.IsNullOrEmpty(b2) &&
+                b1 != b2)
             {
                 LoadHero(b1, b2);
                 LoadSpecs(b1, b2);
+                LoadGallery(b1, b2);
+                LoadScore(b1, b2);
 
                 CompareHeroPanel.Visible = true;
                 CompareSpecsPanel.Visible = true;
+                CompareGalleryPanel.Visible = true;
+                CompareScorePanel.Visible = true;
             }
-
-            LoadGallery(b1, b2);
-            CompareGalleryPanel.Visible = true;
-
-            LoadScore(b1, b2);
-            CompareScorePanel.Visible = true;
-
         }
     }
+
 
 
     void LoadScore(string id1, string id2)
@@ -286,6 +285,40 @@ public partial class Compare : System.Web.UI.Page
             Bike2Select.Text = s2;
         }
     }
+
+    void LoadPopular()
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlDataAdapter da = new SqlDataAdapter(@"
+        SELECT TOP 6
+            b1.BikeID AS BikeID1,
+            b2.BikeID AS BikeID2,
+            b1.ModelName,
+            b2.ModelName AS ModelName2,
+            b1.Image1,
+            b2.Image1 AS Image2
+        FROM Bikes b1
+        INNER JOIN Bikes b2 
+            ON b1.BikeID < b2.BikeID
+        WHERE b1.IsApproved = 1 
+        AND b2.IsApproved = 1
+        ORDER BY b1.CreatedAt DESC
+        ", con);
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            if (dt.Rows.Count > 0)
+            {
+                rptPopular.DataSource = dt;
+                rptPopular.DataBind();
+            }
+        }
+    }
+
 
     protected void CompareNow(object sender, EventArgs e)
     {
