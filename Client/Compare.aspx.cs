@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Data;
 
 public partial class Compare : System.Web.UI.Page
 {
@@ -12,22 +12,245 @@ public partial class Compare : System.Web.UI.Page
         if (!IsPostBack)
         {
             LoadSelectors();
-            LoadPopular();
 
             string b1 = Request.QueryString["b1"];
             string b2 = Request.QueryString["b2"];
 
             if (!string.IsNullOrEmpty(b1) &&
-                !string.IsNullOrEmpty(b2) &&
-                b1 != b2)
+     !string.IsNullOrEmpty(b2) &&
+     b1 != b2)
             {
-                LoadComparison(b1, b2);
-                ComparePanel.Visible = true;
+                LoadHero(b1, b2);
+                LoadSpecs(b1, b2);
+
+                CompareHeroPanel.Visible = true;
+                CompareSpecsPanel.Visible = true;
+            }
+
+            LoadGallery(b1, b2);
+            CompareGalleryPanel.Visible = true;
+
+            LoadScore(b1, b2);
+            CompareScorePanel.Visible = true;
+
+        }
+    }
+
+
+    void LoadScore(string id1, string id2)
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand(
+            "SELECT Price, RangeKM, TopSpeed FROM Bikes WHERE BikeID=@b1 OR BikeID=@b2",
+            con);
+
+            cmd.Parameters.AddWithValue("@b1", id1);
+            cmd.Parameters.AddWithValue("@b2", id2);
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            if (dt.Rows.Count < 2) return;
+
+            DataRow b1 = dt.Rows[0];
+            DataRow b2 = dt.Rows[1];
+
+            decimal score1 = CalculateScore(b1);
+            decimal score2 = CalculateScore(b2);
+
+            ScoreBike1.Text = BuildScoreHtml(score1);
+            ScoreBike2.Text = BuildScoreHtml(score2);
+        }
+    }
+
+    decimal CalculateScore(DataRow bike)
+    {
+        decimal price = bike["Price"] == DBNull.Value ? 0 : Convert.ToDecimal(bike["Price"]);
+        decimal range = bike["RangeKM"] == DBNull.Value ? 0 : Convert.ToDecimal(bike["RangeKM"]);
+        decimal speed = bike["TopSpeed"] == DBNull.Value ? 0 : Convert.ToDecimal(bike["TopSpeed"]);
+
+        // Example scoring formula
+        decimal score = (range * 0.4m) + (speed * 0.3m) - (price * 0.0001m);
+
+        if (score < 0) score = 0;
+        if (score > 100) score = 100;
+
+        return Math.Round(score, 1);
+    }
+
+    string BuildScoreHtml(decimal score)
+    {
+        decimal percent = score; // since score is out of 100
+
+        return
+        "<div class='score-circle' style='--percent:" + percent + "%'>" +
+            "<div class='score-inner'>" +
+                "<div class='score-value'>" + score + "</div>" +
+                "<div class='score-label'>Score</div>" +
+            "</div>" +
+        "</div>";
+    }
+
+
+
+    void LoadGallery(string id1, string id2)
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand(
+            "SELECT * FROM Bikes WHERE BikeID=@b1 OR BikeID=@b2",
+            con);
+
+            cmd.Parameters.AddWithValue("@b1", id1);
+            cmd.Parameters.AddWithValue("@b2", id2);
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            if (dt.Rows.Count < 2) return;
+
+            GalleryBike1.Text = BuildGallery(dt.Rows[0]);
+            GalleryBike2.Text = BuildGallery(dt.Rows[1]);
+        }
+    }
+
+    string BuildGallery(DataRow bike)
+    {
+        string html = "";
+
+        for (int i = 1; i <= 4; i++)
+        {
+            string col = "Image" + i;
+
+            if (bike.Table.Columns.Contains(col) &&
+                bike[col] != DBNull.Value &&
+                bike[col].ToString() != "")
+            {
+                html += "<img src='/Uploads/Bikes/" +
+                        bike[col] +
+                        "' />";
+            }
+        }
+
+        return html;
+    }
+
+
+    void LoadHero(string id1, string id2)
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand(
+            "SELECT BikeID, ModelName, Price, Image1 FROM Bikes WHERE BikeID=@b1 OR BikeID=@b2",
+            con);
+
+            cmd.Parameters.AddWithValue("@b1", id1);
+            cmd.Parameters.AddWithValue("@b2", id2);
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            string html1 = "";
+            string html2 = "";
+
+            int count = 0;
+
+            while (dr.Read())
+            {
+                string html =
+                "<img src='/Uploads/Bikes/" + dr["Image1"] + "' />" +
+                "<h3>" + dr["ModelName"] + "</h3>" +
+                "<p>₹ " + Convert.ToDecimal(dr["Price"]).ToString("N0") + "</p>";
+
+                if (count == 0)
+                    html1 = html;
+                else
+                    html2 = html;
+
+                count++;
+            }
+
+            HeroBike1.Text = html1;
+            HeroBike2.Text = html2;
+        }
+    }
+
+    void LoadSpecs(string id1, string id2)
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand(
+            "SELECT * FROM Bikes WHERE BikeID=@b1 OR BikeID=@b2",
+            con);
+
+            cmd.Parameters.AddWithValue("@b1", id1);
+            cmd.Parameters.AddWithValue("@b2", id2);
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            System.Data.DataTable dt = new System.Data.DataTable();
+            da.Fill(dt);
+
+            if (dt.Rows.Count < 2) return;
+
+            System.Data.DataRow bike1 = dt.Rows[0];
+            System.Data.DataRow bike2 = dt.Rows[1];
+
+            SpecRows.Text = "";
+
+            foreach (System.Data.DataColumn col in dt.Columns)
+            {
+                string colName = col.ColumnName;
+
+                if (colName == "BikeID" ||
+                    colName == "DealerID" ||
+                    colName == "BrandID" ||
+                    colName == "Slug" ||
+                    colName.StartsWith("Image") ||
+                    colName == "IsApproved" ||
+                    colName == "ApprovedAt" ||
+                    colName == "CreatedAt")
+                    continue;
+
+                string v1 = bike1[colName] == DBNull.Value ? "N/A" : bike1[colName].ToString();
+                string v2 = bike2[colName] == DBNull.Value ? "N/A" : bike2[colName].ToString();
+
+                SpecRows.Text += BuildSpecRow(colName, v1, v2);
             }
         }
     }
 
-    // ================= SELECT DROPDOWNS =================
+
+    string BuildSpecRow(string title, string val1, string val2)
+    {
+        decimal n1, n2;
+        bool isNum1 = decimal.TryParse(val1.Replace("₹", "").Replace(",", ""), out n1);
+        bool isNum2 = decimal.TryParse(val2.Replace("₹", "").Replace(",", ""), out n2);
+
+        if (isNum1 && isNum2 && n1 != n2)
+        {
+            if (n1 > n2)
+                val1 = "<span class='spec-highlight'>" + val1 + "</span>";
+            else
+                val2 = "<span class='spec-highlight'>" + val2 + "</span>";
+        }
+
+        return "<div class='spec-row'>" +
+               "<div class='spec-title'>" + title + "</div>" +
+               "<div class='spec-value'>" + val1 + "</div>" +
+               "<div class='spec-value'>" + val2 + "</div>" +
+               "</div>";
+    }
+
 
     void LoadSelectors()
     {
@@ -36,13 +259,13 @@ public partial class Compare : System.Web.UI.Page
             con.Open();
 
             SqlCommand cmd = new SqlCommand(
-            "SELECT BikeID,ModelName FROM Bikes WHERE IsApproved=1",
+            "SELECT BikeID, ModelName FROM Bikes WHERE IsApproved=1",
             con);
 
             SqlDataReader dr = cmd.ExecuteReader();
 
-            string s1 = "<select name='bike1' class='form-control'>";
-            string s2 = "<select name='bike2' class='form-control'>";
+            string s1 = "<select name='bike1'>";
+            string s2 = "<select name='bike2'>";
 
             s1 += "<option value=''>Select Bike</option>";
             s2 += "<option value=''>Select Bike</option>";
@@ -69,211 +292,11 @@ public partial class Compare : System.Web.UI.Page
         string b1 = Request.Form["bike1"];
         string b2 = Request.Form["bike2"];
 
-        if (string.IsNullOrEmpty(b1) ||
-            string.IsNullOrEmpty(b2) ||
-            b1 == b2)
-            return;
-
-        Response.Redirect("Compare.aspx?b1=" + b1 + "&b2=" + b2);
-    }
-
-    // ================= LOAD COMPARISON =================
-
-    void LoadComparison(string id1, string id2)
-    {
-        using (SqlConnection con = new SqlConnection(constr))
+        if (!string.IsNullOrEmpty(b1) &&
+            !string.IsNullOrEmpty(b2) &&
+            b1 != b2)
         {
-            con.Open();
-
-            SqlCommand cmd = new SqlCommand(
-            "SELECT * FROM Bikes WHERE BikeID=@b1 OR BikeID=@b2",
-            con);
-
-            cmd.Parameters.AddWithValue("@b1", id1);
-            cmd.Parameters.AddWithValue("@b2", id2);
-
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            if (dt.Rows.Count < 2) return;
-
-            DataRow b1 = dt.Rows[0];
-            DataRow b2 = dt.Rows[1];
-
-            // HEADER
-            Bike1Header.Text =
-            "<div><img src='/Uploads/Bikes/" + b1["Image1"] +
-            "'/><h6>" + b1["ModelName"] + "</h6></div>";
-
-            Bike2Header.Text =
-            "<div><img src='/Uploads/Bikes/" + b2["Image1"] +
-            "'/><h6>" + b2["ModelName"] + "</h6></div>";
-
-            // SPEC TABLE (ALL COLUMNS DYNAMIC)
-            SpecRows.Text = "";
-
-            foreach (DataColumn col in dt.Columns)
-            {
-                string name = col.ColumnName;
-
-                if (name == "BikeID" ||
-                    name.StartsWith("Image"))
-                    continue;
-
-                SpecRows.Text += BuildRow(name,
-                    b1[name],
-                    b2[name]);
-            }
-
-            // IMAGES
-            ImageRows.Text =
-            "<tr><th>Gallery</th><td>" +
-            BuildImages(b1) +
-            "</td><td>" +
-            BuildImages(b2) +
-            "</td></tr>";
-
-            // REVIEWS
-            ReviewRows.Text =
-            "<tr><th>User Rating</th><td>" +
-            GetAverageRating(id1) +
-            "</td><td>" +
-            GetAverageRating(id2) +
-            "</td></tr>";
-        }
-    }
-
-    // ================= BUILD ROW =================
-
-    string BuildRow(string title, object v1, object v2)
-    {
-        string s1 = v1 == DBNull.Value ? "N/A" : v1.ToString();
-        string s2 = v2 == DBNull.Value ? "N/A" : v2.ToString();
-
-        decimal a, b;
-
-        bool n1 = decimal.TryParse(s1.Replace("₹", "")
-                                      .Replace(",", "")
-                                      .Trim(), out a);
-
-        bool n2 = decimal.TryParse(s2.Replace("₹", "")
-                                      .Replace(",", "")
-                                      .Trim(), out b);
-
-        if (n1 && n2 && a != b)
-        {
-            if (a > b)
-                s1 = "<span class='highlight'>" + s1 + "</span>";
-            else
-                s2 = "<span class='highlight'>" + s2 + "</span>";
-        }
-
-        return "<tr><th>" + title + "</th><td>" +
-               s1 + "</td><td>" + s2 + "</td></tr>";
-    }
-
-    // ================= IMAGES =================
-
-    string BuildImages(DataRow bike)
-    {
-        string html = "";
-
-        for (int i = 1; i <= 4; i++)
-        {
-            string col = "Image" + i;
-
-            if (bike.Table.Columns.Contains(col) &&
-                bike[col] != DBNull.Value &&
-                bike[col].ToString() != "")
-            {
-                html += "<img src='/Uploads/Bikes/" +
-                        bike[col] +
-                        "' height='80' style='margin:5px;border-radius:8px;' />";
-            }
-        }
-
-        return html;
-    }
-
-    // ================= REVIEWS =================
-
-    string GetAverageRating(string bikeId)
-    {
-        using (SqlConnection con = new SqlConnection(constr))
-        {
-            con.Open();
-
-            SqlCommand cmd = new SqlCommand(
-            "SELECT ISNULL(AVG(CAST(Rating AS FLOAT)),0) " +
-            "FROM BikeReviews " +
-            "WHERE BikeID=@id AND IsApproved=1",
-            con);
-
-            cmd.Parameters.AddWithValue("@id", bikeId);
-
-            decimal avg = Convert.ToDecimal(cmd.ExecuteScalar());
-
-            return BuildStars(avg) +
-                   " <br/><small>(" + GetReviewCount(bikeId) + " Reviews)</small>";
-        }
-    }
-
-    string GetReviewCount(string bikeId)
-    {
-        using (SqlConnection con = new SqlConnection(constr))
-        {
-            con.Open();
-
-            SqlCommand cmd = new SqlCommand(
-            "SELECT COUNT(*) FROM BikeReviews WHERE BikeID=@id AND IsApproved=1",
-            con);
-
-            cmd.Parameters.AddWithValue("@id", bikeId);
-
-            return cmd.ExecuteScalar().ToString();
-        }
-    }
-
-
-
-    string BuildStars(decimal rating)
-    {
-        string stars = "";
-        int full = (int)Math.Round(rating);
-
-        for (int i = 1; i <= 5; i++)
-        {
-            stars += i <= full
-                ? "<span style='color:#facc15;'>★</span>"
-                : "<span style='color:#475569;'>★</span>";
-        }
-
-        return stars + " (" + rating.ToString("0.0") + ")";
-    }
-
-    // ================= POPULAR =================
-
-    void LoadPopular()
-    {
-        using (SqlConnection con = new SqlConnection(constr))
-        {
-            con.Open();
-
-            SqlDataAdapter da = new SqlDataAdapter(
-            "SELECT TOP 4 b1.BikeID AS BikeID1, b2.BikeID AS BikeID2, " +
-            "b1.ModelName AS ModelName, b2.ModelName AS ModelName2, " +
-            "b1.Image1, b2.Image1 AS Image2 " +
-            "FROM Bikes b1 CROSS JOIN Bikes b2 " +
-            "WHERE b1.BikeID <> b2.BikeID " +
-            "AND b1.IsApproved=1 AND b2.IsApproved=1",
-            con);
-
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            rptPopular.DataSource = dt;
-            rptPopular.DataBind();
+            Response.Redirect("Compare.aspx?b1=" + b1 + "&b2=" + b2);
         }
     }
 }
