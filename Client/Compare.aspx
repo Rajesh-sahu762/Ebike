@@ -800,13 +800,14 @@ align-items:flex-start;
 
 }
 
-    /* ===============================
-   PREMIUM POPULAR CAROUSEL
+  /* ===============================
+   POPULAR SECTION - FINAL MARKETPLACE UI
 =================================*/
 
 .popular-section{
-margin-top:100px;
+margin-top:120px;
 padding:80px 0;
+background:#ffffff;
 }
 
 .popular-header{
@@ -814,139 +815,196 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 margin-bottom:50px;
+padding:0 60px;
 }
 
 .popular-header h2{
-font-size:26px;
+font-size:30px;
 font-weight:700;
-color:#0f172a;
+color:#111827;
 }
 
-.popular-controls button{
-width:40px;
-height:40px;
-border:none;
-border-radius:50%;
-background:#111827;
-color:#fff;
-cursor:pointer;
-transition:0.3s ease;
-}
-
-.popular-controls button:hover{
-background:#0ea5e9;
-transform:scale(1.1);
-}
-
-/* Carousel Wrapper */
+/* ===============================
+   CAROUSEL WRAPPER
+=================================*/
 
 .popular-carousel-wrapper{
 overflow:hidden;
-position:relative;
+padding:0 60px;
 }
 
 .popular-carousel{
 display:flex;
-gap:30px;
-transition:transform 0.5s ease;
+gap:40px;
+scroll-snap-type:x mandatory;
+overflow-x:auto;
+scroll-behavior:smooth;
+padding-bottom:10px;
 }
 
-/* Card */
+.popular-carousel::-webkit-scrollbar{
+display:none;
+}
+
+/* ===============================
+   CARD DESIGN (EXACT IMAGE STYLE)
+=================================*/
 
 .popular-card{
-min-width:340px;
+flex:0 0 420px;
 background:#ffffff;
-border-radius:24px;
-padding:30px;
-box-shadow:0 20px 40px rgba(0,0,0,0.08);
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:space-between;
+border-radius:16px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+overflow:hidden;
 transition:0.4s ease;
-opacity:0;
-transform:translateY(40px);
-}
-
-.popular-card.visible{
-opacity:1;
-transform:translateY(0);
+scroll-snap-align:center;
+position:relative;
 }
 
 .popular-card:hover{
-transform:translateY(-10px);
-box-shadow:0 30px 60px rgba(0,0,0,0.15);
+transform:translateY(-8px);
+box-shadow:0 25px 50px rgba(0,0,0,0.15);
 }
 
-/* Top */
+/* IMAGE AREA */
 
-.popular-top{
+.popular-image-area{
+background:#f3f4f6;
+padding:25px;
 display:flex;
 align-items:center;
 justify-content:space-between;
-width:100%;
-gap:15px;
-margin-bottom:25px;
+position:relative;
 }
 
 .popular-bike{
-text-align:center;
 flex:1;
+text-align:center;
 }
 
 .popular-bike img{
-height:100px;
+width:160px;
+height:130px;
 object-fit:contain;
-margin-bottom:8px;
-transition:0.3s ease;
 }
 
-.popular-card:hover .popular-bike img{
-transform:scale(1.05);
+/* VS Circle */
+
+.popular-vs{
+width:48px;
+height:48px;
+background:#111827;
+color:#fff;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:700;
+font-size:14px;
 }
 
-.popular-bike p{
+/* CONTENT AREA */
+
+.popular-content{
+padding:22px;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.popular-names{
+display:flex;
+justify-content:space-between;
 font-weight:600;
-font-size:15px;
-margin:0;
+font-size:17px;
 color:#111827;
 }
 
-.popular-vs{
-font-weight:800;
-font-size:18px;
-color:#ef4444;
+
+.popular-controls{
+display:flex;
+gap:15px;
 }
 
-/* Button */
+.popular-controls button{
+width:50px;
+height:50px;
+border:none;
+border-radius:50%;
+background:#111827;
+color:#ffffff;
+font-size:18px;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+transition:all 0.3s ease;
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+.popular-controls button:hover{
+background:#dc2626;
+transform:translateY(-4px);
+box-shadow:0 15px 35px rgba(220,38,38,0.4);
+}
+
+.popular-controls button:active{
+transform:scale(0.95);
+}
+
+.popular-prices{
+display:flex;
+justify-content:space-between;
+font-size:15px;
+color:#374151;
+}
+
+/* BUTTON */
 
 .popular-compare-btn{
-display:inline-block;
-padding:10px 25px;
-background:#111827;
-color:#fff;
-border-radius:30px;
-font-size:14px;
+margin-top:15px;
+padding:14px 0;
+background:#dc2626;
+color:#ffffff;
+text-align:center;
+border-radius:10px;
+font-weight:600;
 text-decoration:none;
-transition:0.3s ease;
+transition:0.3s;
 }
 
 .popular-compare-btn:hover{
-background:#0ea5e9;
-transform:translateY(-2px);
+background:#b91c1c;
 }
 
-/* Responsive */
+/* CENTER SCALE EFFECT */
+
+.popular-card.active{
+transform:scale(1.05);
+box-shadow:0 30px 60px rgba(0,0,0,0.18);
+}
+
+/* ===============================
+   RESPONSIVE
+=================================*/
 
 @media(max-width:768px){
 
+.popular-header,
+.popular-carousel-wrapper{
+padding:0 20px;
+}
+
 .popular-card{
-min-width:280px;
+flex:0 0 85%;
+}
+
+.popular-bike img{
+width:130px;
+height:110px;
 }
 
 }
-
-
 
 </style>
 
@@ -1127,8 +1185,8 @@ Compare Now
     <div class="popular-header">
         <h2>Popular Bike Comparisons</h2>
         <div class="popular-controls">
-            <button id="prevBtn">&#10094;</button>
-            <button id="nextBtn">&#10095;</button>
+            <button type="button" id="prevBtn">&#10094;</button>
+            <button type="button" id="nextBtn">&#10095;</button>
         </div>
     </div>
 
@@ -1138,31 +1196,42 @@ Compare Now
             <asp:Repeater ID="rptPopular" runat="server">
                 <ItemTemplate>
 
-                    <div class="popular-card">
+                  <div class="popular-card">
 
-                        <div class="popular-top">
+    <div class="popular-image-area">
 
-                            <div class="popular-bike">
-                                <img src='/Uploads/Bikes/<%# Eval("Image1") %>' />
-                                <p><%# Eval("ModelName") %></p>
-                            </div>
+        <div class="popular-bike">
+            <img src='/Uploads/Bikes/<%# Eval("Image1") %>' />
+        </div>
 
-                            <div class="popular-vs">VS</div>
+        <div class="popular-vs">VS</div>
 
-                            <div class="popular-bike">
-                                <img src='/Uploads/Bikes/<%# Eval("Image2") %>' />
-                                <p><%# Eval("ModelName2") %></p>
-                            </div>
+        <div class="popular-bike">
+            <img src='/Uploads/Bikes/<%# Eval("Image2") %>' />
+        </div>
 
-                        </div>
+    </div>
 
-                        <a href='Compare.aspx?b1=<%# Eval("BikeID1") %>&b2=<%# Eval("BikeID2") %>'
-                           class="popular-compare-btn">
-                            Compare Now
-                        </a>
+    <div class="popular-content">
 
-                    </div>
+        <div class="popular-names">
+            <span><%# Eval("ModelName") %></span>
+            <span><%# Eval("ModelName2") %></span>
+        </div>
 
+        <div class="popular-prices">
+            <span>₹ <%# FormatPrice(Eval("BikeID1")) %></span>
+            <span>₹ <%# FormatPrice(Eval("BikeID2")) %></span>
+        </div>
+
+        <a href='Compare.aspx?b1=<%# Eval("BikeID1") %>&b2=<%# Eval("BikeID2") %>'
+           class="popular-compare-btn">
+           Know More
+        </a>
+
+    </div>
+
+</div>
                 </ItemTemplate>
             </asp:Repeater>
 
@@ -1235,45 +1304,34 @@ const badge = document.getElementById("diffBadge");
 
 </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function(){
+  <script>
+      document.addEventListener("DOMContentLoaded", function () {
 
-            const carousel = document.getElementById("popularCarousel");
-            const cards = document.querySelectorAll(".popular-card");
-            const nextBtn = document.getElementById("nextBtn");
-            const prevBtn = document.getElementById("prevBtn");
+       const carousel = document.querySelector(".popular-carousel");
+       const nextBtn = document.getElementById("nextBtn");
+       const prevBtn = document.getElementById("prevBtn");
 
-            let scrollAmount = 0;
-            const cardWidth = 370;
+          function getScrollAmount() {
+              const card = document.querySelector(".popular-card");
+              return card.offsetWidth + 40; // width + gap
+          }
 
-            nextBtn.addEventListener("click", function(){
-                scrollAmount += cardWidth;
-                carousel.style.transform = "translateX(-" + scrollAmount + "px)";
-            });
+          nextBtn.addEventListener("click", function () {
+              carousel.scrollBy({
+                  left: getScrollAmount(),
+                  behavior: "smooth"
+              });
+          });
 
-            prevBtn.addEventListener("click", function(){
-                scrollAmount -= cardWidth;
-                if(scrollAmount < 0) scrollAmount = 0;
-                carousel.style.transform = "translateX(-" + scrollAmount + "px)";
-            });
+          prevBtn.addEventListener("click", function () {
+              carousel.scrollBy({
+                  left: -getScrollAmount(),
+                  behavior: "smooth"
+              });
+          });
 
-            // Stagger Fade-Up Animation
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if(entry.isIntersecting){
-                        cards.forEach((card, index) => {
-                            setTimeout(() => {
-                                card.classList.add("visible");
-        }, index * 120);
-        });
-        }
-        });
-        }, { threshold: 0.2 });
-
-        observer.observe(document.querySelector(".popular-section"));
-
-        });
-</script>
+      });
+  </script>
 
 
 </asp:Content>

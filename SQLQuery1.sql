@@ -218,6 +218,12 @@ ALTER TABLE Leads ADD IsSpam BIT DEFAULT 0;
 ALTER TABLE Leads ADD LeadAmount DECIMAL(18,2) DEFAULT 0;
 
 
+ALTER TABLE Bikes ADD
+IsForRent BIT DEFAULT 0,
+RentPerDay DECIMAL(18,2) NULL,
+RentPerWeek DECIMAL(18,2) NULL,
+RentPerMonth DECIMAL(18,2) NULL;
+
 
 CREATE TABLE Settlements (
     SettlementID INT PRIMARY KEY IDENTITY(1,1),
@@ -231,6 +237,30 @@ CREATE TABLE Settlements (
     IsApproved BIT DEFAULT 0,
     ApprovedBy INT NULL,  -- AdminID
     ApprovedAt DATETIME NULL,
+
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+
+
+CREATE TABLE RentalBookings (
+    RentalID INT PRIMARY KEY IDENTITY(1,1),
+
+    BikeID INT FOREIGN KEY REFERENCES Bikes(BikeID),
+    CustomerID INT FOREIGN KEY REFERENCES Users(UserID),
+    DealerID INT FOREIGN KEY REFERENCES Users(UserID),
+
+    StartDate DATE,
+    EndDate DATE,
+    TotalDays INT,
+
+    RentAmount DECIMAL(18,2),
+    CommissionAmount DECIMAL(18,2),
+
+    Status NVARCHAR(20) DEFAULT 'Pending', 
+    -- Pending / Approved / Rejected / Active / Completed / Cancelled
+
+    IsViewed BIT DEFAULT 0,
 
     CreatedAt DATETIME DEFAULT GETDATE()
 );

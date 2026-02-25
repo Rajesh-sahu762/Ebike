@@ -319,6 +319,22 @@ public partial class Compare : System.Web.UI.Page
         }
     }
 
+    public string FormatPrice(object bikeId)
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("SELECT Price FROM Bikes WHERE BikeID=@id", con);
+            cmd.Parameters.AddWithValue("@id", bikeId);
+            object priceObj = cmd.ExecuteScalar();
+
+            if (priceObj == null) return "0";
+
+            decimal price = Convert.ToDecimal(priceObj);
+            return price.ToString("N0");
+        }
+    }
+
 
     protected void CompareNow(object sender, EventArgs e)
     {
