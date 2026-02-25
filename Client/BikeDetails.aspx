@@ -7,15 +7,17 @@
    PREMIUM BIKE DETAILS SECTION
 ================================ */
 
+
+
 .bike-hero{
-max-width:1250px;
-margin:90px auto;
+max-width:1180px;
+margin:60px auto 30px auto;
 display:flex;
-gap:80px;
-padding:40px;
-background:linear-gradient(135deg,#ffffff,#f9fafb);
-border-radius:24px;
-box-shadow:0 25px 60px rgba(0,0,0,0.06);
+gap:60px;
+padding:30px 20px;
+background:#ffffff; /* remove gradient */
+border-radius:18px;
+box-shadow:0 10px 30px rgba(0,0,0,0.04);
 }
 
 /* ===== LEFT IMAGE SECTION ===== */
@@ -27,22 +29,38 @@ flex:1;
 /* ===== FIXED IMAGE SIZE ===== */
 
 .bike-main{
-width:100%;
-height:380px;   /* Pehle 460 tha */
-background:#ffffff;
-border-radius:18px;
-display:flex;
-align-items:center;
-justify-content:center;
-overflow:hidden;
-box-shadow:0 10px 25px rgba(0,0,0,0.06);
+height:340px;
+background:#f8fafc;
+border-radius:16px;
+box-shadow:none;
 }
 
 .bike-main img{
-max-width:80%;   /* Pehle 90% tha */
-max-height:80%;
-object-fit:contain;
-transition:0.3s ease;
+max-width:85%;
+max-height:85%;
+}
+
+.bike-info{
+padding-top:10px;
+}
+
+.bike-title{
+font-size:28px;
+font-weight:700;
+margin-bottom:6px;
+}
+
+.bike-price{
+font-size:30px;
+margin-top:10px;
+margin-bottom:10px;
+}
+
+.bike-emi{
+background:#f1f5f9;
+padding:8px 12px;
+border-radius:8px;
+display:inline-block;
 }
 
 .bike-main img:hover{
@@ -130,17 +148,14 @@ margin-top:20px;
 .btn-primary{
 width:100%;
 padding:14px;
-border-radius:12px;
-background:#111827;
-color:#fff;
-border:none;
-font-weight:600;
-cursor:pointer;
-transition:0.3s;
+border-radius:10px;
+background:linear-gradient(135deg,#ff3b3b,#e60023);
+box-shadow:0 8px 20px rgba(255,0,0,0.2);
 }
 
 .btn-primary:hover{
-background:#000;
+transform:none;
+box-shadow:0 10px 25px rgba(255,0,0,0.25);
 }
 
 .secondary-actions{
@@ -216,8 +231,86 @@ padding:25px;
 .bike-main{
 height:280px;
 }
+}
+
+        /* ===============================
+   CLEAN BIKE HIGHLIGHTS SECTION
+================================ */
+
+.highlights-section{
+max-width:1180px;
+margin:0 auto 80px auto;
+padding:0 20px;
+}
+
+.highlights-card{
+background:#ffffff;
+border-radius:18px;
+padding:25px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:25px;
+box-shadow:0 10px 30px rgba(0,0,0,0.04);
+}
+.bike-hero{
+border-bottom-left-radius:0;
+border-bottom-right-radius:0;
+}
 
 
+.highlight-item{
+display:flex;
+align-items:center;
+gap:15px;
+padding:12px 10px;
+border-radius:10px;
+transition:0.25s ease;
+}
+
+.highlight-item:hover{
+background:#f8fafc;
+}
+
+.highlight-icon{
+width:45px;
+height:45px;
+border-radius:12px;
+background:#fff1f2;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:18px;
+color:#ef4444;
+flex-shrink:0;
+}
+
+.highlight-text h4{
+margin:0;
+font-size:16px;
+font-weight:600;
+color:#111827;
+}
+
+.highlight-text p{
+margin:2px 0 0;
+font-size:12px;
+color:#6b7280;
+}
+
+/* Tablet */
+
+@media(max-width:992px){
+.highlights-card{
+grid-template-columns:repeat(2,1fr);
+}
+}
+
+/* Mobile */
+
+@media(max-width:600px){
+.highlights-card{
+grid-template-columns:1fr;
+}
 }
     </style>
 
@@ -282,6 +375,49 @@ Enquire Now
 <a href="#">Wishlist</a>
 </div>
 
+</div>
+
+</div>
+
+
+
+</section>
+
+
+    <section class="highlights-section">
+
+<div class="highlights-card">
+
+<div class="highlight-item">
+<div class="highlight-icon">🔋</div>
+<div class="highlight-text">
+<h4><asp:Literal ID="litRange" runat="server"></asp:Literal></h4>
+<p>Range</p>
+</div>
+</div>
+
+<div class="highlight-item">
+<div class="highlight-icon">⚡</div>
+<div class="highlight-text">
+<h4><asp:Literal ID="litSpeed" runat="server"></asp:Literal></h4>
+<p>Top Speed</p>
+</div>
+</div>
+
+<div class="highlight-item">
+<div class="highlight-icon">🔌</div>
+<div class="highlight-text">
+<h4><asp:Literal ID="litCharge" runat="server"></asp:Literal></h4>
+<p>Charging Time</p>
+</div>
+</div>
+
+<div class="highlight-item">
+<div class="highlight-icon">🛵</div>
+<div class="highlight-text">
+<h4><asp:Literal ID="litMotor" runat="server"></asp:Literal></h4>
+<p>Motor Power</p>
+</div>
 </div>
 
 </div>

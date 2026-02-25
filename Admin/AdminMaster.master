@@ -150,8 +150,8 @@ select option {
                 <a href="ManageLeads.aspx">ManageLeads</a>
                 <a href="ManageBrands.aspx">ManageBrands</a>
                 <a href="Reports.aspx">Report</a>
-                <a href="Settings.aspx">Setting</a>
                 <a href="RentalManagement.aspx">RentalManagement</a>
+                <a href="AdminRentalSettlement.aspx">RentalSettlement</a>
                 <a href="Settings.aspx">Setting</a>
 
                 <hr style="border-color:#444;" />

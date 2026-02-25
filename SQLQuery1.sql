@@ -207,6 +207,10 @@ VALUES ('Admin', 'Super Admin', 'admin@ebikes.com', '9999999999', 'admin123', 1)
 
 
 
+ALTER TABLE RentalBookings
+ADD IsSettled BIT DEFAULT 0,
+SettlementID INT NULL;
+
 CREATE INDEX IX_Bikes_Price ON Bikes(Price);
 CREATE INDEX IX_Bikes_Brand ON Bikes(BrandID);
 CREATE INDEX IX_Bikes_Approved ON Bikes(IsApproved);

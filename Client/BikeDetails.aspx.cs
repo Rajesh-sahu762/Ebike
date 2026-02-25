@@ -48,6 +48,24 @@ public partial class Client_BikeDetails : System.Web.UI.Page
                 ViewState["BikeID"] = dr["BikeID"].ToString();
                 ViewState["Price"] = price;
 
+                // Highlights
+
+                litRange.Text = dr["RangeKM"] != DBNull.Value
+                    ? dr["RangeKM"].ToString() + " KM"
+                    : "N/A";
+
+                litSpeed.Text = dr["TopSpeed"] != DBNull.Value
+                    ? dr["TopSpeed"].ToString() + " km/h"
+                    : "N/A";
+
+                litCharge.Text = dr["ChargingTime"] != DBNull.Value
+                    ? dr["ChargingTime"].ToString()
+                    : "N/A";
+
+                litMotor.Text = dr["MotorPower"] != DBNull.Value
+                    ? dr["MotorPower"].ToString()
+                    : "N/A";
+
                 // Thumbnails
                 string thumbs = "";
 
