@@ -651,6 +651,151 @@
 }
 
 
+/* =========================================
+   GLOBAL MOBILE RESPONSIVE FIX
+========================================= */
+
+@media (max-width: 992px){
+
+/* HERO SECTION */
+.hero-wrapper{
+    padding:50px 0;
+}
+
+.hero-heading{
+    font-size:30px;
+    line-height:1.3;
+}
+
+.hero-search-box{
+    flex-direction:column;
+    gap:12px;
+}
+
+.hero-select,
+.hero-search-btn{
+    width:100%;
+}
+
+/* HERO SLIDER IMAGE */
+.hero-slide img{
+    height:220px;
+    border-radius:18px;
+}
+
+/* FEATURED SECTION */
+.featured-section{
+    padding:60px 0;
+}
+
+.featured-card{
+    min-width:260px;
+}
+
+.card-image img{
+    height:180px;
+}
+
+/* BROWSE GRID FIX */
+.browse-grid{
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* BATTERY SECTION */
+.battery-section{
+    padding:70px 0;
+}
+
+.battery-title{
+    font-size:24px;
+}
+
+.battery-content{
+    padding-left:0;
+    margin-top:30px;
+}
+
+/* WHY SECTION */
+.why-grid{
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* REVIEW SECTION */
+.review-card{
+    min-width:280px;
+}
+
+/* COMPARE CTA */
+.compare-box{
+    padding:40px 25px;
+}
+
+.compare-content h2{
+    font-size:22px;
+}
+
+/* ULTIMATE CTA */
+.ultimate-box{
+    padding:50px 25px;
+}
+
+.ultimate-box h2{
+    font-size:26px;
+}
+
+.ultimate-buttons{
+    flex-direction:column;
+}
+
+.ultimate-btn{
+    width:100%;
+    text-align:center;
+}
+
+}
+
+
+/* =========================================
+   SMALL MOBILE (Phones)
+========================================= */
+
+@media (max-width: 576px){
+
+.hero-heading{
+    font-size:24px;
+}
+
+.hero-slide img{
+    height:200px;
+}
+
+.browse-grid{
+    grid-template-columns:1fr;
+}
+
+.why-grid{
+    grid-template-columns:1fr;
+}
+
+.review-title{
+    font-size:22px;
+}
+
+.section-title{
+    font-size:22px;
+}
+
+.browse-title{
+    font-size:22px;
+}
+
+.why-title{
+    font-size:24px;
+}
+
+}
+
+
 
     </style>
 

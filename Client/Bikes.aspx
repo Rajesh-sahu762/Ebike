@@ -251,7 +251,9 @@ bottom:70px;
 
 </style>
 
-<section class="bike-wrapper">
+    <asp:HiddenField ID="hfSearch" runat="server" />
+
+    <section class="bike-wrapper">
 <div class="container">
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -370,14 +372,15 @@ Apply Filters
         $.ajax({
             type:"POST",
             url:"/Client/Bikes.aspx/GetBikes",
-            data:JSON.stringify({
+            data: JSON.stringify({
                 page:page,
                 minPrice:minPrice,
                 maxPrice:maxPrice,
                 range:$("#rangeFilter").val(),
                 sort:$("#sortFilter").val(),
-                brands:brands
-            }),
+                brands:brands,
+                search: $("#<%= hfSearch.ClientID %>").val()
+           }),
             contentType:"application/json; charset=utf-8",
             dataType:"json",
             success:function(res){

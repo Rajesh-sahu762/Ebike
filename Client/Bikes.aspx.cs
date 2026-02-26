@@ -7,18 +7,24 @@ using System.Web.Services;
 
 public partial class Client_Bikes : System.Web.UI.Page
 {
-    protected void Page_Load(object sender, EventArgs e) { 
-    if (!IsPostBack)
+    protected void Page_Load(object sender, EventArgs e)
     {
-        LoadBikes();
-    }
-    }
+        if (!IsPostBack)
+        {
+            string keyword = Request.QueryString["search"];
 
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                hfSearch.Value = keyword;
+            }
+        }
+    }
 
 
 
     [WebMethod]
-    public static object GetBikes(int page, int minPrice, int maxPrice, string range, string sort, string[] brands)
+    public static object GetBikes(int page, int minPrice, int maxPrice,
+        string range, string sort, string[] brands, string search)
     {
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
         int pageSize = 6;
@@ -36,6 +42,10 @@ public partial class Client_Bikes : System.Web.UI.Page
             if (brands != null && brands.Length > 0)
                 brandFilter = " AND BrandID IN (" + string.Join(",", brands) + ")";
 
+            string searchFilter = "";
+            if (!string.IsNullOrEmpty(search))
+                searchFilter = " AND (ModelName LIKE @search)";
+
             string query =
             "SELECT * FROM (" +
             " SELECT ROW_NUMBER() OVER (ORDER BY " + order + ") AS RowNum," +
@@ -43,21 +53,29 @@ public partial class Client_Bikes : System.Web.UI.Page
             " FROM Bikes WHERE IsApproved=1" +
             " AND Price BETWEEN @min AND @max" +
             brandFilter +
+            searchFilter +
             (range != "" ? " AND RangeKM<=@range" : "") +
             ") X WHERE RowNum BETWEEN @start AND @end";
 
             SqlCommand cmd = new SqlCommand(query, con);
+
             cmd.Parameters.AddWithValue("@min", minPrice);
             cmd.Parameters.AddWithValue("@max", maxPrice);
             cmd.Parameters.AddWithValue("@start", start + 1);
             cmd.Parameters.AddWithValue("@end", start + pageSize);
-            if (range != "") cmd.Parameters.AddWithValue("@range", range);
+
+            if (range != "")
+                cmd.Parameters.AddWithValue("@range", range);
+
+            if (!string.IsNullOrEmpty(search))
+                cmd.Parameters.AddWithValue("@search", "%" + search + "%");
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
             StringBuilder html = new StringBuilder();
+
             foreach (DataRow dr in dt.Rows)
             {
                 html.Append("<div class='bike-card'>");
@@ -67,7 +85,6 @@ public partial class Client_Bikes : System.Web.UI.Page
                 html.Append("<label class='compare-label'>");
                 html.Append("<input type='checkbox' onchange='toggleCompare(this," + dr["BikeID"] + ")'/> Compare");
                 html.Append("</label>");
-               
                 html.Append("</div>");
                 html.Append("<div class='bike-body'>");
                 html.Append("<h6>" + dr["ModelName"] + "</h6>");
