@@ -205,7 +205,7 @@ VALUES
 INSERT INTO Users (Role, FullName, Email, Mobile, PasswordHash, IsApproved)
 VALUES ('Admin', 'Super Admin', 'admin@ebikes.com', '9999999999', 'admin123', 1);
 
-
+UPDATE Bikes SET IsForRent = 0 WHERE IsForRent IS NULL;
 
 ALTER TABLE RentalBookings
 ADD IsSettled BIT DEFAULT 0,

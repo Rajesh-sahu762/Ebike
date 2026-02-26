@@ -62,7 +62,13 @@
             <asp:BoundField DataField="BrandName" HeaderText="Brand" />
             <asp:BoundField DataField="ModelName" HeaderText="Model" />
             <asp:BoundField DataField="Price" HeaderText="Price" />
-
+     <asp:TemplateField HeaderText="Type">
+    <ItemTemplate>
+        <%# Convert.ToBoolean(Eval("IsForRent") == DBNull.Value ? false : Eval("IsForRent"))
+            ? "<span class='badge bg-info'>Sell + Rent</span>"
+            : "<span class='badge bg-secondary'>Sell Only</span>" %>
+    </ItemTemplate>
+</asp:TemplateField>
             <asp:BoundField DataField="LeadCount" HeaderText="Leads" />
 
             <asp:TemplateField HeaderText="Status">
@@ -78,11 +84,12 @@
             <asp:TemplateField>
                 <ItemTemplate>
 
-                    <asp:Button ID="btnEdit" runat="server"
-                        Text="Edit"
-                        CssClass="btn btn-sm btn-info"
-                        CommandName="EditBike"
-                        CommandArgument='<%# Eval("BikeID") %>' />
+                <asp:LinkButton ID="btnEdit" runat="server"
+    CssClass="btn btn-sm btn-info"
+    CommandName="EditBike"
+    CommandArgument='<%# Eval("BikeID") %>'>
+    Edit
+</asp:LinkButton>
 
                     <asp:Button ID="btnDelete" runat="server"
                         Text="Delete"
@@ -157,6 +164,8 @@
                 <asp:FileUpload ID="fuImg3Edit" runat="server" />
             </div>
 
+            <asp:CheckBox ID="chkRentEdit" runat="server" Text="Available For Rent" />
+
         </div>
 
         <asp:Button ID="btnUpdateBike" runat="server"
@@ -165,7 +174,7 @@
             OnClick="btnUpdateBike_Click" />
 
     </div>
-  </d
+  <//div>
 
 
     <asp:Label ID="lblMsg" runat="server"></asp:Label>

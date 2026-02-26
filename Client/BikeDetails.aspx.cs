@@ -43,6 +43,9 @@ public partial class Client_BikeDetails : System.Web.UI.Page
                 decimal price = Convert.ToDecimal(dr["Price"]);
                 litPrice.Text = price.ToString("N0");
 
+                litStickyName.Text = dr["ModelName"].ToString();
+                litStickyPrice.Text = price.ToString("N0");
+
                 imgMain.ImageUrl = "/Uploads/Bikes/" + dr["Image1"].ToString();
 
                 ViewState["BikeID"] = dr["BikeID"].ToString();
@@ -85,6 +88,52 @@ public partial class Client_BikeDetails : System.Web.UI.Page
 
                 // Dummy rating (replace later with review table)
                 litRating.Text = "★ 4.5 (124 Reviews)";
+
+
+                // Overview
+                litOverview.Text = dr["Description"] != DBNull.Value
+                    ? dr["Description"].ToString()
+                    : "No overview available.";
+
+
+                // Specifications (basic example)
+                string specsHtml = "";
+
+                specsHtml += "<tr><td>Range</td><td>" + dr["RangeKM"] + " KM</td></tr>";
+                specsHtml += "<tr><td>Top Speed</td><td>" + dr["TopSpeed"] + " km/h</td></tr>";
+                specsHtml += "<tr><td>Charging Time</td><td>" + dr["ChargingTime"] + "</td></tr>";
+                specsHtml += "<tr><td>Motor Power</td><td>" + dr["MotorPower"] + "</td></tr>";
+                specsHtml += "<tr><td>Battery Type</td><td>" + dr["BatteryType"] + "</td></tr>";
+
+                litSpecsTable.Text = specsHtml;
+
+
+                if (dr.GetSchemaTable().Columns.Contains("Features"))
+                {
+                    if (dr["Features"] != DBNull.Value)
+                    {
+                        string featuresRaw = dr["Features"].ToString();
+
+                        if (!string.IsNullOrEmpty(featuresRaw))
+                        {
+                            string[] features = featuresRaw.Split(',');
+
+                            string featureHtml = "";
+
+                            foreach (string f in features)
+                            {
+                                featureHtml += "<div class='feature-item'>✔ " + f.Trim() + "</div>";
+                            }
+
+                            litFeatures.Text = featureHtml;
+                        }
+                    }
+                }
+                else
+                {
+                    litFeatures.Text = "<div class='feature-item'>No features available</div>";
+                }
+
             }
         }
     }

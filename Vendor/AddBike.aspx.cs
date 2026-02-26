@@ -70,19 +70,20 @@ public partial class Vendor_AddBike : System.Web.UI.Page
             string img2 = SaveImage(fu2);
             string img3 = SaveImage(fu3);
 
-            SqlCommand cmd = new SqlCommand(
-            @"INSERT INTO Bikes
-            (DealerID, BrandID, ModelName, Slug, Price,
-             RangeKM, BatteryType, MotorPower, TopSpeed,
-             ChargingTime, Description,
-             Image1, Image2, Image3,
-             IsApproved)
-            VALUES
-            (@DealerID, @BrandID, @ModelName, @Slug, @Price,
-             @RangeKM, @BatteryType, @MotorPower, @TopSpeed,
-             @ChargingTime, @Description,
-             @Image1, @Image2, @Image3,
-             0)", con);
+            SqlCommand cmd = new SqlCommand(@"INSERT INTO Bikes
+(DealerID, BrandID, ModelName, Slug, Price,
+ RangeKM, BatteryType, MotorPower, TopSpeed,
+ ChargingTime, Description,
+ Image1, Image2, Image3,
+ IsApproved,
+ IsForRent, RentPerDay, RentPerWeek, RentPerMonth)
+VALUES
+(@DealerID, @BrandID, @ModelName, @Slug, @Price,
+ @RangeKM, @BatteryType, @MotorPower, @TopSpeed,
+ @ChargingTime, @Description,
+ @Image1, @Image2, @Image3,
+ 0,
+ @IsForRent, @RentPerDay, @RentPerWeek, @RentPerMonth)", con);
 
             cmd.Parameters.AddWithValue("@DealerID", dealerId);
             cmd.Parameters.AddWithValue("@BrandID", ddlBrand.SelectedValue);
@@ -120,6 +121,35 @@ public partial class Vendor_AddBike : System.Web.UI.Page
             cmd.Parameters.AddWithValue("@Image1", img1);
             cmd.Parameters.AddWithValue("@Image2", img2);
             cmd.Parameters.AddWithValue("@Image3", img3);
+            // ===== RENTAL LOGIC =====
+            bool isForRent = chkIsForRent.Checked;
+            cmd.Parameters.AddWithValue("@IsForRent", isForRent);
+
+            decimal rentDay, rentWeek, rentMonth;
+
+            if (isForRent)
+            {
+                if (decimal.TryParse(txtRentDay.Text, out rentDay))
+                    cmd.Parameters.AddWithValue("@RentPerDay", rentDay);
+                else
+                    cmd.Parameters.AddWithValue("@RentPerDay", DBNull.Value);
+
+                if (decimal.TryParse(txtRentWeek.Text, out rentWeek))
+                    cmd.Parameters.AddWithValue("@RentPerWeek", rentWeek);
+                else
+                    cmd.Parameters.AddWithValue("@RentPerWeek", DBNull.Value);
+
+                if (decimal.TryParse(txtRentMonth.Text, out rentMonth))
+                    cmd.Parameters.AddWithValue("@RentPerMonth", rentMonth);
+                else
+                    cmd.Parameters.AddWithValue("@RentPerMonth", DBNull.Value);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@RentPerDay", DBNull.Value);
+                cmd.Parameters.AddWithValue("@RentPerWeek", DBNull.Value);
+                cmd.Parameters.AddWithValue("@RentPerMonth", DBNull.Value);
+            }
 
             cmd.ExecuteNonQuery();
 

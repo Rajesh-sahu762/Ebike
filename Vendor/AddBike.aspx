@@ -24,6 +24,27 @@
             <asp:TextBox ID="txtPrice" runat="server" CssClass="form-control"></asp:TextBox>
         </div>
 
+        <div class="col-md-12 mt-3">
+    <asp:CheckBox ID="chkIsForRent" runat="server" 
+        Text="Available For Rental" 
+        AutoPostBack="false" />
+</div>
+
+<div class="col-md-4">
+    <label>Rent Per Day</label>
+    <asp:TextBox ID="txtRentDay" runat="server" CssClass="form-control"></asp:TextBox>
+</div>
+
+<div class="col-md-4">
+    <label>Rent Per Week</label>
+    <asp:TextBox ID="txtRentWeek" runat="server" CssClass="form-control"></asp:TextBox>
+</div>
+
+<div class="col-md-4">
+    <label>Rent Per Month</label>
+    <asp:TextBox ID="txtRentMonth" runat="server" CssClass="form-control"></asp:TextBox>
+</div>
+
         <div class="col-md-6">
             <label>Range (KM)</label>
             <asp:TextBox ID="txtRange" runat="server" CssClass="form-control"></asp:TextBox>

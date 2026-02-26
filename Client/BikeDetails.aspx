@@ -23,26 +23,28 @@ box-shadow:0 10px 30px rgba(0,0,0,0.04);
 /* ===== LEFT IMAGE SECTION ===== */
 
 .bike-gallery{
-flex:1;
+flex:0 0 52%;
+}
+
+.bike-info{
+flex:0 0 48%;
+padding-left:20px;
 }
 
 /* ===== FIXED IMAGE SIZE ===== */
 
 .bike-main{
-height:340px;
-background:#f8fafc;
-border-radius:16px;
-box-shadow:none;
+height:320px;
+background:#f3f4f6;
+border-radius:14px;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+overflow:hidden;
 }
 
-.bike-main img{
-max-width:85%;
-max-height:85%;
-}
 
-.bike-info{
-padding-top:10px;
-}
 
 .bike-title{
 font-size:28px;
@@ -62,33 +64,39 @@ padding:8px 12px;
 border-radius:8px;
 display:inline-block;
 }
+.bike-main img{
+width:100%;
+max-width:420px;   /* control max width */
+height:auto;
+object-fit:contain;
+}
 
 .bike-main img:hover{
 transform:scale(1.04);
 }
 
-.bike-thumbs img{
-width:75px;   /* Pehle 90px */
-height:60px;
-padding:6px;
-border-radius:10px;
+.bike-thumbs{
+display:flex;
+gap:15px;
+margin-top:15px;
 }
 
 .bike-thumbs img{
-width:90px;
-height:75px;
-background:#f3f4f6;
-padding:10px;
-border-radius:14px;
+width:70px;
+height:55px;
+object-fit:cover;
+border-radius:8px;
 cursor:pointer;
-transition:0.3s;
 border:2px solid transparent;
+transition:0.2s;
 }
 
 .bike-thumbs img:hover{
-border:2px solid #ff4d4d;
-transform:translateY(-4px);
-box-shadow:0 8px 20px rgba(0,0,0,0.12);
+border-color:#ff3b3b;
+}
+
+.bike-hero{
+align-items:flex-start;
 }
 
 /* ===== RIGHT SIDE CLEAN PROFESSIONAL ===== */
@@ -146,7 +154,7 @@ margin-top:20px;
 }
 
 .btn-primary{
-width:100%;
+width:80%;
 padding:14px;
 border-radius:10px;
 background:linear-gradient(135deg,#ff3b3b,#e60023);
@@ -312,6 +320,396 @@ grid-template-columns:repeat(2,1fr);
 grid-template-columns:1fr;
 }
 }
+
+        /* ===============================
+   STICKY BUY BAR
+================================ */
+
+.sticky-buy-bar{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#ffffff;
+box-shadow:0 -10px 30px rgba(0,0,0,0.08);
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+z-index:999;
+transition:0.4s ease;
+transform:translateY(100%);
+}
+
+.sticky-buy-bar.active{
+transform:translateY(0);
+}
+
+.sticky-left{
+display:flex;
+flex-direction:column;
+}
+
+.sticky-title{
+font-weight:600;
+color:#111827;
+font-size:15px;
+}
+
+.sticky-price{
+font-weight:700;
+color:#ef4444;
+font-size:18px;
+}
+
+.sticky-actions{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+}
+
+.sticky-btn-primary{
+padding:10px 22px;
+border-radius:8px;
+background:#ef4444;
+color:#fff;
+border:none;
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+.sticky-btn-primary:hover{
+background:#dc2626;
+}
+
+.sticky-btn-outline{
+padding:10px 22px;
+border-radius:8px;
+border:2px solid #111827;
+background:#fff;
+color:#111827;
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+.sticky-btn-outline:hover{
+background:#111827;
+color:#fff;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.sticky-buy-bar{
+flex-direction:column;
+gap:12px;
+align-items:flex-start;
+padding:15px;
+}
+
+.sticky-actions{
+width:100%;
+display:flex;
+gap:10px;
+}
+
+.sticky-btn-primary,
+.sticky-btn-outline{
+flex:1;
+text-align:center;
+}
+
+}
+
+
+
+        
+/* ===============================
+   TABS SECTION
+================================ */
+
+.tabs-section{
+max-width:1200px;
+margin:80px auto;
+padding:0 20px;
+}
+
+.tabs-card{
+background:#ffffff;
+border-radius:20px;
+box-shadow:0 15px 40px rgba(0,0,0,0.05);
+overflow:hidden;
+}
+
+/* Tab Header */
+
+.tabs-header{
+display:flex;
+border-bottom:1px solid #e5e7eb;
+}
+
+.tab-btn{
+flex:1;
+padding:18px;
+text-align:center;
+cursor:pointer;
+font-weight:600;
+color:#6b7280;
+transition:0.3s;
+}
+
+.tab-btn.active{
+color:#ef4444;
+border-bottom:3px solid #ef4444;
+background:#fff;
+}
+
+/* Tab Content */
+
+.tab-content{
+display:none;
+padding:40px;
+animation:fadeIn 0.4s ease;
+}
+
+.tab-content.active{
+display:block;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+/* Overview */
+
+.overview-text{
+color:#374151;
+line-height:1.7;
+font-size:15px;
+}
+
+/* Specs Table */
+
+.spec-table{
+width:100%;
+border-collapse:collapse;
+}
+
+.spec-table tr{
+border-bottom:1px solid #f1f5f9;
+}
+
+.spec-table td{
+padding:14px 10px;
+font-size:14px;
+}
+
+.spec-table td:first-child{
+font-weight:600;
+color:#111827;
+width:40%;
+}
+
+/* Features Grid */
+
+.features-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+
+.feature-item{
+background:#f9fafb;
+padding:20px;
+border-radius:12px;
+font-size:14px;
+transition:0.3s;
+}
+
+.feature-item:hover{
+background:#fee2e2;
+transform:translateY(-4px);
+}
+
+/* Responsive */
+
+@media(max-width:992px){
+
+.bike-hero{
+flex-direction:column;
+gap:25px;
+padding:20px;
+margin:40px 15px 20px 15px;
+border-radius:16px;
+}
+
+.bike-gallery{
+flex:100%;
+}
+
+.bike-info{
+flex:100%;
+padding-left:0;
+}
+
+.bike-main{
+height:auto;
+padding:15px;
+}
+
+.bike-main img{
+max-width:100%;
+width:100%;
+height:auto;
+}
+
+.bike-thumbs{
+justify-content:flex-start;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.bike-price{
+font-size:24px;
+}
+
+.bike-title{
+font-size:22px;
+}
+
+.quick-specs{
+grid-template-columns:1fr;
+gap:8px;
+}
+
+.btn-primary{
+width:100%;
+padding:12px;
+font-size:14px;
+}
+
+.secondary-actions{
+justify-content:flex-start;
+}
+
+}
+
+@media(max-width:600px){
+
+.tabs-header{
+flex-direction:column;
+}
+
+.features-grid{
+grid-template-columns:1fr;
+}
+
+.tab-content{
+padding:25px;
+}
+.bike-hero{
+box-shadow:none;
+border:1px solid #f1f5f9;
+}
+
+.bike-meta{
+flex-wrap:wrap;
+gap:10px;
+}
+
+.rating{
+font-size:12px;
+padding:4px 8px;
+}
+}
+
+
+        /* ===============================
+   MOBILE HERO TEXT IMPROVEMENT
+================================ */
+
+@media(max-width:768px){
+
+/* Hero full width stack */
+.bike-hero{
+flex-direction:column;
+gap:20px;
+padding:18px;
+margin:20px 10px;
+}
+
+/* Image full width */
+.bike-gallery{
+width:100%;
+}
+
+.bike-main{
+height:auto;
+padding:10px;
+}
+
+.bike-main img{
+width:100%;
+height:auto;
+}
+
+/* Text section below image */
+.bike-info{
+width:100%;
+padding:0;
+}
+
+/* Title bigger */
+.bike-title{
+font-size:24px;
+font-weight:700;
+margin-bottom:8px;
+}
+
+/* Rating slightly bigger */
+.bike-meta{
+font-size:15px;
+margin-bottom:10px;
+}
+
+/* Price bigger like 2nd screenshot */
+.bike-price{
+font-size:26px;
+font-weight:800;
+margin:8px 0;
+}
+
+/* EMI text */
+.bike-emi{
+font-size:14px;
+margin-bottom:15px;
+}
+
+/* Specs readable */
+.quick-specs{
+grid-template-columns:1fr;
+gap:6px;
+font-size:14px;
+}
+
+/* Button full width */
+.btn-primary{
+width:100%;
+font-size:15px;
+padding:14px;
+}
+
+/* Secondary links */
+.secondary-actions{
+font-size:14px;
+margin-top:10px;
+}
+
+}
     </style>
 
 
@@ -424,6 +822,72 @@ Enquire Now
 
 </section>
 
+<section class="tabs-section">
+
+<div class="tabs-card">
+
+<div class="tabs-header">
+<div class="tab-btn active" onclick="openTab(event,'overview')">Overview</div>
+<div class="tab-btn" onclick="openTab(event,'specs')">Specifications</div>
+<div class="tab-btn" onclick="openTab(event,'features')">Features</div>
+</div>
+
+<!-- OVERVIEW -->
+<div id="overview" class="tab-content active">
+<div class="overview-text">
+<asp:Literal ID="litOverview" runat="server"></asp:Literal>
+</div>
+</div>
+
+<!-- SPECIFICATIONS -->
+<div id="specs" class="tab-content">
+<table class="spec-table">
+<asp:Literal ID="litSpecsTable" runat="server"></asp:Literal>
+</table>
+</div>
+
+<!-- FEATURES -->
+<div id="features" class="tab-content">
+<div class="features-grid">
+<asp:Literal ID="litFeatures" runat="server"></asp:Literal>
+</div>
+</div>
+
+</div>
+
+</section>
+
+
+<div class="sticky-buy-bar" id="stickyBar">
+
+<div class="sticky-left">
+<div class="sticky-title">
+<asp:Literal ID="litStickyName" runat="server"></asp:Literal>
+</div>
+<div class="sticky-price">
+₹ <asp:Literal ID="litStickyPrice" runat="server"></asp:Literal>
+</div>
+</div>
+
+<div class="sticky-actions">
+
+<button class="sticky-btn-outline"
+onclick="location.href='Compare.aspx?b1=<%= ViewState["BikeID"] %>'">
+Compare
+</button>
+
+<button class="sticky-btn-primary"
+onclick="location.href='Enquiry.aspx?slug=<%= Request.QueryString["slug"] %>'">
+Enquire Now
+</button>
+
+</div>
+
+</div>
+
+
+
+
     <script>
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -453,6 +917,49 @@ Enquire Now
             });
 
             event.target.style.border = "2px solid #ff4d4d";
+        }
+
+</script>
+
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function(){
+
+        const stickyBar = document.getElementById("stickyBar");
+
+            window.addEventListener("scroll", function(){
+
+                if(window.scrollY > 500){
+                    stickyBar.classList.add("active");
+                }else{
+                    stickyBar.classList.remove("active");
+                }
+
+            });
+
+        });
+
+</script>
+
+    <script>
+
+        function openTab(evt, tabName){
+
+            var contents = document.querySelectorAll(".tab-content");
+            var buttons = document.querySelectorAll(".tab-btn");
+
+            contents.forEach(function(c){
+                c.classList.remove("active");
+            });
+
+            buttons.forEach(function(b){
+                b.classList.remove("active");
+            });
+
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+
         }
 
 </script>

@@ -41,6 +41,21 @@ public partial class Vendor_ManageBikes : System.Web.UI.Page
         }
     }
 
+    void LoadBrandsForEdit()
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand(
+                "SELECT BrandID, BrandName FROM Brands WHERE IsActive=1", con);
+
+            ddlBrandEdit.DataSource = cmd.ExecuteReader();
+            ddlBrandEdit.DataTextField = "BrandName";
+            ddlBrandEdit.DataValueField = "BrandID";
+            ddlBrandEdit.DataBind();
+        }
+    }
+
     void LoadBikes()
     {
         using (SqlConnection con = new SqlConnection(constr))
@@ -48,12 +63,13 @@ public partial class Vendor_ManageBikes : System.Web.UI.Page
             con.Open();
 
             string query = @"
-            SELECT B.BikeID, BR.BrandName, B.ModelName, B.Price,
-                   B.Image1, B.IsApproved, B.CreatedAt,
-                   (SELECT COUNT(*) FROM Leads L WHERE L.BikeID=B.BikeID) AS LeadCount
-            FROM Bikes B
-            INNER JOIN Brands BR ON B.BrandID=BR.BrandID
-            WHERE B.DealerID=@DealerID";
+SELECT B.BikeID, BR.BrandName, B.ModelName, B.Price,
+       B.Image1, B.IsApproved, B.CreatedAt,
+       B.IsForRent,
+       (SELECT COUNT(*) FROM Leads L WHERE L.BikeID=B.BikeID) AS LeadCount
+FROM Bikes B
+INNER JOIN Brands BR ON B.BrandID=BR.BrandID
+WHERE B.DealerID=@DealerID";
 
             if (txtSearch.Text.Trim() != "")
                 query += " AND B.ModelName LIKE @search";
@@ -142,8 +158,9 @@ public partial class Vendor_ManageBikes : System.Web.UI.Page
                 txtPriceEdit.Text = dr["Price"].ToString();
                 txtRangeEdit.Text = dr["RangeKM"].ToString();
                 txtDescEdit.Text = dr["Description"].ToString();
-
-                LoadBrands();
+                chkRentEdit.Checked = dr["IsForRent"] != DBNull.Value
+                      && Convert.ToBoolean(dr["IsForRent"]);
+                LoadBrandsForEdit();
                 ddlBrandEdit.SelectedValue = dr["BrandID"].ToString();
             }
 
@@ -195,6 +212,7 @@ public partial class Vendor_ManageBikes : System.Web.UI.Page
           ModelName=@model,
           Slug=@slug,
           Price=@price,
+IsForRent=@rent
           RangeKM=@range,
           Description=@desc,
           Image1=ISNULL(@img1,Image1),

@@ -7,7 +7,15 @@ using System.Web.Services;
 
 public partial class Client_Bikes : System.Web.UI.Page
 {
-    protected void Page_Load(object sender, EventArgs e) { }
+    protected void Page_Load(object sender, EventArgs e) { 
+    if (!IsPostBack)
+    {
+        LoadBikes();
+    }
+    }
+
+
+
 
     [WebMethod]
     public static object GetBikes(int page, int minPrice, int maxPrice, string range, string sort, string[] brands)
