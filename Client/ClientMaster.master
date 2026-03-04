@@ -401,7 +401,8 @@ body{
                     <div class="dropdown">
                         <a class="btn btn-glow dropdown-toggle"
                            data-bs-toggle="dropdown">
-
+                           <img src="../Uploads/user.jpg"
+     style="width:28px;height:28px;border-radius:50%;margin-right:6px;" />
                             <asp:Label ID="lblUserName" runat="server"></asp:Label>
                         </a>
 
@@ -488,6 +489,22 @@ body{
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+
+    function refreshWishlistCount() {
+
+        $.ajax({
+            type: "POST",
+            url: "/Client/ClientMaster.master/GetWishlistCount",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (res) {
+
+                $("#wishCount").text(res.d);
+
+            }
+        });
+
+    }
     document.addEventListener("DOMContentLoaded", function () {
 
         var searchInput = document.getElementById("txtSearch");

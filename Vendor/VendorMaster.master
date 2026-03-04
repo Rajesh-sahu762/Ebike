@@ -119,7 +119,7 @@ body{
         onclick="toggleNotif()"></i>
 
     <span id="notifBadge" class="badge bg-danger"
-        style="position:absolute; top:-5px; right:-8px;">
+        style="position:absolute; top:-12px; right:-10px;">
         <asp:Label ID="lblNotifCount" runat="server"></asp:Label>
     </span>
 
@@ -133,7 +133,7 @@ body{
         <asp:Repeater ID="rptNotifications" runat="server">
             <ItemTemplate>
                 <div style="padding:8px; border-bottom:1px solid #eee;">
-                    <a href="ManageLeads.aspx?lead=<%# Eval("LeadID") %>"
+                    <a href="VendorManageLeads.aspx?lead=<%# Eval("LeadID") %>"
                        style="text-decoration:none;">
                         <%# Eval("FullName") %> interested in
                         <%# Eval("ModelName") %>

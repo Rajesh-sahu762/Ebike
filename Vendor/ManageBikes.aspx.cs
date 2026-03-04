@@ -136,9 +136,9 @@ ORDER BY B.CreatedAt DESC";
         }
 
         ClientScript.RegisterStartupScript(this.GetType(),
-    "OpenModal",
-    "var myModal = new bootstrap.Modal(document.getElementById('editModal')); myModal.show();",
-    true);
+      "OpenModal",
+      "setTimeout(function(){ var myModal = new bootstrap.Modal(document.getElementById('editModal')); myModal.show(); },200);",
+      true);
     }
 
     // ================= UPDATE BIKE =================

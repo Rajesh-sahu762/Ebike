@@ -440,6 +440,425 @@ margin-top:10px !important;
 }
 
 }
+
+
+/* ===============================
+   SIMILAR BIKES SLIDER
+================================ */
+
+.similar-section{
+max-width:1180px;
+margin:50px auto 100px auto;
+padding:0 20px;
+}
+
+.similar-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.slider-controls button{
+border:none;
+background:#111827;
+color:#fff;
+width:36px;
+height:36px;
+border-radius:6px;
+cursor:pointer;
+margin-left:5px;
+}
+
+.slider-controls button:hover{
+background:#ef4444;
+}
+
+/* slider */
+
+.similar-slider-wrapper{
+overflow:hidden;
+}
+
+.similar-slider{
+display:flex;
+gap:20px;
+overflow-x:auto;
+scroll-behavior:smooth;
+padding-bottom:10px;
+}
+
+.similar-slider::-webkit-scrollbar{
+display:none;
+}
+
+/* card */
+
+.similar-card{
+min-width:240px;
+background:#fff;
+border-radius:14px;
+box-shadow:0 8px 20px rgba(0,0,0,0.06);
+overflow:hidden;
+flex-shrink:0;
+transition:0.3s;
+}
+
+.similar-card:hover{
+transform:translateY(-5px);
+box-shadow:0 12px 30px rgba(0,0,0,0.12);
+}
+
+.similar-img{
+height:160px;
+background:#f3f4f6;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:15px;
+}
+
+.similar-img img{
+max-width:100%;
+max-height:100%;
+object-fit:contain;
+}
+
+.similar-body{
+padding:14px;
+}
+
+.similar-name{
+font-weight:600;
+font-size:15px;
+margin-bottom:5px;
+}
+
+.similar-price{
+font-weight:700;
+color:#ef4444;
+margin-bottom:10px;
+}
+
+.similar-btn{
+display:block;
+text-align:center;
+padding:8px;
+background:#111827;
+color:#fff;
+border-radius:6px;
+text-decoration:none;
+font-size:13px;
+}
+
+.similar-btn:hover{
+background:#ef4444;
+}
+
+/* ===============================
+   REVIEWS
+================================ */
+
+.reviews-section{
+max-width:1180px;
+margin:60px auto;
+padding:0 20px;
+}
+
+.reviews-title{
+font-size:22px;
+font-weight:700;
+margin-bottom:25px;
+}
+
+.reviews-wrapper{
+display:grid;
+grid-template-columns:300px 1fr;
+gap:40px;
+}
+
+.rating-big{
+font-size:48px;
+font-weight:700;
+}
+
+.rating-stars{
+color:#f59e0b;
+font-size:20px;
+margin:5px 0;
+}
+
+.rating-count{
+color:#6b7280;
+font-size:13px;
+margin-bottom:20px;
+}
+
+.breakdown-row{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:6px;
+font-size:13px;
+}
+
+.breakdown-bar{
+flex:1;
+height:6px;
+background:#e5e7eb;
+border-radius:4px;
+overflow:hidden;
+}
+
+.breakdown-fill{
+height:100%;
+background:#f59e0b;
+}
+
+.review-item{
+background:#fff;
+padding:18px;
+border-radius:12px;
+box-shadow:0 6px 20px rgba(0,0,0,0.05);
+margin-bottom:15px;
+}
+
+.review-item h4{
+font-size:14px;
+margin-bottom:4px;
+}
+
+.review-item .stars{
+color:#f59e0b;
+font-size:14px;
+}
+
+.review-item p{
+font-size:13px;
+color:#6b7280;
+margin-top:6px;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.reviews-wrapper{
+grid-template-columns:1fr;
+}
+
+}
+
+
+        /* WRITE REVIEW */
+
+.write-review-section{
+max-width:1180px;
+margin:60px auto;
+padding:0 20px;
+}
+
+.review-form{
+background:#fff;
+padding:25px;
+border-radius:14px;
+box-shadow:0 8px 25px rgba(0,0,0,0.05);
+max-width:600px;
+}
+
+.review-form label{
+display:block;
+margin-top:10px;
+font-weight:600;
+font-size:14px;
+}
+
+.review-form select,
+.review-form input,
+.review-form textarea{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:1px solid #e5e7eb;
+margin-top:5px;
+}
+
+.review-form textarea{
+height:120px;
+resize:none;
+}
+
+.review-form button{
+margin-top:15px;
+background:#ef4444;
+color:#fff;
+border:none;
+padding:12px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.review-form button:hover{
+background:#dc2626;
+}
+
+#reviewMsg{
+margin-top:10px;
+font-size:13px;
+}
+
+/* ===============================
+   REVIEW PAGE LAYOUT FIX
+================================ */
+
+.reviews-layout{
+max-width:1180px;
+margin:70px auto;
+padding:0 20px;
+display:grid;
+grid-template-columns:380px 1fr;
+gap:60px;
+align-items:start;
+}
+
+/* LEFT CARD */
+
+.write-review-section{
+margin:0;
+padding:0;
+}
+
+.review-form{
+background:#fff;
+padding:28px;
+border-radius:16px;
+box-shadow:0 10px 30px rgba(0,0,0,0.06);
+width:100%;
+}
+
+/* RIGHT REVIEWS */
+
+.reviews-section{
+margin:0;
+padding:0;
+}
+
+.reviews-wrapper{
+display:block;
+}
+
+/* spacing fix */
+
+.reviews-title{
+margin-bottom:20px;
+}
+
+.rating-breakdown{
+margin-top:15px;
+}
+
+/* ===============================
+   MOBILE
+================================ */
+
+@media(max-width:900px){
+
+.reviews-layout{
+grid-template-columns:1fr;
+gap:40px;
+}
+
+}
+
+        /* ===============================
+   DEALER SECTION
+================================ */
+
+.dealer-section{
+max-width:1180px;
+margin:60px auto;
+padding:0 20px;
+}
+
+.dealer-card{
+background:#fff;
+border-radius:16px;
+box-shadow:0 10px 30px rgba(0,0,0,0.06);
+padding:30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:20px;
+}
+
+.dealer-left{
+display:flex;
+flex-direction:column;
+gap:6px;
+}
+
+.dealer-title{
+font-size:14px;
+color:#6b7280;
+}
+
+.dealer-name{
+font-size:22px;
+font-weight:700;
+}
+
+.dealer-meta{
+font-size:14px;
+color:#6b7280;
+}
+
+.dealer-actions{
+display:flex;
+gap:12px;
+}
+
+.dealer-btn{
+padding:10px 18px;
+border-radius:8px;
+font-size:14px;
+cursor:pointer;
+border:none;
+}
+
+.btn-contact{
+background:#ef4444;
+color:#fff;
+}
+
+.btn-view{
+background:#111827;
+color:#fff;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.dealer-card{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.dealer-actions{
+width:100%;
+}
+
+.dealer-btn{
+flex:1;
+}
+
+}
+        #wishlistBtn.active{
+color:#ef4444;
+font-weight:600;
+}
+
     </style>
 
 
@@ -494,15 +913,19 @@ EMI starting from ₹ <span id="emiAmount"></span> / month
 
 <div class="bike-actions">
 
-<button class="btn-primary"
-onclick="location.href='Enquiry.aspx?slug=<%= Request.QueryString["slug"] %>'">
+<button type="button" class="btn-primary"
+onclick="goEnquiry()">
 Enquire Now
 </button>
 
 <div class="secondary-actions">
 <a href="Compare.aspx?b1=<%= ViewState["BikeID"] %>">Compare</a>
 <span>|</span>
-<a href="#">Wishlist</a>
+<a href="javascript:void(0)"
+   id="wishlistBtn"
+   onclick="toggleWishlistHero()">
+♡ Wishlist
+</a>
 </div>
 
 </div>
@@ -589,6 +1012,154 @@ Enquire Now
 
 </section>
 
+    <section class="dealer-section">
+
+<h2 style="margin-bottom:20px;">Sold By Dealer</h2>
+
+<div class="dealer-card">
+
+<div class="dealer-left">
+
+<div class="dealer-title">
+Authorized Electric Bike Dealer
+</div>
+
+<div class="dealer-name">
+<asp:Literal ID="litDealerName" runat="server"></asp:Literal>
+</div>
+
+<div class="dealer-meta">
+📞 <asp:Literal ID="litDealerPhone" runat="server"></asp:Literal>
+</div>
+
+<div class="dealer-meta">
+✉ <asp:Literal ID="litDealerEmail" runat="server"></asp:Literal>
+</div>
+    <div class="dealer-meta">
+📍 <asp:Literal ID="litDealerCity" runat="server"></asp:Literal>
+</div>
+
+</div>
+
+<div class="dealer-actions">
+
+<button class="dealer-btn btn-contact"
+onclick="contactDealer()">
+Contact Dealer
+</button>
+
+<button type="button" class="dealer-btn btn-view"
+onclick="viewDealerBikes()">
+View Dealer Bikes
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+       <!-- Review section -->
+
+    <div class="reviews-layout">
+
+    <section class="write-review-section">
+
+<h2>Write a Review</h2>
+
+<div class="review-form">
+
+<label>Rating</label>
+
+<select id="rating">
+<option value="5">★★★★★ (5)</option>
+<option value="4">★★★★ (4)</option>
+<option value="3">★★★ (3)</option>
+<option value="2">★★ (2)</option>
+<option value="1">★ (1)</option>
+</select>
+
+<label>Review Title</label>
+
+<input type="text" id="reviewTitle" placeholder="Review title"/>
+
+<label>Your Review</label>
+
+<textarea id="reviewText"
+placeholder="Share your experience"></textarea>
+
+<button onclick="submitReview()">Submit Review</button>
+
+<div id="reviewMsg"></div>
+
+</div>
+
+</section>
+
+    <section class="reviews-section">
+
+<h2 class="reviews-title">Customer Reviews</h2>
+
+<div class="reviews-wrapper">
+
+<!-- LEFT SUMMARY -->
+
+<div class="reviews-summary">
+
+<div class="rating-big">
+<asp:Literal ID="litAvgRating" runat="server"></asp:Literal>
+</div>
+
+<div class="rating-stars">
+<asp:Literal ID="litAvgStars" runat="server"></asp:Literal>
+</div>
+
+<div class="rating-count">
+<asp:Literal ID="litReviewCount" runat="server"></asp:Literal>
+</div>
+
+<div class="rating-breakdown">
+<asp:Literal ID="litBreakdown" runat="server"></asp:Literal>
+</div>
+
+</div>
+
+<!-- RIGHT REVIEWS -->
+
+<div class="reviews-list">
+<asp:Literal ID="litRecentReviews" runat="server"></asp:Literal>
+</div>
+
+</div>
+
+</section>
+
+        </div>
+
+     <!-- similar section -->
+
+    <section class="similar-section">
+
+<div class="similar-header">
+<h2>Similar Electric Bikes</h2>
+
+<div class="slider-controls">
+<button type="button" onclick="return slideLeft(event)">‹</button>
+<button type="button" onclick="return slideRight(event)">›</button>
+</div>
+</div>
+
+<div class="similar-slider-wrapper">
+
+<div class="similar-slider" id="similarSlider">
+<asp:Literal ID="litSimilarBikes" runat="server"></asp:Literal>
+</div>
+
+</div>
+
+</section>
+
+
 
 
 <div class="sticky-buy-bar" id="stickyBar">
@@ -626,8 +1197,27 @@ Enquire Now
 
 
     <script>
+        function viewDealerBikes(){
+
+            var dealerId = "<%= ViewState["DealerID"] %>";
+
+            if(dealerId != ""){
+                window.location.href = "Bikes.aspx?dealer=" + dealerId;
+            }
+
+        }
+        function contactDealer(){
+
+            var phone = "<%= litDealerPhone.Text %>";
+
+            if(phone!=""){
+                window.location.href="tel:"+phone;
+            }
+
+        }
 
         document.addEventListener("DOMContentLoaded", function () {
+            checkWishlist();
 
             var price = parseFloat('<%= ViewState["Price"] ?? "0" %>');
 
@@ -701,6 +1291,139 @@ Enquire Now
 
 </script>
 
+    <script>
+        function slideLeft(e){
+
+            if(e) e.preventDefault();
+
+            var slider = document.getElementById("similarSlider");
+            slider.scrollLeft -= 260;
+
+            return false;
+        }
+
+        function slideRight(e){
+
+            if(e) e.preventDefault();
+
+            var slider = document.getElementById("similarSlider");
+            slider.scrollLeft += 260;
+
+            return false;
+        }
+
+        slider.scrollBy({
+            left:260,
+            behavior:'smooth'
+        });
+</script>
+
+
+    <script>function submitReview(){
+
+    var rating = document.getElementById("rating").value;
+    var title = document.getElementById("reviewTitle").value;
+    var text = document.getElementById("reviewText").value;
+
+    if(text.trim()===""){
+        alert("Please write review");
+        return;
+    }
+
+    $.ajax({
+        type:"POST",
+        url:"BikeDetails.aspx/SubmitReview",
+        data: JSON.stringify({
+            rating: rating,
+            title: title,
+            review: text
+        }),
+        contentType:"application/json; charset=utf-8",
+        dataType:"json",
+        success:function(res){
+
+            if(res.d==="login"){
+                alert("Please login first");
+                return;
+            }
+
+            if(res.d==="exists"){
+                alert("You already reviewed this bike");
+                return;
+            }
+
+            document.getElementById("reviewMsg").innerHTML =
+            "Review submitted. Waiting for admin approval.";
+
+            document.getElementById("reviewTitle").value="";
+            document.getElementById("reviewText").value="";
+        }
+    });
+}
+        function toggleWishlistHero(){
+
+            var bikeId = "<%= ViewState["BikeID"] %>";
+
+            $.ajax({
+                type:"POST",
+                url:"/Client/BikeDetails.aspx/ToggleWishlist",
+                data: JSON.stringify({ bikeId: bikeId }),
+                contentType:"application/json; charset=utf-8",
+                dataType:"json",
+
+                success:function(res){
+
+                    if(res.d==="added"){
+                        $("#wishlistBtn").addClass("active").text("❤ Wishlisted");
+                    }
+
+                    if(res.d==="removed"){
+                        $("#wishlistBtn").removeClass("active").text("♡ Wishlist");
+                    }
+                    refreshWishlistCount();
+
+                    if(res.d==="login"){
+                        alert("Please login first");
+                    }
+
+                }
+
+            });
+
+        }
+        function checkWishlist(){
+
+            var bikeId = "<%= ViewState["BikeID"] %>";
+
+            $.ajax({
+                type:"POST",
+                url:"/Client/BikeDetails.aspx/CheckWishlist",
+                data: JSON.stringify({ bikeId: bikeId }),
+                contentType:"application/json; charset=utf-8",
+                dataType:"json",
+
+                success:function(res){
+
+                    if(res.d==="yes"){
+                        $("#wishlistBtn").addClass("active").text("❤ Wishlisted");
+                    }
+
+                }
+
+            });
+
+        }
+
+        function goEnquiry(){
+
+            var slug = "<%= Request.QueryString["slug"] %>";
+
+            window.location.href = "Enquiry.aspx?slug=" + slug;
+
+        }
+
+
+    </script>
 
 </asp:Content>
 

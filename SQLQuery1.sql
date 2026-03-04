@@ -25,23 +25,12 @@ CREATE TABLE Users (
 
 
 
-select * from Wishlist
-
-
-
-
-ALTER TABLE Users ADD
-IsEmailVerified BIT DEFAULT 0,
-OTPCode NVARCHAR(10),
-OTPExpiry DATETIME,
-FailedLoginAttempts INT DEFAULT 0,
-LockoutEndTime DATETIME NULL;
+ALTER TABLE Bikes ADD
+IsUsed BIT DEFAULT 0 ,
+OwnerType NVARCHAR(10)
 
 
 select * from Users
-
-delete from Users where UserID=3
-
 
 
 CREATE TABLE Brands (
@@ -50,14 +39,8 @@ CREATE TABLE Brands (
     IsActive BIT DEFAULT 1
 );
 
-select * from Brands
-
-
 ALTER TABLE Brands ADD LogoPath NVARCHAR(300), CreatedAt DATETIME DEFAULT GETDATE()
-
 ALTER TABLE Users ADD ProfileImage NVARCHAR(300) NULL;
-
-
 
 CREATE TABLE SiteSettings
 (
@@ -83,7 +66,12 @@ INSERT INTO SiteSettings (SettingID)
 VALUES (1)
 
 
-
+ALTER TABLE Bikes ADD
+KMDriven INT NULL,
+ManufactureYear INT NULL,
+OwnerNumber INT NULL,
+BikeCondition NVARCHAR(50) NULL,
+BatteryHealth NVARCHAR(50) NULL;
 
 CREATE TABLE Bikes (
     BikeID INT PRIMARY KEY IDENTITY(1,1),
@@ -108,7 +96,9 @@ CREATE TABLE Bikes (
 
 
 
-UPDATE Users SET IsEmailVerified = 1, IsApproved =1  WHERE UserID = 4;
+select * from Users
+
+UPDATE Users SET IsEmailVerified = 1, IsApproved =1  WHERE UserID = 1003;
 
 
 
@@ -184,6 +174,20 @@ CREATE TABLE BikeReviews (
     CreatedAt DATETIME DEFAULT GETDATE()
 );
 
+SELECT name
+FROM sys.default_constraints
+WHERE parent_object_id = OBJECT_ID('BikeReviews')
+AND parent_column_id = COLUMNPROPERTY(OBJECT_ID('BikeReviews'),'IsApproved','ColumnId')
+
+ALTER TABLE BikeReviews
+DROP CONSTRAINT DF__BikeRevie__IsApp__73BA3083
+
+ALTER TABLE BikeReviews
+ADD DEFAULT 0 FOR IsApproved
+
+ALTER TABLE BikeReviews
+ADD CONSTRAINT UQ_User_BikeReview
+UNIQUE(CustomerID,BikeID)
 
 INSERT INTO BikeReviews (BikeID, CustomerID, Rating, ReviewTitle, ReviewText)
 VALUES

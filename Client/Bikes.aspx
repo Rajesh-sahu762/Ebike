@@ -252,7 +252,7 @@ bottom:70px;
 </style>
 
     <asp:HiddenField ID="hfSearch" runat="server" />
-
+    <asp:HiddenField ID="hfDealer" runat="server" />
     <section class="bike-wrapper">
 <div class="container">
 
@@ -379,8 +379,9 @@ Apply Filters
                 range:$("#rangeFilter").val(),
                 sort:$("#sortFilter").val(),
                 brands:brands,
-                search: $("#<%= hfSearch.ClientID %>").val()
-           }),
+                search: $("#<%= hfSearch.ClientID %>").val(),
+    dealer: $("#<%= hfDealer.ClientID %>").val()
+        }),
             contentType:"application/json; charset=utf-8",
             dataType:"json",
             success:function(res){
@@ -469,12 +470,20 @@ Apply Filters
             dataType: "json",
             success: function (res) {
 
+                if (res.d === "login") {
+                    alert("Please login first");
+                    window.location.href = "ClientLogin.aspx";
+                    return;
+                }
+
                 if (res.d === "added") {
                     $(el).addClass("active");
                 }
                 else {
                     $(el).removeClass("active");
                 }
+
+                refreshWishlistCount();
             }
         });
     }

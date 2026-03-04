@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Web.Services;
+using System.Web;
 
 public partial class Client_BikeDetails : System.Web.UI.Page
 {
@@ -19,6 +21,53 @@ public partial class Client_BikeDetails : System.Web.UI.Page
         }
     }
 
+    [WebMethod]
+    public static string SubmitReview(int rating, string title, string review)
+    {
+        if (HttpContext.Current.Session["CustomerID"] == null)
+            return "login";
+
+        int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);
+        int bikeId = Convert.ToInt32(HttpContext.Current.Session["BikeID"]);
+
+        string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            // check duplicate review
+            SqlCommand check = new SqlCommand(
+            "SELECT COUNT(*) FROM BikeReviews WHERE CustomerID=@u AND BikeID=@b", con);
+
+            check.Parameters.AddWithValue("@u", userId);
+            check.Parameters.AddWithValue("@b", bikeId);
+
+            int exists = Convert.ToInt32(check.ExecuteScalar());
+
+            if (exists > 0)
+                return "exists";
+
+            SqlCommand cmd = new SqlCommand(@"
+        INSERT INTO BikeReviews
+        (BikeID,CustomerID,Rating,ReviewTitle,ReviewText,IsApproved,CreatedAt)
+        VALUES
+        (@bike,@user,@rating,@title,@text,0,GETDATE())", con);
+
+            cmd.Parameters.AddWithValue("@bike", bikeId);
+            cmd.Parameters.AddWithValue("@user", userId);
+            cmd.Parameters.AddWithValue("@rating", rating);
+            cmd.Parameters.AddWithValue("@title", title);
+            cmd.Parameters.AddWithValue("@text", review);
+
+            cmd.ExecuteNonQuery();
+        }
+
+        return "ok";
+    }
+
+
+
     void LoadBike(string slug)
     {
         using (SqlConnection con = new SqlConnection(constr))
@@ -26,10 +75,17 @@ public partial class Client_BikeDetails : System.Web.UI.Page
             con.Open();
 
             SqlCommand cmd = new SqlCommand(@"
-            SELECT b.*, br.BrandName
-            FROM Bikes b
-            INNER JOIN Brands br ON b.BrandID = br.BrandID
-            WHERE b.Slug=@slug AND b.IsApproved=1", con);
+            SELECT b.*, br.BrandName,
+u.UserID,
+u.FullName,
+u.Mobile,
+u.Email,
+u.ShopName,
+u.City
+FROM Bikes b
+INNER JOIN Brands br ON b.BrandID = br.BrandID
+INNER JOIN Users u ON b.DealerID = u.UserID
+WHERE b.Slug=@slug AND b.IsApproved=1", con);
 
             cmd.Parameters.AddWithValue("@slug", slug);
 
@@ -45,6 +101,17 @@ public partial class Client_BikeDetails : System.Web.UI.Page
 
                 litStickyName.Text = dr["ModelName"].ToString();
                 litStickyPrice.Text = price.ToString("N0");
+
+                // Dealer Info
+
+                litDealerName.Text = dr["ShopName"] != DBNull.Value
+                ? dr["ShopName"].ToString()
+                : dr["FullName"].ToString();
+
+                litDealerPhone.Text = dr["Mobile"].ToString();
+                litDealerEmail.Text = dr["Email"].ToString();
+                litDealerCity.Text = dr["City"].ToString();
+                ViewState["DealerID"] = dr["UserID"].ToString();
 
                 imgMain.ImageUrl = "/Uploads/Bikes/" + dr["Image1"].ToString();
 
@@ -133,8 +200,207 @@ public partial class Client_BikeDetails : System.Web.UI.Page
                 {
                     litFeatures.Text = "<div class='feature-item'>No features available</div>";
                 }
-
+                LoadSimilarBikes(dr["BrandID"].ToString(), dr["BikeID"].ToString());
+                LoadReviews(dr["BikeID"].ToString());
+                Session["BikeID"] = dr["BikeID"];
             }
         }
+    }
+
+    [WebMethod]
+    public static string ToggleWishlist(int bikeId)
+    {
+        if (HttpContext.Current.Session["CustomerID"] == null)
+            return "login";
+
+        int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);
+
+        string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand check = new SqlCommand(
+            "SELECT COUNT(*) FROM Wishlist WHERE CustomerID=@u AND BikeID=@b", con);
+
+            check.Parameters.AddWithValue("@u", userId);
+            check.Parameters.AddWithValue("@b", bikeId);
+
+            int exists = Convert.ToInt32(check.ExecuteScalar());
+
+            if (exists > 0)
+            {
+                SqlCommand delete = new SqlCommand(
+                "DELETE FROM Wishlist WHERE CustomerID=@u AND BikeID=@b", con);
+
+                delete.Parameters.AddWithValue("@u", userId);
+                delete.Parameters.AddWithValue("@b", bikeId);
+                delete.ExecuteNonQuery();
+
+                return "removed";
+            }
+            else
+            {
+                SqlCommand insert = new SqlCommand(
+                "INSERT INTO Wishlist(CustomerID,BikeID) VALUES(@u,@b)", con);
+
+                insert.Parameters.AddWithValue("@u", userId);
+                insert.Parameters.AddWithValue("@b", bikeId);
+                insert.ExecuteNonQuery();
+
+                return "added";
+            }
+
+        }
+    }
+
+
+    [WebMethod]
+    public static string CheckWishlist(int bikeId)
+    {
+        if (HttpContext.Current.Session["CustomerID"] == null)
+            return "no";
+
+        int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);
+
+        string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand(
+            "SELECT COUNT(*) FROM Wishlist WHERE CustomerID=@u AND BikeID=@b", con);
+
+            cmd.Parameters.AddWithValue("@u", userId);
+            cmd.Parameters.AddWithValue("@b", bikeId);
+
+            int exists = Convert.ToInt32(cmd.ExecuteScalar());
+
+            if (exists > 0)
+                return "yes";
+            else
+                return "no";
+        }
+    }
+
+    void LoadSimilarBikes(string brandId, string bikeId)
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand(@"
+        SELECT TOP 10 BikeID, ModelName, Price, Image1, Slug
+        FROM Bikes
+        WHERE BrandID=@brand
+        AND BikeID<>@id
+        AND IsApproved=1
+        ORDER BY NEWID()", con);
+
+            cmd.Parameters.AddWithValue("@brand", brandId);
+            cmd.Parameters.AddWithValue("@id", bikeId);
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            string html = "";
+
+            while (dr.Read())
+            {
+                html += "<div class='similar-card'>";
+
+                html += "<div class='similar-img'>";
+                html += "<img src='/Uploads/Bikes/" + dr["Image1"] + "'>";
+                html += "</div>";
+
+                html += "<div class='similar-body'>";
+
+                html += "<div class='similar-name'>" + dr["ModelName"] + "</div>";
+
+                html += "<div class='similar-price'>₹ "
+                + Convert.ToDecimal(dr["Price"]).ToString("N0") + "</div>";
+
+                html += "<a class='similar-btn' href='BikeDetails.aspx?slug="
+                + dr["Slug"] + "'>View Details</a>";
+
+                html += "</div></div>";
+            }
+
+            litSimilarBikes.Text = html;
+        }
+    }
+
+    void LoadReviews(string bikeId)
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand avgCmd = new SqlCommand(
+            "SELECT ISNULL(AVG(CAST(Rating AS FLOAT)),0), COUNT(*) FROM BikeReviews WHERE BikeID=@id AND IsApproved=1",
+            con);
+
+            avgCmd.Parameters.AddWithValue("@id", bikeId);
+
+            SqlDataReader avgDr = avgCmd.ExecuteReader();
+
+            double avg = 0;
+            int count = 0;
+
+            if (avgDr.Read())
+            {
+                avg = Convert.ToDouble(avgDr[0]);
+                count = Convert.ToInt32(avgDr[1]);
+            }
+
+            avgDr.Close();
+
+            litAvgRating.Text = avg.ToString("0.0");
+            litAvgStars.Text = BuildStars(avg);
+            litReviewCount.Text = count + " Reviews";
+
+            string breakdownHtml = "";
+
+            for (int i = 5; i >= 1; i--)
+            {
+                SqlCommand cmd = new SqlCommand(
+                "SELECT COUNT(*) FROM BikeReviews WHERE BikeID=@id AND Rating=@r AND IsApproved=1",
+                con);
+
+                cmd.Parameters.AddWithValue("@id", bikeId);
+                cmd.Parameters.AddWithValue("@r", i);
+
+                int starCount = Convert.ToInt32(cmd.ExecuteScalar());
+
+                int percent = count == 0 ? 0 : (starCount * 100 / count);
+
+                breakdownHtml +=
+                "<div class='breakdown-row'>" +
+                i + " ★" +
+                "<div class='breakdown-bar'>" +
+                "<div class='breakdown-fill' style='width:" + percent + "%'></div>" +
+                "</div>" +
+                "<span>" + starCount + "</span>" +
+                "</div>";
+            }
+
+            litBreakdown.Text = breakdownHtml;
+        }
+    }
+
+    string BuildStars(double rating)
+    {
+        string stars = "";
+
+        for (int i = 1; i <= 5; i++)
+        {
+            if (i <= Math.Round(rating))
+                stars += "★";
+            else
+                stars += "☆";
+        }
+
+        return stars;
     }
 }
