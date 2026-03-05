@@ -1,8 +1,14 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Client/ClientMaster.master" AutoEventWireup="true" CodeFile="BikeDetails.aspx.cs" Inherits="Client_BikeDetails" %>
+﻿<%@ Page Title="Used Bike Details"
+Language="C#"
+MasterPageFile="~/Client/ClientMaster.master"
+AutoEventWireup="true"
+CodeFile="UsedBikeDetails.aspx.cs"
+Inherits="Client_UsedBikeDetails" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
-    <style>
+
+      <style>
  /* ===============================
    GLOBAL
 ================================ */
@@ -901,21 +907,39 @@ EMI starting from ₹ <span id="emiAmount"></span> / month
 </div>
 
 <hr class="divider"/>
-
 <div class="quick-specs">
-<div><strong>Range:</strong> 120 km/charge</div>
-<div><strong>Top Speed:</strong> 85 km/h</div>
-<div><strong>Battery:</strong> 3.2 kWh</div>
-<div><strong>Warranty:</strong> 3 Years</div>
+
+<div>
+<strong>KM Driven:</strong>
+<asp:Literal ID="litRange" runat="server"></asp:Literal>
 </div>
 
+<div>
+<strong>Manufacture Year:</strong>
+<asp:Literal ID="litSpeed" runat="server"></asp:Literal>
+</div>
+
+<div>
+<strong>Owner:</strong>
+<asp:Literal ID="litCharge" runat="server"></asp:Literal>
+</div>
+
+<div>
+<strong>Condition:</strong>
+<asp:Literal ID="litMotor" runat="server"></asp:Literal>
+</div>
+
+</div>
 <hr class="divider"/>
 
 <div class="bike-actions">
 
-<button type="button" class="btn-primary"
-onclick="goEnquiry()">
-Enquire Now
+<button type="button"
+class="btn-primary"
+onclick="contactSeller()">
+
+Contact Seller
+
 </button>
 
 <div class="secondary-actions">
@@ -932,7 +956,6 @@ onclick="shareBike()">
 Share
 
 </a>
-
 </div>
 
 </div>
@@ -944,39 +967,39 @@ Share
 </section>
 
 
-    <section class="highlights-section">
+   <section class="highlights-section">
 
 <div class="highlights-card">
 
 <div class="highlight-item">
-<div class="highlight-icon">🔋</div>
+<div class="highlight-icon">🛣️</div>
 <div class="highlight-text">
-<h4><asp:Literal ID="litRange" runat="server"></asp:Literal></h4>
-<p>Range</p>
+<h4><asp:Literal ID="litKMHighlight" runat="server"></asp:Literal></h4>
+<p>KM Driven</p>
 </div>
 </div>
 
 <div class="highlight-item">
-<div class="highlight-icon">⚡</div>
+<div class="highlight-icon">📅</div>
 <div class="highlight-text">
-<h4><asp:Literal ID="litSpeed" runat="server"></asp:Literal></h4>
-<p>Top Speed</p>
+<h4><asp:Literal ID="litYearHighlight" runat="server"></asp:Literal></h4>
+<p>Manufacture Year</p>
 </div>
 </div>
 
 <div class="highlight-item">
-<div class="highlight-icon">🔌</div>
+<div class="highlight-icon">👤</div>
 <div class="highlight-text">
-<h4><asp:Literal ID="litCharge" runat="server"></asp:Literal></h4>
-<p>Charging Time</p>
+<h4><asp:Literal ID="litOwnerHighlight" runat="server"></asp:Literal></h4>
+<p>Owner</p>
 </div>
 </div>
 
 <div class="highlight-item">
-<div class="highlight-icon">🛵</div>
+<div class="highlight-icon">✔</div>
 <div class="highlight-text">
-<h4><asp:Literal ID="litMotor" runat="server"></asp:Literal></h4>
-<p>Motor Power</p>
+<h4><asp:Literal ID="litConditionHighlight" runat="server"></asp:Literal></h4>
+<p>Condition</p>
 </div>
 </div>
 
@@ -1049,15 +1072,12 @@ Authorized Electric Bike Dealer
 </div>
 
 <div class="dealer-actions">
+<button type="button"
+class="btn-primary"
+onclick="contactSeller()">
 
-<button class="dealer-btn btn-contact"
-onclick="contactDealer()">
-Contact Dealer
-</button>
+Contact Seller
 
-<button type="button" class="dealer-btn btn-view"
-onclick="viewDealerBikes()">
-View Dealer Bikes
 </button>
 
 </div>
@@ -1188,9 +1208,12 @@ onclick="goCompare()">
 Compare
 </button>
 
-<button class="sticky-btn-primary"
-onclick="location.href='Enquiry.aspx?slug=<%= Request.QueryString["slug"] %>'">
-Enquire Now
+<button type="button"
+class="btn-primary"
+onclick="contactSeller()">
+
+Contact Seller
+
 </button>
 
 </div>
@@ -1205,7 +1228,7 @@ Enquire Now
 
 
     <script>
-        
+
         function goCompare(){
 
             var bikeId = "<%= ViewState["BikeID"] %>";
@@ -1215,6 +1238,7 @@ Enquire Now
             }
 
         }
+
         function shareBike(){
 
             navigator.clipboard.writeText(window.location.href);
@@ -1222,15 +1246,17 @@ Enquire Now
             alert("Bike link copied");
 
         }
-        function viewDealerBikes(){
+        function contactWhatsapp(){
 
-            var dealerId = "<%= ViewState["DealerID"] %>";
+            var phone = "<%= litDealerPhone.Text %>";
 
-            if(dealerId != ""){
-                window.location.href = "Bikes.aspx?dealer=" + dealerId;
-            }
+         if(phone!=""){
 
-        }
+             window.open("https://wa.me/91"+phone);
+
+         }
+
+     }
         function contactDealer(){
 
             var phone = "<%= litDealerPhone.Text %>";
@@ -1246,18 +1272,18 @@ Enquire Now
 
             var price = parseFloat('<%= ViewState["Price"] ?? "0" %>');
 
-    var interest = 9.5 / 100 / 12;
-    var tenure = 36;
+            var interest = 9.5 / 100 / 12;
+            var tenure = 36;
 
-    var emi = (price * interest * Math.pow(1 + interest, tenure)) /
-              (Math.pow(1 + interest, tenure) - 1);
+            var emi = (price * interest * Math.pow(1 + interest, tenure)) /
+                      (Math.pow(1 + interest, tenure) - 1);
 
-    if (!isNaN(emi)) {
-        document.getElementById("emiAmount").innerText =
-        Math.round(emi).toLocaleString();
-    }
+            if (!isNaN(emi)) {
+                document.getElementById("emiAmount").innerText =
+                Math.round(emi).toLocaleString();
+            }
 
-});
+        });
 
         function changeImage(src) {
             var mainImg = document.querySelector(".bike-main img");
@@ -1337,10 +1363,6 @@ Enquire Now
             return false;
         }
 
-        slider.scrollBy({
-            left:260,
-            behavior:'smooth'
-        });
 </script>
 
 
@@ -1357,7 +1379,7 @@ Enquire Now
 
     $.ajax({
         type:"POST",
-        url:"BikeDetails.aspx/SubmitReview",
+        url:"UsedBikeDetails.aspx/SubmitReview",
         data: JSON.stringify({
             rating: rating,
             title: title,
@@ -1391,7 +1413,7 @@ Enquire Now
 
             $.ajax({
                 type:"POST",
-                url:"/Client/BikeDetails.aspx/ToggleWishlist",
+                url:"/Client/UsedBikeDetails.aspx/ToggleWishlist",
                 data: JSON.stringify({ bikeId: bikeId }),
                 contentType:"application/json; charset=utf-8",
                 dataType:"json",
@@ -1422,7 +1444,7 @@ Enquire Now
 
             $.ajax({
                 type:"POST",
-                url:"/Client/BikeDetails.aspx/CheckWishlist",
+                url:"/Client/UsedBikeDetails.aspx/ToggleWishlist",
                 data: JSON.stringify({ bikeId: bikeId }),
                 contentType:"application/json; charset=utf-8",
                 dataType:"json",
@@ -1439,16 +1461,22 @@ Enquire Now
 
         }
 
-        function goEnquiry(){
+        function contactSeller(){
 
-            var slug = "<%= Request.QueryString["slug"] %>";
+            var phone = "<%= litDealerPhone.Text %>";
 
-            window.location.href = "Enquiry.aspx?slug=" + slug;
+        if(phone!=""){
+
+            window.location.href = "tel:"+phone;
 
         }
 
+    }
+
 
     </script>
+
+
 
 </asp:Content>
 

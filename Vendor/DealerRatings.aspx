@@ -39,26 +39,64 @@
     AutoGenerateColumns="false"
     AllowPaging="true"
     PageSize="5"
-    AllowSorting="true"
     OnPageIndexChanging="gvRatings_PageIndexChanging"
-    OnSorting="gvRatings_Sorting">
+    OnRowCommand="gvRatings_RowCommand">
 
-    <Columns>
+<Columns>
 
-        <asp:BoundField DataField="FullName" HeaderText="Customer" SortExpression="FullName" />
+<asp:BoundField DataField="ModelName" HeaderText="Bike"/>
 
-        <asp:TemplateField HeaderText="Rating" SortExpression="Rating">
-            <ItemTemplate>
-                <%# GetStars(Convert.ToInt32(Eval("Rating"))) %>
-            </ItemTemplate>
-        </asp:TemplateField>
+<asp:BoundField DataField="FullName" HeaderText="Customer"/>
 
-        <asp:BoundField DataField="Review" HeaderText="Review" />
+<asp:TemplateField HeaderText="Rating">
+<ItemTemplate>
+<%# GetStars(Convert.ToInt32(Eval("Rating"))) %>
+</ItemTemplate>
+</asp:TemplateField>
 
-        <asp:BoundField DataField="CreatedAt" HeaderText="Date" SortExpression="CreatedAt" />
+<asp:BoundField DataField="ReviewText" HeaderText="Review"/>
 
-    </Columns>
+<asp:BoundField DataField="CreatedAt" HeaderText="Date"/>
 
+<asp:TemplateField HeaderText="Status">
+<ItemTemplate>
+
+<%# Convert.ToBoolean(Eval("IsApproved")) 
+? "<span class='badge bg-success'>Approved</span>" 
+: "<span class='badge bg-warning'>Pending</span>" %>
+
+</ItemTemplate>
+</asp:TemplateField>
+
+<asp:TemplateField HeaderText="Action">
+<ItemTemplate>
+
+<asp:LinkButton ID="LinkButton1" runat="server"
+CommandName="approve"
+CommandArgument='<%# Eval("ReviewID") %>'
+CssClass="btn btn-success btn-sm">
+Approve
+</asp:LinkButton>
+
+<asp:LinkButton ID="LinkButton2" runat="server"
+CommandName="reject"
+CommandArgument='<%# Eval("ReviewID") %>'
+CssClass="btn btn-warning btn-sm">
+Reject
+</asp:LinkButton>
+
+<asp:LinkButton ID="LinkButton3" runat="server"
+CommandName="delete"
+CommandArgument='<%# Eval("ReviewID") %>'
+CssClass="btn btn-danger btn-sm"
+OnClientClick="return confirm('Delete review?');">
+Delete
+</asp:LinkButton>
+
+</ItemTemplate>
+</asp:TemplateField>
+
+</Columns>
 </asp:GridView>
 
 </asp:Content>

@@ -33,6 +33,7 @@ OwnerType NVARCHAR(10)
 select * from Users
 
 
+
 CREATE TABLE Brands (
     BrandID INT PRIMARY KEY IDENTITY(1,1),
     BrandName NVARCHAR(100) NOT NULL,
@@ -222,6 +223,11 @@ CREATE INDEX IX_Users_Role ON Users(Role);
 CREATE INDEX IX_Users_Approved ON Users(IsApproved);
 
 ALTER TABLE Leads ADD IsSpam BIT DEFAULT 0;
+
+
+UPDATE Bikes
+SET IsUsed = 0
+WHERE IsUsed IS NULL
 
 ALTER TABLE Leads ADD LeadAmount DECIMAL(18,2) DEFAULT 0;
 

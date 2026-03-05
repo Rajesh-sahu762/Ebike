@@ -17,18 +17,138 @@ public partial class Admin_ApproveBikes : System.Web.UI.Page
         if (!IsPostBack)
         {
             LoadBikes();
+            LoadApprovedBikes();
         }
+    }
+
+
+    void LoadApprovedBikes(string keyword = "", string type = "")
+    {
+
+        SqlConnection con = new SqlConnection(constr);
+
+        string query = @"SELECT 
+B.BikeID,
+ISNULL(BR.BrandName,'User Added') AS BrandName,
+B.ModelName,
+B.Price,
+B.Image1,
+ISNULL(B.IsUsed,0) AS IsUsed
+FROM Bikes B
+LEFT JOIN Brands BR ON B.BrandID = BR.BrandID
+WHERE B.IsApproved = 1";
+
+
+        if (keyword != "")
+            query += " AND B.ModelName LIKE @search";
+
+        if (type != "")
+            query += " AND B.IsUsed=@type";
+
+
+        SqlCommand cmd = new SqlCommand(query, con);
+
+        if (keyword != "")
+            cmd.Parameters.AddWithValue("@search", "%" + keyword + "%");
+
+        if (type != "")
+            cmd.Parameters.AddWithValue("@type", type);
+
+
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+
+        gvApproved.DataSource = dt;
+        gvApproved.DataBind();
+
+    }
+
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+
+        LoadApprovedBikes(
+        txtSearch.Text.Trim(),
+        ddlType.SelectedValue
+        );
+
+    }
+
+    protected void gvApproved_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
+    {
+
+        if (e.CommandName == "HardDelete")
+        {
+
+            int bikeId = Convert.ToInt32(e.CommandArgument);
+
+            SqlConnection con = new SqlConnection(constr);
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand(
+            "SELECT Image1,Image2,Image3 FROM Bikes WHERE BikeID=@id", con);
+
+            cmd.Parameters.AddWithValue("@id", bikeId);
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            string i1 = "", i2 = "", i3 = "";
+
+            if (dr.Read())
+            {
+
+                i1 = dr["Image1"].ToString();
+                i2 = dr["Image2"].ToString();
+                i3 = dr["Image3"].ToString();
+
+            }
+
+            dr.Close();
+
+
+            string path = Server.MapPath("~/Uploads/Bikes/");
+
+            if (i1 != "" && System.IO.File.Exists(path + i1))
+                System.IO.File.Delete(path + i1);
+
+            if (i2 != "" && System.IO.File.Exists(path + i2))
+                System.IO.File.Delete(path + i2);
+
+            if (i3 != "" && System.IO.File.Exists(path + i3))
+                System.IO.File.Delete(path + i3);
+
+
+            SqlCommand del = new SqlCommand(
+            "DELETE FROM Bikes WHERE BikeID=@id", con);
+
+            del.Parameters.AddWithValue("@id", bikeId);
+
+            del.ExecuteNonQuery();
+
+            con.Close();
+
+            LoadApprovedBikes();
+
+        }
+
     }
 
     void LoadBikes()
     {
         SqlConnection con = new SqlConnection(constr);
 
-        string query = @"SELECT B.BikeID, B.ModelName, B.Price, B.RangeKM,
-                        B.Image1, BR.BrandName
-                        FROM Bikes B
-                        INNER JOIN Brands BR ON B.BrandID = BR.BrandID
-                        WHERE B.IsApproved=0";
+        string query = @"SELECT 
+B.BikeID,
+ISNULL(BR.BrandName,'User Added') AS BrandName,
+B.ModelName,
+B.Price,
+B.RangeKM,
+B.Image1,
+B.IsUsed
+FROM Bikes B
+LEFT JOIN Brands BR ON B.BrandID = BR.BrandID
+WHERE B.IsApproved = 0";
 
         SqlDataAdapter da = new SqlDataAdapter(query, con);
         DataTable dt = new DataTable();

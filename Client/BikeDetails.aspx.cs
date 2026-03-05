@@ -337,6 +337,8 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
         {
             con.Open();
 
+            // AVG RATING
+
             SqlCommand avgCmd = new SqlCommand(
             "SELECT ISNULL(AVG(CAST(Rating AS FLOAT)),0), COUNT(*) FROM BikeReviews WHERE BikeID=@id AND IsApproved=1",
             con);
@@ -359,6 +361,8 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
             litAvgRating.Text = avg.ToString("0.0");
             litAvgStars.Text = BuildStars(avg);
             litReviewCount.Text = count + " Reviews";
+
+            // RATING BREAKDOWN
 
             string breakdownHtml = "";
 
@@ -386,6 +390,50 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
             }
 
             litBreakdown.Text = breakdownHtml;
+
+
+            // =========================
+            // RECENT REVIEWS
+            // =========================
+
+            SqlCommand reviewCmd = new SqlCommand(@"
+
+        SELECT TOP 5
+        ReviewTitle,
+        ReviewText,
+        Rating
+
+        FROM BikeReviews
+
+        WHERE BikeID=@id
+        AND IsApproved=1
+
+        ORDER BY CreatedAt DESC
+
+        ", con);
+
+            reviewCmd.Parameters.AddWithValue("@id", bikeId);
+
+            SqlDataReader dr = reviewCmd.ExecuteReader();
+
+            string html = "";
+
+            while (dr.Read())
+            {
+                html += "<div class='review-item'>";
+
+                html += "<h4>" + dr["ReviewTitle"] + "</h4>";
+
+                html += "<div class='stars'>" +
+                        BuildStars(Convert.ToInt32(dr["Rating"])) +
+                        "</div>";
+
+                html += "<p>" + dr["ReviewText"] + "</p>";
+
+                html += "</div>";
+            }
+
+            litRecentReviews.Text = html;
         }
     }
 

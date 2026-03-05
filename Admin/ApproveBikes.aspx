@@ -19,6 +19,13 @@
             <asp:BoundField DataField="ModelName" HeaderText="Model" />
             <asp:BoundField DataField="Price" HeaderText="Price" />
             <asp:BoundField DataField="RangeKM" HeaderText="Range (KM)" />
+            <asp:TemplateField HeaderText="Type">
+<ItemTemplate>
+
+<%# Eval("IsUsed") != DBNull.Value && Convert.ToBoolean(Eval("IsUsed")) ? "Used Bike" : "New Bike" %>
+
+</ItemTemplate>
+</asp:TemplateField>
 
             <asp:TemplateField HeaderText="Image">
                 <ItemTemplate>
@@ -57,6 +64,94 @@
         </Columns>
 
     </asp:GridView>
+
+
+ <h4 class="mt-5">Approved Bikes</h4>
+
+<div class="row mb-3">
+
+<div class="col-md-4">
+
+<asp:TextBox ID="txtSearch"
+runat="server"
+CssClass="form-control"
+placeholder="Search model..."></asp:TextBox>
+
+</div>
+
+<div class="col-md-3">
+
+<asp:DropDownList ID="ddlType"
+runat="server"
+CssClass="form-control">
+
+<asp:ListItem Value="">All Bikes</asp:ListItem>
+<asp:ListItem Value="0">New Bike</asp:ListItem>
+<asp:ListItem Value="1">Used Bike</asp:ListItem>
+
+</asp:DropDownList>
+
+</div>
+
+<div class="col-md-2">
+
+<asp:Button ID="btnSearch"
+runat="server"
+Text="Search"
+CssClass="btn btn-primary"
+OnClick="btnSearch_Click" />
+
+</div>
+
+</div>
+
+
+
+<asp:GridView ID="gvApproved"
+runat="server"
+CssClass="table table-success table-striped"
+AutoGenerateColumns="false"
+OnRowCommand="gvApproved_RowCommand">
+
+<Columns>
+
+<asp:BoundField DataField="BrandName" HeaderText="Brand"/>
+<asp:BoundField DataField="ModelName" HeaderText="Model"/>
+<asp:BoundField DataField="Price" HeaderText="Price"/>
+
+<asp:TemplateField HeaderText="Type">
+<ItemTemplate>
+
+<%# Convert.ToBoolean(Eval("IsUsed")) ? "Used Bike" : "New Bike" %>
+
+</ItemTemplate>
+</asp:TemplateField>
+
+<asp:TemplateField HeaderText="Image">
+<ItemTemplate>
+
+<img src='../Uploads/Bikes/<%# Eval("Image1") %>'
+style="width:80px;height:60px;object-fit:cover;border-radius:8px;" />
+
+</ItemTemplate>
+</asp:TemplateField>
+
+<asp:TemplateField HeaderText="Action">
+<ItemTemplate>
+
+<asp:Button ID="btnDelete"
+runat="server"
+Text="Delete"
+CssClass="btn btn-danger btn-sm"
+CommandName="HardDelete"
+CommandArgument='<%# Eval("BikeID") %>' />
+
+</ItemTemplate>
+</asp:TemplateField>
+
+</Columns>
+
+</asp:GridView>
 
 </div>
 

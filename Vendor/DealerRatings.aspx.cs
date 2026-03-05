@@ -63,11 +63,29 @@ public partial class Vendor_DealerRatings : System.Web.UI.Page
             con.Open();
 
             string query = @"
-            SELECT U.FullName, R.Rating, R.Review, R.CreatedAt
-            FROM DealerRatings R
-            INNER JOIN Users U ON R.CustomerID=U.UserID
-            WHERE R.DealerID=@d
-            ORDER BY " + SortExpression + " " + SortDirection;
+
+SELECT 
+R.ReviewID,
+B.ModelName,
+U.FullName,
+R.Rating,
+R.ReviewText,
+R.IsApproved,
+R.CreatedAt
+
+FROM BikeReviews R
+
+INNER JOIN Bikes B
+ON R.BikeID = B.BikeID
+
+INNER JOIN Users U
+ON R.CustomerID = U.UserID
+
+WHERE B.DealerID = @d
+
+ORDER BY R.CreatedAt DESC
+
+";
 
             SqlCommand cmd = new SqlCommand(query, con);
             cmd.Parameters.AddWithValue("@d", Session["VendorID"]);
@@ -79,6 +97,46 @@ public partial class Vendor_DealerRatings : System.Web.UI.Page
             gvRatings.DataSource = dt;
             gvRatings.DataBind();
         }
+    }
+
+    protected void gvRatings_RowCommand(object sender,
+    System.Web.UI.WebControls.GridViewCommandEventArgs e)
+    {
+        int reviewId = Convert.ToInt32(e.CommandArgument);
+
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            if (e.CommandName == "approve")
+            {
+                SqlCommand cmd = new SqlCommand(
+                "UPDATE BikeReviews SET IsApproved=1 WHERE ReviewID=@id", con);
+
+                cmd.Parameters.AddWithValue("@id", reviewId);
+                cmd.ExecuteNonQuery();
+            }
+
+            if (e.CommandName == "reject")
+            {
+                SqlCommand cmd = new SqlCommand(
+                "UPDATE BikeReviews SET IsApproved=0 WHERE ReviewID=@id", con);
+
+                cmd.Parameters.AddWithValue("@id", reviewId);
+                cmd.ExecuteNonQuery();
+            }
+
+            if (e.CommandName == "delete")
+            {
+                SqlCommand cmd = new SqlCommand(
+                "DELETE FROM BikeReviews WHERE ReviewID=@id", con);
+
+                cmd.Parameters.AddWithValue("@id", reviewId);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        LoadRatings();
     }
 
     protected void gvRatings_PageIndexChanging(object sender,

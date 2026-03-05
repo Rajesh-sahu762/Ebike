@@ -60,19 +60,21 @@ public partial class Client_Bikes : System.Web.UI.Page
 
 
             string query =
-            "SELECT * FROM (" +
-            " SELECT ROW_NUMBER() OVER (ORDER BY " + order + ") AS RowNum," +
-            " B.BikeID,B.ModelName,B.Price,B.RangeKM,B.Image1,B.Slug," +
-            " CASE WHEN W.BikeID IS NULL THEN 0 ELSE 1 END AS IsWishlisted" +
-            " FROM Bikes B " +
-            " LEFT JOIN Wishlist W ON B.BikeID=W.BikeID AND W.CustomerID=@user " +
-            " WHERE B.IsApproved=1" +
-            " AND B.Price BETWEEN @min AND @max" +
-            brandFilter +
-            dealerFilter +
-            searchFilter +
-            (range != "" ? " AND B.RangeKM<=@range" : "") +
-            ") X WHERE RowNum BETWEEN @start AND @end";
+ "SELECT * FROM (" +
+ " SELECT ROW_NUMBER() OVER (ORDER BY " + order + ") AS RowNum," +
+ " B.BikeID,B.ModelName,B.Price,B.RangeKM,B.Image1,B.Slug," +
+ " CASE WHEN W.BikeID IS NULL THEN 0 ELSE 1 END AS IsWishlisted" +
+ " FROM Bikes B " +
+ " LEFT JOIN Wishlist W ON B.BikeID=W.BikeID AND W.CustomerID=@user " +
+ " WHERE B.IsApproved=1 " +
+ " AND ISNULL(B.IsUsed,0)=0 " +
+ " AND ISNULL(B.IsForRent,0)=0 " +
+ " AND B.Price BETWEEN @min AND @max" +
+ brandFilter +
+ dealerFilter +
+ searchFilter +
+ (range != "" ? " AND B.RangeKM<=@range" : "") +
+ ") X WHERE RowNum BETWEEN @start AND @end";
 
 
             SqlCommand cmd = new SqlCommand(query, con);
