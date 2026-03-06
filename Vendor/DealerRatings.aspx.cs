@@ -39,19 +39,62 @@ public partial class Vendor_DealerRatings : System.Web.UI.Page
 
             int dealerId = Convert.ToInt32(Session["VendorID"]);
 
-            SqlCommand avgCmd = new SqlCommand(
-                "SELECT ISNULL(AVG(CAST(Rating AS FLOAT)),0) FROM DealerRatings WHERE DealerID=@d", con);
-            avgCmd.Parameters.AddWithValue("@d", dealerId);
-            lblAvg.Text = Math.Round(Convert.ToDouble(avgCmd.ExecuteScalar()), 1).ToString();
+            // ===== AVG RATING =====
 
-            SqlCommand totalCmd = new SqlCommand(
-                "SELECT COUNT(*) FROM DealerRatings WHERE DealerID=@d", con);
+            SqlCommand avgCmd = new SqlCommand(@"
+
+        SELECT ISNULL(AVG(CAST(R.Rating AS FLOAT)),0)
+
+        FROM BikeReviews R
+        INNER JOIN Bikes B ON R.BikeID = B.BikeID
+
+        WHERE B.DealerID=@d
+        AND R.IsApproved=1
+
+        ", con);
+
+            avgCmd.Parameters.AddWithValue("@d", dealerId);
+
+            double avg = Convert.ToDouble(avgCmd.ExecuteScalar());
+
+            lblAvg.Text = Math.Round(avg, 1).ToString();
+
+
+            // ===== TOTAL REVIEWS =====
+
+            SqlCommand totalCmd = new SqlCommand(@"
+
+        SELECT COUNT(*)
+
+        FROM BikeReviews R
+        INNER JOIN Bikes B ON R.BikeID = B.BikeID
+
+        WHERE B.DealerID=@d
+
+        ", con);
+
             totalCmd.Parameters.AddWithValue("@d", dealerId);
+
             lblTotal.Text = totalCmd.ExecuteScalar().ToString();
 
-            SqlCommand fiveCmd = new SqlCommand(
-                "SELECT COUNT(*) FROM DealerRatings WHERE DealerID=@d AND Rating=5", con);
+
+            // ===== 5 STAR REVIEWS =====
+
+            SqlCommand fiveCmd = new SqlCommand(@"
+
+        SELECT COUNT(*)
+
+        FROM BikeReviews R
+        INNER JOIN Bikes B ON R.BikeID = B.BikeID
+
+        WHERE B.DealerID=@d
+        AND R.Rating=5
+        AND R.IsApproved=1
+
+        ", con);
+
             fiveCmd.Parameters.AddWithValue("@d", dealerId);
+
             lblFive.Text = fiveCmd.ExecuteScalar().ToString();
         }
     }
@@ -137,6 +180,7 @@ ORDER BY R.CreatedAt DESC
         }
 
         LoadRatings();
+        LoadSummary();
     }
 
     protected void gvRatings_PageIndexChanging(object sender,

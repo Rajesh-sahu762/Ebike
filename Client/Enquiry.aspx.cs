@@ -92,11 +92,34 @@ WHERE b.Slug=@slug", con);
 
             con.Open();
 
-            SqlCommand check = new SqlCommand(
-            "SELECT COUNT(*) FROM Leads WHERE CustomerID=@u AND BikeID=@b", con);
+            // ===== DUPLICATE CHECK (24 HOURS) =====
 
-            check.Parameters.AddWithValue("@u", userId);
-            check.Parameters.AddWithValue("@b", bikeId);
+            SqlCommand dup = new SqlCommand(@"
+SELECT COUNT(*)
+FROM Leads
+WHERE CustomerID=@u
+AND BikeID=@b
+AND CreatedAt > DATEADD(HOUR,-24,GETDATE())", con);
+
+            dup.Parameters.AddWithValue("@u", userId);
+            dup.Parameters.AddWithValue("@b", bikeId);
+
+            if (Convert.ToInt32(dup.ExecuteScalar()) > 0)
+                return "duplicate";
+
+
+            // ===== DAILY LIMIT =====
+
+            SqlCommand limit = new SqlCommand(@"
+SELECT COUNT(*)
+FROM Leads
+WHERE CustomerID=@u
+AND CreatedAt > DATEADD(DAY,-1,GETDATE())", con);
+
+            limit.Parameters.AddWithValue("@u", userId);
+
+            if (Convert.ToInt32(limit.ExecuteScalar()) >= 5)
+                return "limit";
 
             int exists = Convert.ToInt32(check.ExecuteScalar());
 

@@ -251,12 +251,13 @@ bottom:70px;
 
 </style>
 
+
     <asp:HiddenField ID="hfSearch" runat="server" />
     <asp:HiddenField ID="hfDealer" runat="server" />
     <section class="bike-wrapper">
-<div class="container">
+<div class="container mt-5">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-3">
 <h4>All Electric Bikes</h4>
 
 <div class="d-flex gap-2">

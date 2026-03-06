@@ -116,7 +116,8 @@ public partial class Client_Home : System.Web.UI.Page
             string query = @"SELECT TOP 6 BikeID, ModelName, Price,
                              RangeKM, Image1, Slug
                              FROM Bikes
-                             WHERE IsApproved=1";
+                             WHERE IsApproved=1 AND IsUsed = 0
+AND IsForRent = 0";
 
             if (!string.IsNullOrEmpty(budget))
                 query += " AND Price <= @budget";
@@ -124,7 +125,7 @@ public partial class Client_Home : System.Web.UI.Page
             if (!string.IsNullOrEmpty(brandId))
                 query += " AND BrandID = @brand";
 
-            query += " ORDER BY BikeID DESC";
+            query += " ORDER BY CASE WHEN BikeID IN (SELECT BikeID FROM FeaturedBikes WHERE IsActive=1 AND EndDate >= GETDATE()) THEN 0 ELSE 1 END, CreatedAt DESC";
 
             SqlCommand cmd = new SqlCommand(query, con);
 

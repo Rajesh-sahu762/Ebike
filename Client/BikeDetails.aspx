@@ -556,49 +556,67 @@ background:#ef4444;
 }
 
 /* ===============================
-   REVIEWS
+   REVIEWS SECTION PREMIUM UI
 ================================ */
 
 .reviews-section{
 max-width:1180px;
-margin:60px auto;
+margin:70px auto;
 padding:0 20px;
 }
 
-.reviews-title{
-font-size:22px;
-font-weight:700;
-margin-bottom:25px;
+.reviews-container{
+background:#ffffff;
+border-radius:16px;
+padding:40px;
+box-shadow:0 10px 30px rgba(0,0,0,0.06);
 }
 
-.reviews-wrapper{
-display:grid;
-grid-template-columns:300px 1fr;
-gap:40px;
+/* TOP LAYOUT */
+
+.reviews-top{
+display:flex;
+align-items:flex-start;
+justify-content:space-between;
+gap:80px;
+margin-bottom:40px;
+flex-wrap:wrap;
 }
 
-.rating-big{
-font-size:48px;
+/* LEFT RATING */
+
+.reviews-rating{
+width:300px;
+}
+
+.rating-number{
+font-size:52px;
 font-weight:700;
+line-height:1;
+margin-bottom:6px;
 }
 
 .rating-stars{
 color:#f59e0b;
 font-size:20px;
-margin:5px 0;
+margin-bottom:6px;
 }
 
 .rating-count{
-color:#6b7280;
 font-size:13px;
-margin-bottom:20px;
+color:#6b7280;
+margin-bottom:14px;
+}
+
+.rating-breakdown{
+width:100%;
 }
 
 .breakdown-row{
 display:flex;
 align-items:center;
 gap:10px;
-margin-bottom:6px;
+margin-bottom:8px;
 font-size:13px;
 }
 
@@ -615,157 +633,151 @@ height:100%;
 background:#f59e0b;
 }
 
-.review-item{
-background:#fff;
-padding:18px;
-border-radius:12px;
-box-shadow:0 6px 20px rgba(0,0,0,0.05);
-margin-bottom:15px;
+/* REVIEW FORM */
+
+.review-form-mini{
+width:420px;
+display:flex;
+flex-direction:column;
+gap:12px;
 }
 
-.review-item h4{
-font-size:14px;
+.review-form-mini h4{
+font-size:20px;
 margin-bottom:4px;
 }
 
-.review-item .stars{
-color:#f59e0b;
+.review-form-mini select,
+.review-form-mini input,
+.review-form-mini textarea{
+width:100%;
+padding:12px;
+border-radius:8px;
+border:1px solid #e5e7eb;
 font-size:14px;
 }
 
-.review-item p{
-font-size:13px;
-color:#6b7280;
-margin-top:6px;
+.review-form-mini textarea{
+height:100px;
+resize:none;
 }
 
-/* MOBILE */
-
-@media(max-width:900px){
-
-.reviews-wrapper{
-grid-template-columns:1fr;
+.review-form-mini button{
+background:#ef4444;
+color:#fff;
+border:none;
+padding:14px;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
 }
 
+.review-form-mini button:hover{
+background:#dc2626;
 }
 
+/* CAROUSEL */
 
-        /* WRITE REVIEW */
-
-.write-review-section{
-max-width:1180px;
-margin:60px auto;
-padding:0 20px;
+.reviews-slider-wrapper{
+position:relative;
+margin-top:20px;
 }
 
-.review-form{
-background:#fff;
-padding:25px;
+.reviews-slider{
+display:flex;
+gap:20px;
+overflow-x:auto;
+scroll-behavior:smooth;
+padding-bottom:10px;
+}
+
+.reviews-slider::-webkit-scrollbar{
+display:none;
+}
+
+/* REVIEW CARD */
+
+.review-card{
+min-width:320px;
+background:#ffffff;
 border-radius:14px;
+padding:20px;
 box-shadow:0 8px 25px rgba(0,0,0,0.05);
-max-width:600px;
 }
 
-.review-form label{
-display:block;
-margin-top:10px;
+.review-user{
+display:flex;
+align-items:center;
+gap:12px;
+margin-bottom:10px;
+}
+
+.user-avatar{
+width:40px;
+height:40px;
+background:#e5e7eb;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
 font-weight:600;
 font-size:14px;
 }
 
-.review-form select,
-.review-form input,
-.review-form textarea{
-width:100%;
-padding:10px;
-border-radius:8px;
+.review-stars{
+color:#f59e0b;
+font-size:14px;
+}
+
+.review-title{
+font-weight:600;
+font-size:14px;
+}
+
+.review-text{
+font-size:13px;
+color:#6b7280;
+margin-top:8px;
+line-height:1.5;
+}
+
+/* SLIDER BUTTON */
+
+.review-nav{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+width:36px;
+height:36px;
+border-radius:50%;
+background:#ffffff;
 border:1px solid #e5e7eb;
-margin-top:5px;
-}
-
-.review-form textarea{
-height:120px;
-resize:none;
-}
-
-.review-form button{
-margin-top:15px;
-background:#ef4444;
-color:#fff;
-border:none;
-padding:12px;
-border-radius:8px;
 cursor:pointer;
 }
 
-.review-form button:hover{
-background:#dc2626;
+.review-nav.left{
+left:-18px;
 }
 
-#reviewMsg{
-margin-top:10px;
-font-size:13px;
+.review-nav.right{
+right:-18px;
 }
 
-/* ===============================
-   REVIEW PAGE LAYOUT FIX
-================================ */
+/* MOBILE */
 
-.reviews-layout{
-max-width:1180px;
-margin:70px auto;
-padding:0 20px;
-display:grid;
-grid-template-columns:380px 1fr;
-gap:60px;
-align-items:start;
+@media(max-width:768px){
+
+.reviews-top{
+flex-direction:column;
+gap:30px;
 }
 
-/* LEFT CARD */
-
-.write-review-section{
-margin:0;
-padding:0;
-}
-
-.review-form{
-background:#fff;
-padding:28px;
-border-radius:16px;
-box-shadow:0 10px 30px rgba(0,0,0,0.06);
+.reviews-rating{
 width:100%;
 }
 
-/* RIGHT REVIEWS */
-
-.reviews-section{
-margin:0;
-padding:0;
-}
-
-.reviews-wrapper{
-display:block;
-}
-
-/* spacing fix */
-
-.reviews-title{
-margin-bottom:20px;
-}
-
-.rating-breakdown{
-margin-top:15px;
-}
-
-/* ===============================
-   MOBILE
-================================ */
-
-@media(max-width:900px){
-
-.reviews-layout{
-grid-template-columns:1fr;
-gap:40px;
+.review-form-mini{
+width:100%;
 }
 
 }
@@ -857,6 +869,27 @@ flex:1;
         #wishlistBtn.active{
 color:#ef4444;
 font-weight:600;
+}
+
+        .breakdown-row{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:6px;
+font-size:13px;
+}
+
+.breakdown-bar{
+flex:1;
+height:6px;
+background:#e5e7eb;
+border-radius:4px;
+overflow:hidden;
+}
+
+.breakdown-fill{
+height:100%;
+background:#f59e0b;
 }
 
     </style>
@@ -1068,15 +1101,17 @@ View Dealer Bikes
 
        <!-- Review section -->
 
-    <div class="reviews-layout">
+    <section class="reviews-section">
 
-    <section class="write-review-section">
+<div class="reviews-container">
 
-<h2>Write a Review</h2>
+<!-- HEADER -->
 
-<div class="review-form">
+<div class="reviews-top">
 
-<label>Rating</label>
+    <div class="review-form-mini">
+
+<h4>Write a Review</h4>
 
 <select id="rating">
 <option value="5">★★★★★ (5)</option>
@@ -1086,34 +1121,19 @@ View Dealer Bikes
 <option value="1">★ (1)</option>
 </select>
 
-<label>Review Title</label>
+<input type="text" id="reviewTitle" placeholder="Review title">
 
-<input type="text" id="reviewTitle" placeholder="Review title"/>
+<textarea id="reviewText" placeholder="Write your review"></textarea>
 
-<label>Your Review</label>
-
-<textarea id="reviewText"
-placeholder="Share your experience"></textarea>
-
-<button type="button" onclick="submitReview()">Submit Review</button>
+<button onclick="submitReview()">Submit Review</button>
 
 <div id="reviewMsg"></div>
 
 </div>
 
-</section>
+<div class="reviews-rating">
 
-    <section class="reviews-section">
-
-<h2 class="reviews-title">Customer Reviews</h2>
-
-<div class="reviews-wrapper">
-
-<!-- LEFT SUMMARY -->
-
-<div class="reviews-summary">
-
-<div class="rating-big">
+<div class="rating-number">
 <asp:Literal ID="litAvgRating" runat="server"></asp:Literal>
 </div>
 
@@ -1122,26 +1142,38 @@ placeholder="Share your experience"></textarea>
 </div>
 
 <div class="rating-count">
-<asp:Literal ID="litReviewCount" runat="server"></asp:Literal>
+Based on <asp:Literal ID="litReviewCount" runat="server"></asp:Literal>
 </div>
-
-<div class="rating-breakdown">
+    <div class="rating-breakdown">
 <asp:Literal ID="litBreakdown" runat="server"></asp:Literal>
 </div>
 
 </div>
 
-<!-- RIGHT REVIEWS -->
 
-<div class="reviews-list">
+
+</div>
+
+
+<!-- CAROUSEL -->
+
+<div class="reviews-slider-wrapper">
+
+<button type="button" class="review-nav left" onclick="slideReviews(-1)">‹</button>
+
+<div class="reviews-slider" id="reviewsSlider">
+
 <asp:Literal ID="litRecentReviews" runat="server"></asp:Literal>
+
+</div>
+
+<button type="button" class="review-nav right" onclick="slideReviews(1)">›</button>
+
 </div>
 
 </div>
 
 </section>
-
-        </div>
 
      <!-- similar section -->
 
@@ -1311,6 +1343,17 @@ Enquire Now
 
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
+
+        }
+
+        function slideReviews(dir){
+
+            var slider = document.getElementById("reviewsSlider");
+
+            slider.scrollBy({
+                left: dir * 320,
+                behavior: 'smooth'
+            });
 
         }
 

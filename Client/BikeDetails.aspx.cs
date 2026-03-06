@@ -420,15 +420,31 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
 
             while (dr.Read())
             {
-                html += "<div class='review-item'>";
+                html += "<div class='review-card'>";
 
-                html += "<h4>" + dr["ReviewTitle"] + "</h4>";
+                html += "<div class='review-user'>";
 
-                html += "<div class='stars'>" +
-                        BuildStars(Convert.ToInt32(dr["Rating"])) +
-                        "</div>";
+                html += "<div class='user-avatar'>"
+                + dr["ReviewTitle"].ToString().Substring(0, 1)
+                + "</div>";
 
-                html += "<p>" + dr["ReviewText"] + "</p>";
+                html += "<div>";
+
+                html += "<div class='review-stars'>"
+                + BuildStars(Convert.ToInt32(dr["Rating"]))
+                + "</div>";
+
+                html += "<div class='review-title'>"
+                + dr["ReviewTitle"] +
+                "</div>";
+
+                html += "</div>";
+
+                html += "</div>";
+
+                html += "<div class='review-text'>"
+                + dr["ReviewText"] +
+                "</div>";
 
                 html += "</div>";
             }

@@ -621,12 +621,16 @@ height:100%;
 background:#f59e0b;
 }
 
+/* REVIEW CARD FIX */
+
 .review-item{
+min-width:320px;
+max-width:320px;
+flex:0 0 320px;
 background:#fff;
 padding:18px;
 border-radius:12px;
 box-shadow:0 6px 20px rgba(0,0,0,0.05);
-margin-bottom:15px;
 }
 
 .review-item h4{
@@ -774,6 +778,52 @@ grid-template-columns:1fr;
 gap:40px;
 }
 
+}
+
+          /* ===============================
+   REVIEWS CAROUSEL
+================================ */
+
+.reviews-slider-wrapper{
+position:relative;
+margin-top:20px;
+}
+
+.reviews-slider{
+display:flex;
+gap:20px;
+overflow-x:auto;
+scroll-behavior:smooth;
+padding-bottom:10px;
+}
+
+.reviews-slider::-webkit-scrollbar{
+display:none;
+}
+
+.review-item{
+min-width:320px;
+flex-shrink:0;
+}
+
+.review-nav{
+position:absolute;
+top:40%;
+width:36px;
+height:36px;
+border-radius:50%;
+background:#fff;
+border:1px solid #e5e7eb;
+cursor:pointer;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+.review-nav.left{
+left:-18px;
+}
+
+.review-nav.right{
+right:-18px;
 }
 
         /* ===============================
@@ -1152,9 +1202,18 @@ placeholder="Share your experience"></textarea>
 </div>
 
 <!-- RIGHT REVIEWS -->
+<div class="reviews-slider-wrapper">
 
-<div class="reviews-list">
+<button type="button" class="review-nav left" onclick="slideReviews(-1)">‹</button>
+
+<div class="reviews-slider" id="reviewsSlider">
+
 <asp:Literal ID="litRecentReviews" runat="server"></asp:Literal>
+
+</div>
+
+<button type="button" class="review-nav right" onclick="slideReviews(1)">›</button>
+
 </div>
 
 </div>
@@ -1228,6 +1287,17 @@ Contact Seller
 
 
     <script>
+
+        function slideReviews(dir){
+
+            var slider = document.getElementById("reviewsSlider");
+
+            slider.scrollBy({
+                left: dir * 340,
+                behavior: 'smooth'
+            });
+
+        }
 
         function goCompare(){
 
