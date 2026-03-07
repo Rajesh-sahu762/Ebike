@@ -91,6 +91,23 @@
 
             <asp:BoundField DataField="CreatedAt" HeaderText="Created" />
 
+            <asp:TemplateField HeaderText="Featured">
+<ItemTemplate>
+
+<asp:LinkButton
+ID="btnFeature"
+runat="server"
+CssClass="btn btn-sm btn-warning"
+CommandName="FeatureBike"
+CommandArgument='<%# Eval("BikeID") %>'>
+
+Feature
+
+</asp:LinkButton>
+
+</ItemTemplate>
+</asp:TemplateField>
+
             <asp:TemplateField>
                 <ItemTemplate>
 
@@ -100,6 +117,7 @@
                         CommandArgument='<%# Eval("BikeID") %>'>
                         Edit
                     </asp:LinkButton>
+
 
                     <asp:LinkButton ID="btnDelete" runat="server"
                         CssClass="btn btn-sm btn-danger"

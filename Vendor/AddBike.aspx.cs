@@ -38,6 +38,17 @@ public partial class Vendor_AddBike : System.Web.UI.Page
     protected void btnAddBike_Click(object sender, EventArgs e)
     {
 
+        // ================= PLAN LIMIT CHECK =================
+
+        if (!CanAddBike())
+        {
+            lblMsg.Text = "Your subscription bike limit reached. Upgrade your plan.";
+            lblMsg.ForeColor = System.Drawing.Color.Red;
+            return;
+        }
+
+
+
         if (ddlBrand.SelectedValue == "" || txtModel.Text.Trim() == "")
         {
             lblMsg.Text = "Brand and Model are required.";
@@ -209,6 +220,53 @@ VALUES
 
         }
     }
+
+
+    bool CanAddBike()
+    {
+
+        int dealerId = Convert.ToInt32(Session["VendorID"]);
+
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+
+            con.Open();
+
+            SqlCommand sub = new SqlCommand(@"
+
+SELECT MaxBikes
+FROM DealerSubscriptions
+WHERE DealerID=@d
+AND IsActive=1
+AND EndDate >= GETDATE()
+
+", con);
+
+            sub.Parameters.AddWithValue("@d", dealerId);
+
+            object limitObj = sub.ExecuteScalar();
+
+            if (limitObj == null)
+                return false;
+
+            int limit = Convert.ToInt32(limitObj);
+
+            SqlCommand count = new SqlCommand(
+            "SELECT COUNT(*) FROM Bikes WHERE DealerID=@d", con);
+
+            count.Parameters.AddWithValue("@d", dealerId);
+
+            int current = Convert.ToInt32(count.ExecuteScalar());
+
+            if (current >= limit)
+                return false;
+
+            return true;
+
+        }
+
+    }
+
 
     void ClearForm()
     {

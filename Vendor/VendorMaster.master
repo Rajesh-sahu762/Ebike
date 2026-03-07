@@ -98,8 +98,10 @@ body{
     <a href="AddBike.aspx"><i class="fa fa-plus"></i> Add Bike</a>
     <a href="ManageBikes.aspx"><i class="fa fa-motorcycle"></i> Manage Bikes</a>
     <a href="VendorManageLeads.aspx"><i class="fa fa-envelope"></i> Leads</a>
-    <a href="DealerRatings.aspx"><i class="fa fa-star"></i> Ratings</a>
+    <a href="DealerRatings.aspx"><i class="fa fa-star"></i> Ratings</a>   
+    <a href="VendorEarnings.aspx"><i class="fa fa-dollar-sign"></i> Earnings</a>
     <a href="VendorAnalytics.aspx"><i class="fa fa-chart-line"></i> Analytics</a>
+    <a href="VendorSubscription.aspx"><i class="fa fa-clipboard-list"></i> Plans</a>
     <a href="VendorProfile.aspx"><i class="fa fa-user"></i> Profile</a>
 </div>
 

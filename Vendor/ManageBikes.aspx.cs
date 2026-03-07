@@ -46,7 +46,14 @@ public partial class Vendor_ManageBikes : System.Web.UI.Page
             con.Open();
 
             string query = @"
-SELECT B.BikeID, BR.BrandName, B.ModelName, B.Price,
+SELECT B.BikeID,
+BR.BrandName,
+B.ModelName,
+B.Price,
+B.IsForRent,
+B.RentPerDay,
+B.RentPerWeek,
+B.RentPerMonth,
        B.Image1, B.IsApproved, B.CreatedAt,
        ISNULL(B.IsForRent,0) AS IsForRent,
        (SELECT COUNT(*) FROM Leads L WHERE L.BikeID=B.BikeID) AS LeadCount
@@ -99,6 +106,95 @@ ORDER BY B.CreatedAt DESC";
             DeleteBike(bikeId);
             LoadBikes();
         }
+
+        if (e.CommandName == "FeatureBike")
+        {
+
+            int dealerId = Convert.ToInt32(Session["VendorID"]);
+
+            if (!CanFeatureBike(dealerId))
+            {
+                lblMsg.Text = "Featured bike limit reached for your plan.";
+                return;
+            }
+
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand(@"
+
+INSERT INTO FeaturedBikes
+(BikeID,DealerID,StartDate,EndDate,IsActive)
+
+VALUES
+
+(@bike,@dealer,GETDATE(),DATEADD(DAY,7,GETDATE()),1)
+
+", con);
+
+                cmd.Parameters.AddWithValue("@bike", bikeId);
+                cmd.Parameters.AddWithValue("@dealer", dealerId);
+
+                cmd.ExecuteNonQuery();
+
+            }
+
+        }
+
+
+    }
+
+    bool CanFeatureBike(int dealerId)
+    {
+
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+
+            con.Open();
+
+            SqlCommand sub = new SqlCommand(@"
+
+SELECT TOP 1 FeaturedLimit
+FROM DealerSubscriptionRequests
+WHERE DealerID=@d
+AND Status='Approved'
+
+ORDER BY ApprovedAt DESC
+
+", con);
+
+            sub.Parameters.AddWithValue("@d", dealerId);
+
+            object limitObj = sub.ExecuteScalar();
+
+            if (limitObj == null)
+                return false;
+
+            int limit = Convert.ToInt32(limitObj);
+
+            SqlCommand count = new SqlCommand(@"
+
+SELECT COUNT(*)
+FROM FeaturedBikes
+WHERE DealerID=@d
+AND IsActive=1
+AND EndDate>=GETDATE()
+
+", con);
+
+            count.Parameters.AddWithValue("@d", dealerId);
+
+            int current = Convert.ToInt32(count.ExecuteScalar());
+
+            if (current >= limit)
+                return false;
+
+            return true;
+
+        }
+
     }
 
     // ================= LOAD EDIT MODAL =================

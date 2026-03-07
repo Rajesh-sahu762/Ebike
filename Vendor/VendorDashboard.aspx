@@ -48,6 +48,39 @@
 
 </div>
 
+    <div class="card shadow-sm mt-4 p-3">
+
+<h5>Subscription Plan</h5>
+
+<div class="row">
+
+<div class="col-md-4">
+Plan :
+<asp:Label ID="lblPlanName" runat="server"></asp:Label>
+</div>
+
+<div class="col-md-4">
+Expiry :
+<asp:Label ID="lblExpiry" runat="server"></asp:Label>
+</div>
+
+<div class="col-md-4">
+Bike Limit :
+<asp:Label ID="lblBikeLimit" runat="server"></asp:Label>
+</div>
+
+</div>
+
+<br />
+
+<asp:Button ID="btnUpgradePlan"
+runat="server"
+Text="Upgrade Plan"
+CssClass="btn btn-warning"
+/>
+
+</div>
+
 <!-- Recent Leads -->
 <div class="card shadow-sm mt-4 p-3">
     <h5 class="mb-3">Recent Leads</h5>

@@ -13,6 +13,44 @@ public partial class Vendor_VendorDashboard : System.Web.UI.Page
         {
             LoadSummary();
             LoadRecentLeads();
+            LoadSubscription();
+        }
+    }
+
+
+    void LoadSubscription()
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            int dealerId = Convert.ToInt32(Session["VendorID"]);
+
+            SqlCommand cmd = new SqlCommand(@"
+        SELECT TOP 1 PlanName, EndDate, MaxBikes
+        FROM DealerSubscriptions
+        WHERE DealerID=@id
+        AND IsActive=1
+        ORDER BY EndDate DESC", con);
+
+            cmd.Parameters.AddWithValue("@id", dealerId);
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            if (dr.Read())
+            {
+                lblPlanName.Text = dr["PlanName"].ToString();
+                lblExpiry.Text =
+                    Convert.ToDateTime(dr["EndDate"]).ToString("dd MMM yyyy");
+
+                lblBikeLimit.Text = dr["MaxBikes"].ToString();
+            }
+            else
+            {
+                lblPlanName.Text = "No Active Plan";
+                lblExpiry.Text = "-";
+                lblBikeLimit.Text = "0";
+            }
         }
     }
 

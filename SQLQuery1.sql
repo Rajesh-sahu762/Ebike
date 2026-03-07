@@ -24,12 +24,35 @@ CREATE TABLE Users (
 );
 
 
-SELECT *
-FROM BikeReviews R
-INNER JOIN Bikes B ON R.BikeID = B.BikeID
-WHERE B.DealerID = 1
+CREATE TABLE SubscriptionPlans
+(
+PlanID INT IDENTITY PRIMARY KEY,
+PlanName NVARCHAR(50),
+Price DECIMAL(18,2),
+DurationDays INT,
+MaxBikes INT,
+IsActive BIT DEFAULT 1
+)
 
 
+CREATE TABLE DealerSubscriptionRequests
+(
+RequestID INT IDENTITY PRIMARY KEY,
+
+DealerID INT,
+PlanName NVARCHAR(50),
+
+BikeLimit INT,
+FeaturedLimit INT,
+
+Amount DECIMAL(18,2),
+
+Status NVARCHAR(20) DEFAULT 'Pending',
+-- Pending / Approved / Rejected
+
+CreatedAt DATETIME DEFAULT GETDATE(),
+ApprovedAt DATETIME NULL
+)
 
 ALTER TABLE Bikes ADD
 IsUsed BIT DEFAULT 0 ,
@@ -48,6 +71,8 @@ EndDate DATETIME,
 MaxBikes INT,
 IsActive BIT
 )
+
+delete from DealerSubscriptionRequests where Status ='Rejected'
 
 CREATE TABLE FeaturedBikes(
 FeatureID INT IDENTITY PRIMARY KEY,

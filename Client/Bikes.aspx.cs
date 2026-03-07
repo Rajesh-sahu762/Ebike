@@ -19,9 +19,34 @@ public partial class Client_Bikes : System.Web.UI.Page
 
             if (!string.IsNullOrEmpty(dealer))
                 hfDealer.Value = dealer;
+
+            ExpireFeaturedBikes();
+            ExpireSubscriptions();
         }
     }
 
+    private void ExpireSubscriptions()
+    {
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["con"].ConnectionString);
+        con.Open();
+
+        SqlCommand cmd = new SqlCommand("UPDATE DealerSubscriptions SET IsActive=0 WHERE EndDate < GETDATE() AND IsActive=1", con);
+        cmd.ExecuteNonQuery();
+
+        con.Close();
+    }
+
+
+    private void ExpireFeaturedBikes()
+    {
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["con"].ConnectionString);
+        con.Open();
+
+        SqlCommand cmd = new SqlCommand("UPDATE FeaturedBikes SET IsActive=0 WHERE EndDate < GETDATE() AND IsActive=1", con);
+        cmd.ExecuteNonQuery();
+
+        con.Close();
+    }
 
     [WebMethod]
     public static object GetBikes(int page, int minPrice, int maxPrice,
@@ -60,21 +85,35 @@ public partial class Client_Bikes : System.Web.UI.Page
 
 
             string query =
- "SELECT * FROM (" +
- " SELECT ROW_NUMBER() OVER (ORDER BY " + order + ") AS RowNum," +
- " B.BikeID,B.ModelName,B.Price,B.RangeKM,B.Image1,B.Slug," +
- " CASE WHEN W.BikeID IS NULL THEN 0 ELSE 1 END AS IsWishlisted" +
- " FROM Bikes B " +
- " LEFT JOIN Wishlist W ON B.BikeID=W.BikeID AND W.CustomerID=@user " +
- " WHERE B.IsApproved=1 " +
- " AND ISNULL(B.IsUsed,0)=0 " +
- " AND ISNULL(B.IsForRent,0)=0 " +
- " AND B.Price BETWEEN @min AND @max" +
- brandFilter +
- dealerFilter +
- searchFilter +
- (range != "" ? " AND B.RangeKM<=@range" : "") +
- ") X WHERE RowNum BETWEEN @start AND @end";
+"SELECT * FROM (" +
+" SELECT ROW_NUMBER() OVER (ORDER BY " +
+" CASE WHEN FB.IsActive=1 THEN 1 ELSE 2 END," +
+" CASE WHEN DS.IsActive=1 THEN 1 ELSE 2 END," +
+order + ") AS RowNum," +
+
+" B.BikeID,B.ModelName,B.Price,B.RangeKM,B.Image1,B.Slug," +
+" CASE WHEN W.BikeID IS NULL THEN 0 ELSE 1 END AS IsWishlisted" +
+
+" FROM Bikes B " +
+
+" LEFT JOIN Wishlist W ON B.BikeID=W.BikeID AND W.CustomerID=@user " +
+
+" LEFT JOIN FeaturedBikes FB ON B.BikeID=FB.BikeID " +
+" AND FB.IsActive=1 AND FB.EndDate>=GETDATE() " +
+
+" LEFT JOIN DealerSubscriptions DS ON B.DealerID=DS.DealerID " +
+" AND DS.IsActive=1 AND DS.EndDate>=GETDATE() " +
+
+" WHERE B.IsApproved=1 " +
+" AND ISNULL(B.IsUsed,0)=0 " +
+" AND ISNULL(B.IsForRent,0)=0 " +
+" AND B.Price BETWEEN @min AND @max" +
+brandFilter +
+dealerFilter +
+searchFilter +
+(range != "" ? " AND B.RangeKM<=@range" : "") +
+
+") X WHERE RowNum BETWEEN @start AND @end";
 
 
             SqlCommand cmd = new SqlCommand(query, con);
