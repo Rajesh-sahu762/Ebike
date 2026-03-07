@@ -24,6 +24,12 @@ CREATE TABLE Users (
 );
 
 
+SELECT *
+FROM BikeReviews R
+INNER JOIN Bikes B ON R.BikeID = B.BikeID
+WHERE B.DealerID = 1
+
+
 
 ALTER TABLE Bikes ADD
 IsUsed BIT DEFAULT 0 ,
@@ -32,6 +38,33 @@ OwnerType NVARCHAR(10)
 
 select * from Users
 
+
+CREATE TABLE DealerSubscriptions(
+SubscriptionID INT IDENTITY PRIMARY KEY,
+DealerID INT,
+PlanName NVARCHAR(50),
+StartDate DATETIME,
+EndDate DATETIME,
+MaxBikes INT,
+IsActive BIT
+)
+
+CREATE TABLE FeaturedBikes(
+FeatureID INT IDENTITY PRIMARY KEY,
+BikeID INT,
+DealerID INT,
+StartDate DATETIME,
+EndDate DATETIME,
+IsActive BIT
+)
+
+CREATE TABLE EnquiryLogs(
+LogID INT IDENTITY PRIMARY KEY,
+UserID INT,
+BikeID INT,
+IP NVARCHAR(50),
+CreatedAt DATETIME
+)
 
 
 CREATE TABLE Brands (
