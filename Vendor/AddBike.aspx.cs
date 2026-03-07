@@ -38,50 +38,6 @@ public partial class Vendor_AddBike : System.Web.UI.Page
     protected void btnAddBike_Click(object sender, EventArgs e)
     {
 
-        // ===== SUBSCRIPTION CHECK =====
-
-        SqlCommand subCheck = new SqlCommand(@"
-SELECT COUNT(*) 
-FROM DealerSubscriptions
-WHERE DealerID=@d
-AND IsActive=1
-AND EndDate >= GETDATE()", con);
-
-        subCheck.Parameters.AddWithValue("@d", dealerId);
-
-        int activeSub = Convert.ToInt32(subCheck.ExecuteScalar());
-
-        if (activeSub == 0)
-        {
-            lblMsg.Text = "Your subscription has expired. Please renew to add bikes.";
-            lblMsg.ForeColor = System.Drawing.Color.Red;
-            return;
-        }
-
-        SqlCommand bikeLimit = new SqlCommand(@"
-SELECT MaxBikes
-FROM DealerSubscriptions
-WHERE DealerID=@d AND IsActive=1", con);
-
-        bikeLimit.Parameters.AddWithValue("@d", dealerId);
-
-        int maxBikes = Convert.ToInt32(bikeLimit.ExecuteScalar());
-
-        SqlCommand bikeCount = new SqlCommand(
-        "SELECT COUNT(*) FROM Bikes WHERE DealerID=@d", con);
-
-        bikeCount.Parameters.AddWithValue("@d", dealerId);
-
-        int currentBikes = Convert.ToInt32(bikeCount.ExecuteScalar());
-
-        if (currentBikes >= maxBikes)
-        {
-            lblMsg.Text = "Bike limit reached for your plan.";
-            lblMsg.ForeColor = System.Drawing.Color.Red;
-            return;
-        }
-
-
         if (ddlBrand.SelectedValue == "" || txtModel.Text.Trim() == "")
         {
             lblMsg.Text = "Brand and Model are required.";
@@ -95,6 +51,54 @@ WHERE DealerID=@d AND IsActive=1", con);
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
+
+
+
+            // ===== SUBSCRIPTION CHECK =====
+
+            SqlCommand subCheck = new SqlCommand(@"
+SELECT COUNT(*) 
+FROM DealerSubscriptions
+WHERE DealerID=@d
+AND IsActive=1
+AND EndDate >= GETDATE()", con);
+
+            subCheck.Parameters.AddWithValue("@d", dealerId);
+
+            int activeSub = Convert.ToInt32(subCheck.ExecuteScalar());
+
+            if (activeSub == 0)
+            {
+                lblMsg.Text = "Your subscription has expired. Please renew to add bikes.";
+                lblMsg.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            SqlCommand bikeLimit = new SqlCommand(@"
+SELECT MaxBikes
+FROM DealerSubscriptions
+WHERE DealerID=@d AND IsActive=1", con);
+
+            bikeLimit.Parameters.AddWithValue("@d", dealerId);
+
+            int maxBikes = Convert.ToInt32(bikeLimit.ExecuteScalar());
+
+            SqlCommand bikeCount = new SqlCommand(
+            "SELECT COUNT(*) FROM Bikes WHERE DealerID=@d", con);
+
+            bikeCount.Parameters.AddWithValue("@d", dealerId);
+
+            int currentBikes = Convert.ToInt32(bikeCount.ExecuteScalar());
+
+            if (currentBikes >= maxBikes)
+            {
+                lblMsg.Text = "Bike limit reached for your plan.";
+                lblMsg.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+
+
 
             // Unique check (DealerID, BrandID, ModelName)
             SqlCommand check = new SqlCommand(

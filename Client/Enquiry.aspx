@@ -257,6 +257,14 @@ Enquiry sent successfully. Dealer will contact you shortly.
 
 <script>
 
+    if (res.d == "duplicate") {
+        alert("You already enquired this bike in last 24 hours");
+    }
+
+    if (res.d == "limit") {
+        alert("Daily enquiry limit reached");
+    }
+
     function sendEnquiry() {
 
         var message = $("#msg").val();

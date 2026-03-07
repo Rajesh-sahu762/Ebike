@@ -75,10 +75,8 @@ WHERE b.Slug=@slug", con);
     }
 
     [WebMethod]
-
     public static string SubmitLead(string message)
     {
-
         if (HttpContext.Current.Session["CustomerID"] == null)
             return "login";
 
@@ -89,62 +87,58 @@ WHERE b.Slug=@slug", con);
 
         using (SqlConnection con = new SqlConnection(constr))
         {
-
             con.Open();
 
             // ===== DUPLICATE CHECK (24 HOURS) =====
 
             SqlCommand dup = new SqlCommand(@"
-SELECT COUNT(*)
-FROM Leads
-WHERE CustomerID=@u
-AND BikeID=@b
-AND CreatedAt > DATEADD(HOUR,-24,GETDATE())", con);
+        SELECT COUNT(*)
+        FROM Leads
+        WHERE CustomerID=@u
+        AND BikeID=@b
+        AND CreatedAt > DATEADD(HOUR,-24,GETDATE())", con);
 
             dup.Parameters.AddWithValue("@u", userId);
             dup.Parameters.AddWithValue("@b", bikeId);
 
-            if (Convert.ToInt32(dup.ExecuteScalar()) > 0)
+            int duplicate = Convert.ToInt32(dup.ExecuteScalar());
+
+            if (duplicate > 0)
                 return "duplicate";
 
 
-            // ===== DAILY LIMIT =====
+            // ===== DAILY LIMIT CHECK =====
 
             SqlCommand limit = new SqlCommand(@"
-SELECT COUNT(*)
-FROM Leads
-WHERE CustomerID=@u
-AND CreatedAt > DATEADD(DAY,-1,GETDATE())", con);
+        SELECT COUNT(*)
+        FROM Leads
+        WHERE CustomerID=@u
+        AND CreatedAt > DATEADD(DAY,-1,GETDATE())", con);
 
             limit.Parameters.AddWithValue("@u", userId);
 
-            if (Convert.ToInt32(limit.ExecuteScalar()) >= 5)
+            int today = Convert.ToInt32(limit.ExecuteScalar());
+
+            if (today >= 5)
                 return "limit";
 
-            int exists = Convert.ToInt32(check.ExecuteScalar());
 
-            if (exists > 0)
-                return "exists";
+            // ===== INSERT LEAD =====
 
             SqlCommand cmd = new SqlCommand(@"
-
-INSERT INTO Leads
-(BikeID,CustomerID,Message,CreatedAt)
-
-VALUES
-
-(@bike,@user,@msg,GETDATE())", con);
+        INSERT INTO Leads
+        (BikeID,CustomerID,Message,CreatedAt)
+        VALUES
+        (@bike,@user,@msg,GETDATE())", con);
 
             cmd.Parameters.AddWithValue("@bike", bikeId);
             cmd.Parameters.AddWithValue("@user", userId);
             cmd.Parameters.AddWithValue("@msg", message);
 
             cmd.ExecuteNonQuery();
-
         }
 
         return "ok";
-
     }
 
 }
