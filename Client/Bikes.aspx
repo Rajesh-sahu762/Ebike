@@ -337,6 +337,26 @@ Apply Filters
 
 <script>
 
+
+    let lastSearch = "";
+
+    function detectSearchChange(){
+
+        let currentSearch = $("#<%= hfSearch.ClientID %>").val();
+
+    if(currentSearch !== lastSearch){
+
+        page = 1;
+        finished = false;
+
+        $("#bikeContainer").html("");
+
+        lastSearch = currentSearch;
+
+    }
+
+}
+
     let page=1,loading=false,finished=false;
     let minPrice=0,maxPrice=500000;
 
@@ -364,6 +384,7 @@ Apply Filters
     }
 
     function loadBikes(reset){
+        detectSearchChange();
         if(loading||finished)return;
         loading=true;$("#loader").show();
 
@@ -388,7 +409,17 @@ Apply Filters
             success:function(res){
                 let d=res.d;
                 if(reset)$("#bikeContainer").html("");
-                if(d.count==0){finished=true;$("#loader").hide();return;}
+                if(d.count==0){
+
+                    if(page==1){
+                        $("#bikeContainer").html(
+                        "<div style='grid-column:1/-1;text-align:center;padding:40px;font-weight:600;'>No Bikes Found</div>");
+                    }
+
+                    finished=false;   // ⭐ important fix
+                    $("#loader").hide();
+                    return;
+                }
                 $("#bikeContainer").append(d.html);
                 page++;loading=false;$("#loader").hide();
             }
@@ -396,9 +427,15 @@ Apply Filters
     }
 
     function applyFilters(){
-        page=1;finished=false;
+
+        page=1;
+        finished=false;
+        loading=false;
+
         $("#bikeContainer").html("");
+
         loadBikes(true);
+
     }
 
     function toggleMobileFilter(){

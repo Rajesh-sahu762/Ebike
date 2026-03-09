@@ -1,5 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Client/ClientMaster.master" AutoEventWireup="true" CodeFile="Rental.aspx.cs" Inherits="Client_Default" %>
-
+﻿<%@ Page Title="Browse Bikes" Language="C#" MasterPageFile="~/Client/ClientMaster.master"
+    AutoEventWireup="true" CodeFile="~/Client/Rental.aspx.cs"
+    Inherits="Client_Rental" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
@@ -257,7 +258,7 @@ bottom:70px;
 <div class="container mt-5">
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-<h4>All Electric Bikes</h4>
+<h4>Electric Bikes for Rent</h4>
 
 <div class="d-flex gap-2">
 <select id="sortFilter" class="form-control" onchange="applyFilters()">
@@ -371,7 +372,7 @@ Apply Filters
 
         $.ajax({
             type:"POST",
-            url:"/Client/Bikes.aspx/GetBikes",
+            url:"/Client/Rental.aspx/GetBikes",
             data: JSON.stringify({
                 page:page,
                 minPrice:minPrice,
@@ -387,7 +388,21 @@ Apply Filters
             success:function(res){
                 let d=res.d;
                 if(reset)$("#bikeContainer").html("");
-                if(d.count==0){finished=true;$("#loader").hide();return;}
+                if(d.count==0){
+
+                    if(page==1){
+
+                        $("#bikeContainer").html(
+                        "<div style='grid-column:1/-1;text-align:center;padding:40px;font-weight:600;'>No Rental Bikes Found</div>");
+
+                    }
+
+                    finished=false; // important fix
+
+                    $("#loader").hide();
+                    return;
+
+                }
                 $("#bikeContainer").append(d.html);
                 page++;loading=false;$("#loader").hide();
             }
@@ -395,9 +410,15 @@ Apply Filters
     }
 
     function applyFilters(){
-        page=1;finished=false;
+
+        page=1;
+        finished=false;
+        loading=false;
+
         $("#bikeContainer").html("");
+
         loadBikes(true);
+
     }
 
     function toggleMobileFilter(){
@@ -492,5 +513,3 @@ Apply Filters
 </script>
 
 </asp:Content>
-
-

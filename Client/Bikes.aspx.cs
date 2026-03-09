@@ -27,7 +27,7 @@ public partial class Client_Bikes : System.Web.UI.Page
 
     private void ExpireSubscriptions()
     {
-        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["con"].ConnectionString);
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString);
         con.Open();
 
         SqlCommand cmd = new SqlCommand("UPDATE DealerSubscriptions SET IsActive=0 WHERE EndDate < GETDATE() AND IsActive=1", con);
@@ -39,7 +39,7 @@ public partial class Client_Bikes : System.Web.UI.Page
 
     private void ExpireFeaturedBikes()
     {
-        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["con"].ConnectionString);
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString);
         con.Open();
 
         SqlCommand cmd = new SqlCommand("UPDATE FeaturedBikes SET IsActive=0 WHERE EndDate < GETDATE() AND IsActive=1", con);
@@ -139,48 +139,55 @@ searchFilter +
 
             StringBuilder html = new StringBuilder();
 
-            foreach (DataRow dr in dt.Rows)
+            if (dt.Rows.Count == 0)
             {
-                string active = dr["IsWishlisted"].ToString() == "1" ? "active" : "";
+                html.Append("<div style='grid-column:1/-1;text-align:center;padding:40px;font-weight:600;'>No Bikes Found</div>");
+            }
+            else
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    string active = dr["IsWishlisted"].ToString() == "1" ? "active" : "";
 
-                html.Append("<div class='bike-card'>");
+                    html.Append("<div class='bike-card'>");
 
-                html.Append("<div class='bike-img'>");
+                    html.Append("<div class='bike-img'>");
 
-                html.Append("<img src='/Uploads/Bikes/" + dr["Image1"] + "'/>");
+                    html.Append("<img src='/Uploads/Bikes/" + dr["Image1"] + "'/>");
 
-                html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + dr["BikeID"] + ")'>♥</div>");
+                    html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + dr["BikeID"] + ")'>♥</div>");
 
-                html.Append("<label class='compare-label'>");
+                    html.Append("<label class='compare-label'>");
 
-                html.Append("<input type='checkbox' onchange='toggleCompare(this," + dr["BikeID"] + ")'/> Compare");
+                    html.Append("<input type='checkbox' onchange='toggleCompare(this," + dr["BikeID"] + ")'/> Compare");
 
-                html.Append("</label>");
+                    html.Append("</label>");
 
-                html.Append("</div>");
+                    html.Append("</div>");
 
-                html.Append("<div class='bike-body'>");
+                    html.Append("<div class='bike-body'>");
 
-                html.Append("<h6>" + dr["ModelName"] + "</h6>");
+                    html.Append("<h6>" + dr["ModelName"] + "</h6>");
 
-                html.Append("<div class='price'>₹ " +
-                Convert.ToDecimal(dr["Price"]).ToString("N0") +
-                "</div>");
+                    html.Append("<div class='price'>₹ " +
+                    Convert.ToDecimal(dr["Price"]).ToString("N0") +
+                    "</div>");
 
-                html.Append("<div>Range: " + dr["RangeKM"] + " KM</div>");
+                    html.Append("<div>Range: " + dr["RangeKM"] + " KM</div>");
 
-                html.Append("<a href='BikeDetails.aspx?slug=" +
-                dr["Slug"] +
-                "' class='view-btn'>View</a>");
+                    html.Append("<a href='BikeDetails.aspx?slug=" +
+                    dr["Slug"] +
+                    "' class='view-btn'>View</a>");
 
-                html.Append("</div>");
+                    html.Append("</div>");
 
-                html.Append("</div>");
+                    html.Append("</div>");
+                }
             }
 
             return new { html = html.ToString(), count = dt.Rows.Count };
         }
-    }
+}
 
 
     [WebMethod]

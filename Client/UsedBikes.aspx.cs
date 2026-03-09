@@ -98,43 +98,47 @@ AND ISNULL(B.IsForRent,0)=0
 
             StringBuilder html = new StringBuilder();
 
-            foreach (DataRow dr in dt.Rows)
+            if (dt.Rows.Count == 0)
             {
+                html.Append("<div style='grid-column:1/-1;text-align:center;padding:40px;font-weight:600;'>No Used Bikes Found</div>");
+            }
+            else
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    string active = dr["IsWishlisted"].ToString() == "1" ? "active" : "";
 
-                string active =
-                dr["IsWishlisted"].ToString() == "1" ? "active" : "";
+                    html.Append("<div class='bike-card'>");
 
-                html.Append("<div class='bike-card'>");
+                    html.Append("<div class='bike-img'>");
 
-                html.Append("<div class='bike-img'>");
+                    html.Append("<img src='/Uploads/Bikes/" + dr["Image1"] + "'/>");
 
-                html.Append("<img src='/Uploads/Bikes/" + dr["Image1"] + "'/>");
+                    html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + dr["BikeID"] + ")'>♥</div>");
 
-                html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + dr["BikeID"] + ")'>♥</div>");
+                    html.Append("</div>");
 
-                html.Append("</div>");
+                    html.Append("<div class='bike-body'>");
 
-                html.Append("<div class='bike-body'>");
+                    html.Append("<h6>" + dr["ModelName"] + "</h6>");
 
-                html.Append("<h6>" + dr["ModelName"] + "</h6>");
+                    html.Append("<div class='price'>₹ " +
+                    Convert.ToDecimal(dr["Price"]).ToString("N0") +
+                    "</div>");
 
-                html.Append("<div class='price'>₹ " +
-                Convert.ToDecimal(dr["Price"]).ToString("N0") +
-                "</div>");
+                    html.Append("<div>" +
+                    dr["ManufactureYear"] +
+                    " • " + dr["KMDriven"] + " KM" +
+                    "</div>");
 
-                html.Append("<div>" +
-                dr["ManufactureYear"] +
-                " • " + dr["KMDriven"] + " KM" +
-                "</div>");
+                    html.Append("<a href='UsedBikeDetails.aspx?slug=" +
+                    dr["Slug"] +
+                    "' class='view-btn'>View</a>");
 
-                html.Append("<a href='UsedBikeDetails.aspx?slug=" +
-                dr["Slug"] +
-                "' class='view-btn'>View</a>");
+                    html.Append("</div>");
 
-                html.Append("</div>");
-
-                html.Append("</div>");
-
+                    html.Append("</div>");
+                }
             }
 
             return new { html = html.ToString(), count = dt.Rows.Count };

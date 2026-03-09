@@ -151,7 +151,7 @@ color:#fff;
 <option value="3">Third Owner</option>
 </select>
 
-<button class="btn btn-dark w-100"
+<button type="button" class="btn btn-dark w-100"
 onclick="applyFilters()">Apply</button>
 
 </div>
@@ -216,7 +216,15 @@ Loading...
 
                 if(d.count==0){
 
-                    finished=true;
+                    if(page==1){
+
+                        $("#bikeContainer").html(
+                        "<div style='grid-column:1/-1;text-align:center;padding:40px;font-weight:600;'>No Used Bikes Found</div>");
+
+                    }
+
+                    finished=false;   // important fix
+
                     $("#loader").hide();
                     return;
 
@@ -238,6 +246,10 @@ Loading...
 
         page=1;
         finished=false;
+        loading=false;
+
+        $("#bikeContainer").html("");
+
         loadBikes(true);
 
     }
