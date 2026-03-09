@@ -75,13 +75,17 @@ public partial class Client_BikeDetails : System.Web.UI.Page
             con.Open();
 
             SqlCommand cmd = new SqlCommand(@"
-            SELECT b.*, br.BrandName
+            SELECT b.*, br.BrandName,
+u.UserID,
+u.FullName,
+u.Mobile,
+u.Email,
+u.ShopName,
+u.City
 FROM Bikes b
 INNER JOIN Brands br ON b.BrandID = br.BrandID
 INNER JOIN Users u ON b.DealerID = u.UserID
-WHERE b.Slug=@slug
-AND b.IsApproved=1
-AND b.IsForRent=1", con);
+WHERE b.Slug=@slug AND b.IsApproved=1", con);
 
             cmd.Parameters.AddWithValue("@slug", slug);
 
