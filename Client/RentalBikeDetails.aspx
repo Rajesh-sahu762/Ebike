@@ -936,7 +936,7 @@ background:#f59e0b;
 <h4>Rental Booking</h4>
 
 <label>Start Date</label>
-<input type="date" id="startDate" class="form-control mb-2"/>
+<input type="date" id="startDate" min="<%= DateTime.Now.ToString("yyyy-MM-dd") %>">
 
 <label>End Date</label>
 <input type="date" id="endDate" class="form-control mb-3"/>
@@ -957,7 +957,7 @@ background:#f59e0b;
 </div>
 
 
-<button class="btn-primary mt-3" onclick="bookRental()">
+<button type="button" class="btn-primary mt-3" onclick="bookRental()">
 Book Rental
 </button>
 
@@ -1479,7 +1479,91 @@ function viewDealerBikes(){
 </script>
 
 
+    <script>
 
+        if(days <= 0){
+
+            alert("Invalid date range");
+            return;
+
+        }
+
+        if(days > 30){
+
+            alert("Maximum rental is 30 days");
+            return;
+
+        }
+
+        let bookedRanges = [];
+
+        $(document).ready(function(){
+
+            loadBookedDates();
+
+        });
+
+        function loadBookedDates(){
+
+            $.ajax({
+
+                type:"POST",
+
+                url:"RentalBikeDetails.aspx/GetBookedDates",
+
+                data: JSON.stringify({
+                    bikeId: bikeId
+                }),
+
+                contentType:"application/json; charset=utf-8",
+
+                dataType:"json",
+
+                success:function(res){
+
+                    bookedRanges = JSON.parse(res.d);
+
+                }
+
+            });
+
+        }
+
+        function isDateBlocked(date){
+
+            for(let i=0;i<bookedRanges.length;i++){
+
+            let s = new Date(bookedRanges[i].start);
+            let e = new Date(bookedRanges[i].end);
+
+            if(date >= s && date <= e)
+            return true;
+
+            }
+
+        return false;
+
+        }
+
+        $("#startDate,#endDate").change(function(){
+
+            let s = new Date($("#startDate").val());
+            let e = new Date($("#endDate").val());
+
+            if(isDateBlocked(s) || isDateBlocked(e)){
+
+                alert("Bike already booked for selected dates");
+
+                $("#startDate").val("");
+                $("#endDate").val("");
+
+                return;
+
+            }
+
+        });
+
+</script>
 
 
 

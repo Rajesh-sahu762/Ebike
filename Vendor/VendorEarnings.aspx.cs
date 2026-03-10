@@ -29,57 +29,97 @@ public partial class Vendor_VendorEarnings : System.Web.UI.Page
 
             decimal totalRevenue = 0;
             decimal totalCommission = 0;
+            decimal net = 0;
             decimal settled = 0;
             decimal pending = 0;
 
             // ===== TOTAL REVENUE =====
             SqlCommand totalCmd = new SqlCommand(@"
-            SELECT ISNULL(SUM(L.LeadAmount),0)
-            FROM Leads L
-            INNER JOIN Bikes B ON L.BikeID=B.BikeID
-            WHERE B.DealerID=@d AND L.LeadAmount>0", con);
+        SELECT ISNULL(SUM(L.LeadAmount),0)
+        FROM Leads L
+        INNER JOIN Bikes B ON L.BikeID=B.BikeID
+        WHERE B.DealerID=@d AND L.LeadAmount>0", con);
 
             totalCmd.Parameters.AddWithValue("@d", vendorId);
+
             totalRevenue = Convert.ToDecimal(totalCmd.ExecuteScalar());
 
-            // ===== TOTAL COMMISSION =====
+
+            // GET COMMISSION %
+            SqlCommand percentCmd = new SqlCommand(
+            "SELECT CommissionPercent FROM SiteSettings WHERE SettingID=1", con);
+
+            object percentObj = percentCmd.ExecuteScalar();
+
+            decimal percent = 0;
+
+            if (percentObj != DBNull.Value && percentObj != null)
+            {
+                percent = Convert.ToDecimal(percentObj);
+            }
+            else
+            {
+                percent = 10; // default commission
+            }
+
+
+            // TOTAL COMMISSION
             SqlCommand comCmd = new SqlCommand(@"
-SELECT ISNULL(SUM(ISNULL(L.CommissionAmount,
-(L.LeadAmount *
-(SELECT CommissionPercent FROM SiteSettings WHERE SettingID=1)/100))),0)
+
+SELECT ISNULL(SUM(
+ISNULL(L.CommissionAmount,
+(L.LeadAmount * @percent / 100))
+),0)
+
 FROM Leads L
 INNER JOIN Bikes B ON L.BikeID=B.BikeID
-WHERE B.DealerID=@d AND L.LeadAmount>0", con);
 
-            decimal net = totalRevenue - totalCommission;
+WHERE B.DealerID=@d
+AND L.LeadAmount>0
+
+", con);
+
+            comCmd.Parameters.AddWithValue("@d", vendorId);
+            comCmd.Parameters.AddWithValue("@percent", percent);
+
+            object comObj = comCmd.ExecuteScalar();
+
+            if (comObj != DBNull.Value && comObj != null)
+                totalCommission = Convert.ToDecimal(comObj);
+            else
+                totalCommission = 0;
 
             // ===== SETTLED =====
             SqlCommand settledCmd = new SqlCommand(@"
-            SELECT ISNULL(SUM(L.LeadAmount - ISNULL(L.CommissionAmount,0)),0)
-            FROM Leads L
-            INNER JOIN Bikes B ON L.BikeID=B.BikeID
-            WHERE B.DealerID=@d AND L.IsSettled=1", con);
+        SELECT ISNULL(SUM(L.LeadAmount - ISNULL(L.CommissionAmount,0)),0)
+        FROM Leads L
+        INNER JOIN Bikes B ON L.BikeID=B.BikeID
+        WHERE B.DealerID=@d AND L.IsSettled=1", con);
 
             settledCmd.Parameters.AddWithValue("@d", vendorId);
+
             settled = Convert.ToDecimal(settledCmd.ExecuteScalar());
+
 
             // ===== PENDING =====
             SqlCommand pendingCmd = new SqlCommand(@"
-            SELECT ISNULL(SUM(L.LeadAmount - ISNULL(L.CommissionAmount,0)),0)
-            FROM Leads L
-            INNER JOIN Bikes B ON L.BikeID=B.BikeID
-            WHERE B.DealerID=@d 
-            AND L.SettlementRequested=1 
-            AND L.IsSettled=0", con);
+        SELECT ISNULL(SUM(L.LeadAmount - ISNULL(L.CommissionAmount,0)),0)
+        FROM Leads L
+        INNER JOIN Bikes B ON L.BikeID=B.BikeID
+        WHERE B.DealerID=@d
+        AND L.SettlementRequested=1
+        AND L.IsSettled=0", con);
 
             pendingCmd.Parameters.AddWithValue("@d", vendorId);
+
             pending = Convert.ToDecimal(pendingCmd.ExecuteScalar());
 
-            lblRevenue.Text = totalRevenue.ToString("0.00");
-            lblCommission.Text = totalCommission.ToString("0.00");
-            lblNet.Text = net.ToString("0.00");
-            lblSettled.Text = settled.ToString("0.00");
-            lblPending.Text = pending.ToString("0.00");
+
+            lblRevenue.Text = totalRevenue.ToString("N0");
+            lblCommission.Text = totalCommission.ToString("N0");
+            lblNet.Text = net.ToString("N0");
+            lblSettled.Text = settled.ToString("N0");
+            lblPending.Text = pending.ToString("N0");
         }
     }
 

@@ -267,6 +267,197 @@ ORDER BY NEWID()
 
     }
 
+    [WebMethod(EnableSession = true)]
+    public static string BookRental(int bikeId, string start, string end)
+    {
+        if (HttpContext.Current.Session["CustomerID"] == null)
+            return "Please login first";
+
+        int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);
+
+        string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            DateTime s = Convert.ToDateTime(start);
+            DateTime e = Convert.ToDateTime(end);
+
+            if (e < s)
+                return "Invalid date selection";
+
+            int days = (e - s).Days + 1;
+
+            /* =====================================
+               1️⃣ CHECK RENTAL DATE CONFLICT
+            ===================================== */
+
+            SqlCommand conflictCmd = new SqlCommand(@"
+
+SELECT COUNT(*) 
+FROM RentalBookings
+
+WHERE BikeID=@bike
+AND Status IN ('Pending','Approved','Active')
+
+AND
+(
+StartDate <= @end
+AND EndDate >= @start
+)
+
+", con);
+
+            conflictCmd.Parameters.AddWithValue("@bike", bikeId);
+            conflictCmd.Parameters.AddWithValue("@start", s);
+            conflictCmd.Parameters.AddWithValue("@end", e);
+
+            int conflict = Convert.ToInt32(conflictCmd.ExecuteScalar());
+
+            if (conflict > 0)
+            {
+                return "Bike already booked for selected dates";
+            }
+
+            /* =====================================
+               2️⃣ GET BIKE RENT PRICE
+            ===================================== */
+
+            SqlCommand priceCmd = new SqlCommand(
+            "SELECT RentPerDay,DealerID FROM Bikes WHERE BikeID=@id", con);
+
+            priceCmd.Parameters.AddWithValue("@id", bikeId);
+
+            SqlDataReader dr = priceCmd.ExecuteReader();
+
+            decimal rent = 0;
+            int dealer = 0;
+
+            if (dr.Read())
+            {
+                rent = Convert.ToDecimal(dr["RentPerDay"]);
+                dealer = Convert.ToInt32(dr["DealerID"]);
+            }
+
+            dr.Close();
+
+            decimal total = rent * days;
+
+            /* =====================================
+               3️⃣ COMMISSION CALCULATION
+            ===================================== */
+
+            decimal commission = total * 0.10M;
+            decimal dealerAmount = total - commission;
+
+            /* =====================================
+               4️⃣ INSERT BOOKING
+            ===================================== */
+
+            SqlCommand cmd = new SqlCommand(@"
+
+INSERT INTO RentalBookings
+(
+BikeID,
+CustomerID,
+DealerID,
+StartDate,
+EndDate,
+TotalDays,
+RentAmount,
+CommissionAmount,
+Status,
+IsViewed,
+CreatedAt,
+IsSettlement
+)
+
+VALUES
+(
+@bike,
+@user,
+@dealer,
+@start,
+@end,
+@days,
+@rent,
+@commission,
+'Pending',
+0,
+GETDATE(),
+0
+)
+
+", con);
+
+            cmd.Parameters.AddWithValue("@bike", bikeId);
+            cmd.Parameters.AddWithValue("@user", userId);
+            cmd.Parameters.AddWithValue("@dealer", dealer);
+            cmd.Parameters.AddWithValue("@start", s);
+            cmd.Parameters.AddWithValue("@end", e);
+            cmd.Parameters.AddWithValue("@days", days);
+            cmd.Parameters.AddWithValue("@rent", total);
+            cmd.Parameters.AddWithValue("@commission", commission);
+
+            cmd.ExecuteNonQuery();
+        }
+
+        return "Rental booking request sent to dealer";
+    }
+
+
+    [WebMethod]
+    public static string GetBookedDates(int bikeId)
+    {
+        string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+
+        System.Text.StringBuilder json = new System.Text.StringBuilder();
+        json.Append("[");
+
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand(@"
+
+SELECT StartDate,EndDate
+FROM RentalBookings
+WHERE BikeID=@id
+AND Status IN ('Pending','Approved','Active')
+
+", con);
+
+            cmd.Parameters.AddWithValue("@id", bikeId);
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            bool first = true;
+
+            while (dr.Read())
+            {
+                if (!first)
+                    json.Append(",");
+
+                json.Append("{");
+
+                json.Append("\"start\":\"" +
+                Convert.ToDateTime(dr["StartDate"]).ToString("yyyy-MM-dd") + "\",");
+
+                json.Append("\"end\":\"" +
+                Convert.ToDateTime(dr["EndDate"]).ToString("yyyy-MM-dd") + "\"");
+
+                json.Append("}");
+
+                first = false;
+            }
+        }
+
+        json.Append("]");
+
+        return json.ToString();
+    }
+
 
     [WebMethod]
     public static string SubmitReview(int rating, string title, string review)

@@ -61,17 +61,28 @@
         <asp:BoundField DataField="LeadAmount" HeaderText="Amount (₹)" />
         <asp:BoundField DataField="Commission" HeaderText="Platform Fee (₹)" />
         <asp:BoundField DataField="NetAmount" HeaderText="Net (₹)" />
-        <asp:BoundField DataField="CreatedAt" HeaderText="Date" />
+        <asp:BoundField
+DataField="CreatedAt"
+HeaderText="Date"
+DataFormatString="{0:dd MMM yyyy}" />
 
-        <asp:TemplateField HeaderText="Status">
-            <ItemTemplate>
-                <%# (Convert.ToBoolean(Eval("IsSettled")) ? 
-                "<span class='badge bg-success'>Settled</span>" :
-                (Convert.ToBoolean(Eval("SettlementRequested")) ?
-                "<span class='badge bg-warning'>Requested</span>" :
-                "<span class='badge bg-secondary'>Not Requested</span>")) %>
-            </ItemTemplate>
-        </asp:TemplateField>
+     <asp:TemplateField HeaderText="Status">
+<ItemTemplate>
+
+<asp:Label ID="Label1" runat="server"
+Text='<%# Convert.ToBoolean(Eval("IsSettled")) ? 
+"Settled" :
+(Convert.ToBoolean(Eval("SettlementRequested")) ?
+"Requested" :
+"Not Requested") %>'
+CssClass='<%# Convert.ToBoolean(Eval("IsSettled")) ? 
+"badge bg-success" :
+(Convert.ToBoolean(Eval("SettlementRequested")) ?
+"badge bg-warning" :
+"badge bg-secondary") %>' />
+
+</ItemTemplate>
+</asp:TemplateField>
 
         <asp:TemplateField HeaderText="Action">
             <ItemTemplate>

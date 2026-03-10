@@ -87,6 +87,43 @@ public partial class Vendor_VendorDashboard : System.Web.UI.Page
               WHERE B.DealerID=@id", con);
             leads.Parameters.AddWithValue("@id", vendorId);
             lblTotalLeads.Text = leads.ExecuteScalar().ToString();
+
+            // Total Rentals
+            SqlCommand totalRentals = new SqlCommand(
+            "SELECT COUNT(*) FROM RentalBookings WHERE DealerID=@id", con);
+            totalRentals.Parameters.AddWithValue("@id", vendorId);
+            lblTotalRentals.Text = totalRentals.ExecuteScalar().ToString();
+
+
+            // Active Rentals
+            SqlCommand activeRentals = new SqlCommand(
+            "SELECT COUNT(*) FROM RentalBookings WHERE DealerID=@id AND Status='Active'", con);
+            activeRentals.Parameters.AddWithValue("@id", vendorId);
+            lblActiveRentals.Text = activeRentals.ExecuteScalar().ToString();
+
+
+            // Total Earnings
+            SqlCommand earnings = new SqlCommand(
+            @"SELECT ISNULL(SUM(RentAmount - CommissionAmount),0)
+FROM RentalBookings
+WHERE DealerID=@id AND Status IN ('Completed','Active')", con);
+
+            earnings.Parameters.AddWithValue("@id", vendorId);
+            lblTotalEarnings.Text =
+            Convert.ToDecimal(earnings.ExecuteScalar()).ToString("N0");
+
+
+            // Admin Commission
+            SqlCommand commission = new SqlCommand(
+            @"SELECT ISNULL(SUM(CommissionAmount),0)
+FROM RentalBookings
+WHERE DealerID=@id AND Status IN ('Completed','Active')", con);
+
+            commission.Parameters.AddWithValue("@id", vendorId);
+            lblAdminCommission.Text =
+            Convert.ToDecimal(commission.ExecuteScalar()).ToString("N0");
+        
+
         }
     }
 

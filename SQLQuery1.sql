@@ -336,3 +336,6 @@ CREATE TABLE RentalBookings (
 
     CreatedAt DATETIME DEFAULT GETDATE()
 );
+
+
+SELECT * FROM SiteSettings

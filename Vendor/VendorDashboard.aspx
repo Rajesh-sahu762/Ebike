@@ -4,6 +4,65 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
+
+    <style>
+
+.card{
+border-radius:12px;
+transition:0.2s;
+}
+
+.card:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+</style>
+
+    <div class="row g-4 mb-4">
+
+<!-- Total Rentals -->
+<div class="col-md-3">
+<div class="card shadow-sm p-3 text-center">
+<h6>Total Rentals</h6>
+<h3 class="fw-bold text-primary">
+<asp:Label ID="lblTotalRentals" runat="server"></asp:Label>
+</h3>
+</div>
+</div>
+
+<!-- Active Rentals -->
+<div class="col-md-3">
+<div class="card shadow-sm p-3 text-center">
+<h6>Active Rentals</h6>
+<h3 class="fw-bold text-success">
+<asp:Label ID="lblActiveRentals" runat="server"></asp:Label>
+</h3>
+</div>
+</div>
+
+<!-- Total Earnings -->
+<div class="col-md-3">
+<div class="card shadow-sm p-3 text-center">
+<h6>Total Earnings</h6>
+<h3 class="fw-bold text-dark">
+₹ <asp:Label ID="lblTotalEarnings" runat="server"></asp:Label>
+</h3>
+</div>
+</div>
+
+<!-- Admin Commission -->
+<div class="col-md-3">
+<div class="card shadow-sm p-3 text-center">
+<h6>Admin Commission</h6>
+<h3 class="fw-bold text-danger">
+₹ <asp:Label ID="lblAdminCommission" runat="server"></asp:Label>
+</h3>
+</div>
+</div>
+
+</div>
+
 <div class="row g-4">
 
     <!-- Total Bikes -->
@@ -83,7 +142,10 @@ CssClass="btn btn-warning"
 
 <!-- Recent Leads -->
 <div class="card shadow-sm mt-4 p-3">
-    <h5 class="mb-3">Recent Leads</h5>
+   <h5 class="mb-3">
+Recent Leads
+<small class="text-muted">(latest customer enquiries)</small>
+</h5>
 
     <asp:GridView ID="gvRecentLeads" runat="server"
         CssClass="table table-striped"
