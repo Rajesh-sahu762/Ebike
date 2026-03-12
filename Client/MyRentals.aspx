@@ -8,7 +8,7 @@ Inherits="Client_MyRentals" %>
 
 .rental-wrapper{
 max-width:1200px;
-margin:80px auto;
+/*margin:60px auto;*/
 padding:20px;
 }
 
@@ -118,7 +118,229 @@ color:#888;
 font-size:18px;
 }
 
+/* ACCOUNT LAYOUT */
+
+.account-section{
+max-width:1200px;
+margin:90px auto;
+padding:0 20px;
+}
+
+.account-grid{
+display:grid;
+grid-template-columns:280px 1fr;
+gap:30px;
+}
+
+/* SIDEBAR */
+
+.account-sidebar{
+background:#fff;
+border-radius:16px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+overflow:hidden;
+}
+
+.profile-header{
+text-align:center;
+position:relative;
+padding-bottom:20px;
+}
+
+.profile-banner{
+height:110px;
+background:linear-gradient(135deg,#ff7a18,#ffb347);
+}
+
+.profile-avatar{
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+top:60px;
+}
+
+.avatar-img{
+width:90px;
+height:90px;
+border-radius:50%;
+border:4px solid #fff;
+}
+
+.profile-info{
+margin-top:60px;
+}
+
+.profile-info h3{
+font-size:18px;
+}
+
+.profile-info p{
+font-size:13px;
+color:#6b7280;
+}
+
+/* MENU */
+
+.account-menu{
+display:flex;
+flex-direction:column;
+padding:15px;
+gap:6px;
+}
+
+.account-menu a{
+padding:10px;
+border-radius:8px;
+text-decoration:none;
+color:#374151;
+font-size:14px;
+}
+
+.account-menu a:hover{
+background:#f3f4f6;
+}
+
+.account-menu a.active{
+background:#ffe4e6;
+color:#ef4444;
+font-weight:600;
+}
+
+
+
+/* ===============================
+   MOBILE ACCOUNT TABS FIX
+================================ */
+
+@media (max-width:900px){
+
+.account-grid{
+
+grid-template-columns:1fr;
+gap:15px;
+
+}
+
+/* SIDEBAR */
+
+.account-sidebar{
+
+border-radius:12px;
+
+}
+
+/* MENU -> HORIZONTAL */
+
+.account-menu{
+
+display:flex;
+flex-direction:row;
+overflow-x:auto;
+gap:8px;
+padding:10px;
+
+}
+
+/* SCROLL BAR HIDE */
+
+.account-menu::-webkit-scrollbar{
+
+display:none;
+
+}
+
+/* TAB STYLE */
+
+.account-menu a{
+
+flex:0 0 auto;
+
+padding:10px 14px;
+
+font-size:13px;
+
+border-radius:8px;
+
+background:#f3f4f6;
+
+white-space:nowrap;
+
+}
+
+.account-menu a.active{
+
+background:#ef4444;
+color:#fff;
+
+}
+
+}
+@media(max-width:600px){
+
+.profile-banner{
+
+height:80px;
+
+}
+
+.avatar-img{
+
+width:70px;
+height:70px;
+
+}
+
+} 
+
+
+
+
+
 </style>
+
+<div class="rental-wrapper">
+
+<section class="account-section">
+
+<div class="account-grid">
+
+<!-- LEFT SIDEBAR -->
+
+<div class="account-sidebar">
+
+<div class="profile-header">
+
+<div class="profile-banner"></div>
+
+<div class="profile-avatar">
+<img src="../Uploads/user.jpg" class="avatar-img"/>
+</div>
+
+<div class="profile-info">
+<h3>My Account</h3>
+<p>Manage your activity</p>
+</div>
+
+</div>
+
+<div class="account-menu">
+
+<a href="MyProfile.aspx">👤 Profile</a>
+
+<a href="Wishlist.aspx">❤️ Wishlist</a>
+
+<a href="MyRentals.aspx" class="active">🛵 My Rentals</a>
+
+<a href="MyEnquiries.aspx">📨 My Enquiries</a>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT CONTENT -->
+
+<div class="account-content">
 
 <div class="rental-wrapper">
 
@@ -129,14 +351,18 @@ My Rentals
 </div>
 
 <div class="rental-filter">
+
 <select id="statusFilter" onchange="loadRentals()">
+
 <option value="">All</option>
 <option value="Pending">Pending</option>
 <option value="Approved">Approved</option>
 <option value="Active">Active</option>
 <option value="Completed">Completed</option>
 <option value="Cancelled">Cancelled</option>
+
 </select>
+
 </div>
 
 </div>
@@ -144,6 +370,12 @@ My Rentals
 <div id="rentalContainer" class="rental-grid"></div>
 
 </div>
+
+</div>
+
+</div>
+
+</section>
 
 <script>
 
