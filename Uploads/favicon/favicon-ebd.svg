@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Main orange gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B1A;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#F44500;stop-opacity:1"/>
+    </linearGradient>
+
+    <!-- Wheel gradient -->
+    <radialGradient id="wheelGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.25"/>
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0.05"/>
+    </radialGradient>
+
+    <!-- Subtle inner glow -->
+    <radialGradient id="glowGrad" cx="50%" cy="30%" r="65%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.18"/>
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0"/>
+    </radialGradient>
+
+    <!-- Drop shadow filter -->
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#C83800" flood-opacity="0.35"/>
+    </filter>
+
+    <!-- Bolt glow -->
+    <filter id="boltGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Clip to rounded square -->
+    <clipPath id="roundedClip">
+      <rect width="512" height="512" rx="112" ry="112"/>
+    </clipPath>
+  </defs>
+
+  <!-- ── BACKGROUND: Rounded square with gradient ── -->
+  <g filter="url(#softShadow)">
+    <rect width="512" height="512" rx="112" ry="112" fill="url(#bgGrad)"/>
+  </g>
+
+  <!-- Subtle inner highlight overlay -->
+  <rect width="512" height="512" rx="112" ry="112" fill="url(#glowGrad)" clip-path="url(#roundedClip)"/>
+
+  <!-- Very subtle texture ring at top-left -->
+  <circle cx="80" cy="80" r="120" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="40" clip-path="url(#roundedClip)"/>
+
+  <g clip-path="url(#roundedClip)">
+
+    <!-- ══════════════════════════════════════════
+         ELECTRIC BIKE SILHOUETTE
+         ══════════════════════════════════════════ -->
+
+    <!-- ── REAR WHEEL ── -->
+    <!-- Outer rim -->
+    <circle cx="158" cy="330" r="88" fill="none" stroke="white" stroke-width="22" opacity="0.95"/>
+    <!-- Hub -->
+    <circle cx="158" cy="330" r="22" fill="white" opacity="0.95"/>
+    <!-- Spokes (6 spokes) -->
+    <g stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.75">
+      <line x1="158" y1="250" x2="158" y2="312"/>
+      <line x1="158" y1="348" x2="158" y2="410"/>
+      <line x1="80"  y1="306" x2="135" y2="320"/>
+      <line x1="181" y1="340" x2="236" y2="354"/>
+      <line x1="80"  y1="354" x2="135" y2="340"/>
+      <line x1="181" y1="320" x2="236" y2="306"/>
+    </g>
+
+    <!-- ── FRONT WHEEL ── -->
+    <circle cx="354" cy="330" r="88" fill="none" stroke="white" stroke-width="22" opacity="0.95"/>
+    <circle cx="354" cy="330" r="22" fill="white" opacity="0.95"/>
+    <g stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.75">
+      <line x1="354" y1="250" x2="354" y2="312"/>
+      <line x1="354" y1="348" x2="354" y2="410"/>
+      <line x1="276" y1="306" x2="331" y2="320"/>
+      <line x1="377" y1="340" x2="432" y2="354"/>
+      <line x1="276" y1="354" x2="331" y2="340"/>
+      <line x1="377" y1="320" x2="432" y2="306"/>
+    </g>
+
+    <!-- ── FRAME ──
+         Clean geometric scooter/e-bike frame shape
+    -->
+    <!-- Main frame tube: rear hub → bottom bracket → front fork -->
+    <path d="
+      M 158 330
+      L 210 242
+      L 310 242
+      L 354 330
+    " fill="none" stroke="white" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+
+    <!-- Seat tube (vertical pillar up from BB area) -->
+    <path d="
+      M 240 242
+      L 240 185
+    " fill="none" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.95"/>
+
+    <!-- Top tube: seat post → head tube -->
+    <path d="
+      M 240 185
+      L 330 185
+      L 354 242
+    " fill="none" stroke="white" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+
+    <!-- Seat -->
+    <path d="
+      M 200 178
+      Q 222 163 258 166
+      Q 272 168 278 176
+      Q 272 188 248 190
+      Q 220 192 200 178 Z
+    " fill="white" opacity="0.95"/>
+
+    <!-- Handlebar stem -->
+    <path d="
+      M 354 242
+      L 365 192
+    " fill="none" stroke="white" stroke-width="20" stroke-linecap="round" opacity="0.95"/>
+
+    <!-- Handlebar bar (horizontal) -->
+    <path d="
+      M 340 192
+      L 382 192
+    " fill="none" stroke="white" stroke-width="16" stroke-linecap="round" opacity="0.95"/>
+
+    <!-- Rider head / helmet (small circle) -->
+    <circle cx="286" cy="152" r="26" fill="white" opacity="0.90"/>
+
+    <!-- Battery pack on downtube area -->
+    <rect x="238" y="248" width="62" height="28" rx="8" ry="8" fill="rgba(255,255,255,0.25)"/>
+    <rect x="300" y="256" width="10" height="12" rx="3" ry="3" fill="rgba(255,255,255,0.25)"/>
+
+    <!-- ══════════════════════════════════════════
+         LIGHTNING BOLT — overlaid, glowing
+         ══════════════════════════════════════════ -->
+
+    <!-- Bolt background glow -->
+    <path d="
+      M 278 244
+      L 257 284
+      L 271 284
+      L 250 324
+      L 275 294
+      L 261 294
+      L 282 254 Z
+    " fill="rgba(255,220,80,0.35)" filter="url(#boltGlow)" transform="translate(2,2)"/>
+
+    <!-- Bolt main shape -->
+    <path d="
+      M 278 244
+      L 257 284
+      L 271 284
+      L 250 324
+      L 275 294
+      L 261 294
+      L 282 254 Z
+    " fill="#FFE55C" filter="url(#boltGlow)"/>
+
+    <!-- Bolt highlight -->
+    <path d="
+      M 274 249
+      L 263 278
+      L 270 278
+      L 259 302
+    " fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="3" stroke-linecap="round"/>
+
+  </g>
+
+  <!-- ── Bottom thin accent line (brand bar) ── -->
+  <rect x="176" y="466" width="160" height="10" rx="5" ry="5" fill="rgba(255,255,255,0.30)" clip-path="url(#roundedClip)"/>
+
+</svg>

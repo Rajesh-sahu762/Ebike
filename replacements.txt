@@ -1,13 +1,144 @@
 ksch jicp cwye gbnk==>REMOVED
 
 
+check new bike system complete with earning 
 
-Compare Bikes CTA Section (Very Important)
+review system properly work 
 
-Why Choose EBikes Duniya Section
 
-Trust builder.
+used bike system done check with the earning integration
 
-Why Choose EBikes Duniya Section
+rental system in progress 
 
-Trust builder.
+
+Bikes.aspx
+
+Featured Bike Expiry
+
+Table में है:
+
+StartDate
+EndDate
+IsActive
+
+लेकिन auto expiry logic होना चाहिए।
+
+--------------------------------------------
+1 Vendor Subscription activation logic
+2 Featured bike promotion
+3 Bike ranking algorithm
+4 Vendor earnings system
+5 Rental booking UI
+6 Reports dashboard
+
+--------------------------------------------
+
+MaxBikes limit
+Subscription expiry
+Subscription ranking
+
+-------------------------------
+
+VendorEarnings.aspx
+VendorAnalytics.aspx
+----------------------
+
+1 Rental system UI complete 
+6 Vendor earnings page
+7 Vendor analytics page
+8 Minor UI fixes
+9 Bug fixes
+10 Query optimization
+
+
+
+wishlist,myprofile
+
+
+
+
+/* ===============================
+   MOBILE ACCOUNT TABS FIX
+================================ */
+
+@media (max-width:900px){
+
+.account-grid{
+
+grid-template-columns:1fr;
+gap:15px;
+
+}
+
+/* SIDEBAR */
+
+.account-sidebar{
+
+border-radius:12px;
+
+}
+
+/* MENU -> HORIZONTAL */
+
+.account-menu{
+
+display:flex;
+flex-direction:row;
+overflow-x:auto;
+gap:8px;
+padding:10px;
+
+}
+
+/* SCROLL BAR HIDE */
+
+.account-menu::-webkit-scrollbar{
+
+display:none;
+
+}
+
+/* TAB STYLE */
+
+.account-menu a{
+
+flex:0 0 auto;
+
+padding:10px 14px;
+
+font-size:13px;
+
+border-radius:8px;
+
+background:#f3f4f6;
+
+white-space:nowrap;
+
+}
+
+.account-menu a.active{
+
+background:#ef4444;
+color:#fff;
+
+}
+
+}
+@media(max-width:600px){
+
+.profile-banner{
+
+height:80px;
+
+}
+
+.avatar-img{
+
+width:70px;
+height:70px;
+
+}
+
+} 
+
+
