@@ -2,11 +2,11 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
-using System.Text;
 using System.Collections.Generic;
 
 public partial class Vendor_VendorAnalytics : System.Web.UI.Page
 {
+
     string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
     public string MonthLabels = "[]";
@@ -14,17 +14,20 @@ public partial class Vendor_VendorAnalytics : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+
         if (Session["VendorID"] == null)
             Response.Redirect("VendorLogin.aspx");
 
         if (!IsPostBack)
         {
-            LoadMonthlyComparison();
+
             LoadSummary();
             LoadMonthlyChart();
             LoadTopBikes();
-            LoadCommissionHistory();
+            LoadSettlements();
+
         }
+
     }
 
     void LoadSummary()
@@ -35,95 +38,77 @@ public partial class Vendor_VendorAnalytics : System.Web.UI.Page
 
             int dealerId = Convert.ToInt32(Session["VendorID"]);
 
-            decimal totalRevenue = 0;
+            decimal leadRevenue = 0;
+            decimal rentalRevenue = 0;
+            decimal percent = 0;
 
-            SqlCommand cmdRevenue = new SqlCommand(@"
-            SELECT ISNULL(SUM(L.LeadAmount),0)
-            FROM Leads L
-            INNER JOIN Bikes B ON L.BikeID=B.BikeID
-            WHERE B.DealerID=@d", con);
+            // ===== LEAD REVENUE =====
 
-            cmdRevenue.Parameters.AddWithValue("@d", dealerId);
+            SqlCommand cmd = new SqlCommand(@"
+        SELECT SUM(L.LeadAmount)
+        FROM Leads L
+        INNER JOIN Bikes B ON L.BikeID=B.BikeID
+        WHERE B.DealerID=@d", con);
 
-            totalRevenue = Convert.ToDecimal(cmdRevenue.ExecuteScalar());
+            cmd.Parameters.AddWithValue("@d", dealerId);
 
-            SqlCommand cmdPercent = new SqlCommand(
-            "SELECT ISNULL(CommissionPercent,0) FROM SiteSettings WHERE SettingID=1", con);
+            object leadObj = cmd.ExecuteScalar();
 
-            decimal commissionPercent = Convert.ToDecimal(cmdPercent.ExecuteScalar());
+            if (leadObj != DBNull.Value && leadObj != null)
+                leadRevenue = Convert.ToDecimal(leadObj);
 
-            decimal totalCommission = totalRevenue * commissionPercent / 100;
-            decimal totalNet = totalRevenue - totalCommission;
 
-            lblRevenue.Text = totalRevenue.ToString("0.00");
-            lblCommission.Text = totalCommission.ToString("0.00");
-            lblNet.Text = totalNet.ToString("0.00");
+            // ===== RENTAL REVENUE =====
 
-            SqlCommand cmdLeads = new SqlCommand(@"
-            SELECT COUNT(*)
-            FROM Leads L
-            INNER JOIN Bikes B ON L.BikeID=B.BikeID
-            WHERE B.DealerID=@d", con);
+            SqlCommand rentCmd = new SqlCommand(@"
+        SELECT SUM(R.RentAmount)
+        FROM RentalBookings R
+        WHERE R.DealerID=@d
+        AND R.Status='Completed'", con);
 
-            cmdLeads.Parameters.AddWithValue("@d", dealerId);
+            rentCmd.Parameters.AddWithValue("@d", dealerId);
 
-            lblLeads.Text = cmdLeads.ExecuteScalar().ToString();
-        }
-    }
+            object rentObj = rentCmd.ExecuteScalar();
 
-    void LoadMonthlyComparison()
-    {
-        using (SqlConnection con = new SqlConnection(constr))
-        {
-            con.Open();
+            if (rentObj != DBNull.Value && rentObj != null)
+                rentalRevenue = Convert.ToDecimal(rentObj);
 
-            int dealerId = Convert.ToInt32(Session["VendorID"]);
 
-            SqlCommand cmdThis = new SqlCommand(@"
-            SELECT ISNULL(SUM(L.LeadAmount),0)
-            FROM Leads L
-            INNER JOIN Bikes B ON L.BikeID=B.BikeID
-            WHERE B.DealerID=@d
-            AND MONTH(L.CreatedAt)=MONTH(GETDATE())
-            AND YEAR(L.CreatedAt)=YEAR(GETDATE())", con);
+            // ===== COMMISSION PERCENT =====
 
-            cmdThis.Parameters.AddWithValue("@d", dealerId);
+            SqlCommand percentCmd = new SqlCommand(
+            "SELECT CommissionPercent FROM SiteSettings WHERE SettingID=1", con);
 
-            decimal thisMonth = Convert.ToDecimal(cmdThis.ExecuteScalar());
+            object percentObj = percentCmd.ExecuteScalar();
 
-            SqlCommand cmdLast = new SqlCommand(@"
-            SELECT ISNULL(SUM(L.LeadAmount),0)
-            FROM Leads L
-            INNER JOIN Bikes B ON L.BikeID=B.BikeID
-            WHERE B.DealerID=@d
-            AND MONTH(L.CreatedAt)=MONTH(DATEADD(MONTH,-1,GETDATE()))
-            AND YEAR(L.CreatedAt)=YEAR(DATEADD(MONTH,-1,GETDATE()))", con);
-
-            cmdLast.Parameters.AddWithValue("@d", dealerId);
-
-            decimal lastMonth = Convert.ToDecimal(cmdLast.ExecuteScalar());
-
-            decimal growth = 0;
-
-            if (lastMonth > 0)
-                growth = ((thisMonth - lastMonth) / lastMonth) * 100;
-
-            lblThisMonth.Text = thisMonth.ToString("0.00");
-            lblLastMonth.Text = lastMonth.ToString("0.00");
-
-            if (growth >= 0)
-                lblGrowth.Text = "<span style='color:green'>▲ " + growth.ToString("0.00") + "%</span>";
+            if (percentObj != DBNull.Value && percentObj != null)
+                percent = Convert.ToDecimal(percentObj);
             else
-                lblGrowth.Text = "<span style='color:red'>▼ " + growth.ToString("0.00") + "%</span>";
+                percent = 10;
 
-            SqlCommand cmdSettle = new SqlCommand(@"
-            SELECT ISNULL(SUM(NetAmount),0)
-            FROM Settlements
-            WHERE DealerID=@d AND IsApproved=1", con);
 
-            cmdSettle.Parameters.AddWithValue("@d", dealerId);
+            decimal totalRevenue = leadRevenue + rentalRevenue;
 
-            lblSettled.Text = Convert.ToDecimal(cmdSettle.ExecuteScalar()).ToString("0.00");
+            decimal commission = totalRevenue * percent / 100;
+
+            decimal net = totalRevenue - commission;
+
+            lblRevenue.Text = totalRevenue.ToString("N0");
+            lblCommission.Text = commission.ToString("N0");
+            lblNet.Text = net.ToString("N0");
+
+
+            // ===== LEADS COUNT =====
+
+            SqlCommand leadCount = new SqlCommand(@"
+        SELECT COUNT(*)
+        FROM Leads L
+        INNER JOIN Bikes B ON L.BikeID=B.BikeID
+        WHERE B.DealerID=@d", con);
+
+            leadCount.Parameters.AddWithValue("@d", dealerId);
+
+            lblLeads.Text = leadCount.ExecuteScalar().ToString();
         }
     }
 
@@ -134,15 +119,25 @@ public partial class Vendor_VendorAnalytics : System.Web.UI.Page
             con.Open();
 
             SqlCommand cmd = new SqlCommand(@"
-            SELECT DATENAME(MONTH,L.CreatedAt) AS MonthName,
-                   MONTH(L.CreatedAt) AS MonthNumber,
-                   SUM(L.LeadAmount) AS Revenue
-            FROM Leads L
-            INNER JOIN Bikes B ON L.BikeID=B.BikeID
-            WHERE B.DealerID=@d
-            AND L.CreatedAt >= DATEADD(MONTH,-5,GETDATE())
-            GROUP BY DATENAME(MONTH,L.CreatedAt), MONTH(L.CreatedAt)
-            ORDER BY MonthNumber", con);
+
+        SELECT 
+        DATENAME(MONTH, L.CreatedAt) AS MonthName,
+        MONTH(L.CreatedAt) AS MonthNumber,
+        ISNULL(SUM(L.LeadAmount),0) AS Revenue
+
+        FROM Leads L
+        INNER JOIN Bikes B ON L.BikeID = B.BikeID
+
+        WHERE B.DealerID = @d
+        AND L.CreatedAt >= DATEADD(MONTH,-5,GETDATE())
+
+        GROUP BY 
+        DATENAME(MONTH, L.CreatedAt),
+        MONTH(L.CreatedAt)
+
+        ORDER BY MonthNumber
+
+        ", con);
 
             cmd.Parameters.AddWithValue("@d", Session["VendorID"]);
 
@@ -166,52 +161,78 @@ public partial class Vendor_VendorAnalytics : System.Web.UI.Page
 
     void LoadTopBikes()
     {
+
         using (SqlConnection con = new SqlConnection(constr))
         {
+
             con.Open();
 
             SqlCommand cmd = new SqlCommand(@"
-            SELECT TOP 5 B.ModelName,
-            ISNULL(SUM(L.LeadAmount),0) AS TotalRevenue,
-            COUNT(L.LeadID) AS LeadCount
-            FROM Bikes B
-            LEFT JOIN Leads L ON B.BikeID=L.BikeID
-            WHERE B.DealerID=@d
-            GROUP BY B.ModelName
-            ORDER BY TotalRevenue DESC", con);
+
+SELECT TOP 5 B.ModelName,
+ISNULL(SUM(L.LeadAmount),0) TotalRevenue,
+COUNT(L.LeadID) LeadCount
+
+FROM Bikes B
+LEFT JOIN Leads L ON B.BikeID=L.BikeID
+
+WHERE B.DealerID=@d
+
+GROUP BY B.ModelName
+ORDER BY TotalRevenue DESC
+
+", con);
 
             cmd.Parameters.AddWithValue("@d", Session["VendorID"]);
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
+
             DataTable dt = new DataTable();
+
             da.Fill(dt);
 
             gvTopBikes.DataSource = dt;
             gvTopBikes.DataBind();
+
         }
+
     }
 
-    void LoadCommissionHistory()
+    void LoadSettlements()
     {
+
         using (SqlConnection con = new SqlConnection(constr))
         {
+
             con.Open();
 
             SqlCommand cmd = new SqlCommand(@"
-            SELECT TotalRevenue,CommissionAmount,
-                   NetAmount,CreatedAt,IsApproved
-            FROM Settlements
-            WHERE DealerID=@d
-            ORDER BY CreatedAt DESC", con);
+
+SELECT TotalRevenue,
+CommissionAmount,
+NetAmount,
+CreatedAt,
+IsApproved
+
+FROM Settlements
+WHERE DealerID=@d
+ORDER BY CreatedAt DESC
+
+", con);
 
             cmd.Parameters.AddWithValue("@d", Session["VendorID"]);
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
+
             DataTable dt = new DataTable();
+
             da.Fill(dt);
 
-            gvCommissionHistory.DataSource = dt;
-            gvCommissionHistory.DataBind();
+            gvSettlement.DataSource = dt;
+            gvSettlement.DataBind();
+
         }
+
     }
+
 }

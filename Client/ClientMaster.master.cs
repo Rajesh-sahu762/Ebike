@@ -12,6 +12,7 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
     {
         if (!IsPostBack)
         {
+            LoadSiteSettings();
             if (Session["CustomerID"] != null)
             {
                 pnlLogin.Visible = false;
@@ -33,6 +34,55 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
         }
     }
 
+
+    void LoadSiteSettings()
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand(
+            "SELECT * FROM SiteSettings WHERE SettingID=1", con);
+
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            if (dr.Read())
+            {
+                if (dr["SiteTitle"] != DBNull.Value)
+                {
+                    Page.Title = dr["SiteTitle"].ToString();
+                    lblSiteTitle.Text = dr["SiteTitle"].ToString();
+                }
+
+                if (dr["LogoPath"] != DBNull.Value)
+                {
+                    imgLogo.ImageUrl = dr["LogoPath"].ToString();
+                }
+
+                if (dr["AdminEmail"] != DBNull.Value)
+                {
+                    lblFooterEmail.Text = dr["AdminEmail"].ToString();
+                }
+
+                if (dr["SupportPhone"] != DBNull.Value)
+                {
+                    lblFooterPhone.Text = dr["SupportPhone"].ToString();
+                }
+
+                if (dr["MaintenanceMode"] != DBNull.Value)
+                {
+                    bool maintenance = Convert.ToBoolean(dr["MaintenanceMode"]);
+
+                    if (maintenance)
+                    {
+                        Response.Redirect("~/Client/Maintenance.aspx");
+                    }
+                }
+            }
+
+            dr.Close();
+        }
+    }
 
     [WebMethod(EnableSession = true)]
     public static int GetWishlistCount()

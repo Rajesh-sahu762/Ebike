@@ -1224,7 +1224,7 @@
 
 <div class="review-slider-wrapper">
 
-    <button class="review-arrow left" onclick="slideReview(-1)">&#10094;</button>
+    <button type="button" class="review-arrow left" onclick="slideReview(-1)">&#10094;</button>
 
     <div class="review-slider" id="reviewSlider">
 
@@ -1234,7 +1234,7 @@
         <div class="review-card">
 
             <div class="review-user">
-                <img src='<%# Eval("ProfileImage") == DBNull.Value ? "../images/user.png" : "/Uploads/Profile/" + Eval("ProfileImage") %>' loading="lazy"
+                <img src='<%# Eval("ProfileImage") == DBNull.Value ? "../Uploads/user.jpg" : "/Uploads/Profile/" + Eval("ProfileImage") %>' loading="lazy"
  class="user-img" />
                 <div>
                     <strong><%# Eval("FullName") %></strong>
@@ -1272,7 +1272,7 @@
 
     </div>
 
-    <button class="review-arrow right" onclick="slideReview(1)">&#10095;</button>
+    <button type="button" class="review-arrow right" onclick="slideReview(1)">&#10095;</button>
 
 </div>
 

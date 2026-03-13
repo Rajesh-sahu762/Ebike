@@ -2,9 +2,11 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Web.UI.WebControls;
 
 public partial class Vendor_VendorEarnings : System.Web.UI.Page
 {
+
     string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -25,103 +27,51 @@ public partial class Vendor_VendorEarnings : System.Web.UI.Page
         {
             con.Open();
 
-            int vendorId = Convert.ToInt32(Session["VendorID"]);
+            int dealer = Convert.ToInt32(Session["VendorID"]);
 
-            decimal totalRevenue = 0;
-            decimal totalCommission = 0;
-            decimal net = 0;
-            decimal settled = 0;
-            decimal pending = 0;
+            SqlCommand cmd = new SqlCommand(@"
 
-            // ===== TOTAL REVENUE =====
-            SqlCommand totalCmd = new SqlCommand(@"
-        SELECT ISNULL(SUM(L.LeadAmount),0)
-        FROM Leads L
-        INNER JOIN Bikes B ON L.BikeID=B.BikeID
-        WHERE B.DealerID=@d AND L.LeadAmount>0", con);
-
-            totalCmd.Parameters.AddWithValue("@d", vendorId);
-
-            totalRevenue = Convert.ToDecimal(totalCmd.ExecuteScalar());
-
-
-            // GET COMMISSION %
-            SqlCommand percentCmd = new SqlCommand(
-            "SELECT CommissionPercent FROM SiteSettings WHERE SettingID=1", con);
-
-            object percentObj = percentCmd.ExecuteScalar();
-
-            decimal percent = 0;
-
-            if (percentObj != DBNull.Value && percentObj != null)
-            {
-                percent = Convert.ToDecimal(percentObj);
-            }
-            else
-            {
-                percent = 10; // default commission
-            }
-
-
-            // TOTAL COMMISSION
-            SqlCommand comCmd = new SqlCommand(@"
-
-SELECT ISNULL(SUM(
-ISNULL(L.CommissionAmount,
-(L.LeadAmount * @percent / 100))
-),0)
-
+SELECT
+SUM(Amount) Revenue,
+SUM(Commission) Commission,
+SUM(Net) Net
+FROM
+(
+SELECT LeadAmount Amount,
+ISNULL(CommissionAmount,0) Commission,
+LeadAmount - ISNULL(CommissionAmount,0) Net
 FROM Leads L
-INNER JOIN Bikes B ON L.BikeID=B.BikeID
-
+JOIN Bikes B ON L.BikeID=B.BikeID
 WHERE B.DealerID=@d
-AND L.LeadAmount>0
+
+UNION ALL
+
+SELECT RentAmount,
+ISNULL(CommissionAmount,0),
+RentAmount - ISNULL(CommissionAmount,0)
+FROM RentalBookings
+WHERE DealerID=@d
+AND Status='Completed'
+
+)X
 
 ", con);
 
-            comCmd.Parameters.AddWithValue("@d", vendorId);
-            comCmd.Parameters.AddWithValue("@percent", percent);
+            cmd.Parameters.AddWithValue("@d", dealer);
 
-            object comObj = comCmd.ExecuteScalar();
+            SqlDataReader dr = cmd.ExecuteReader();
 
-            if (comObj != DBNull.Value && comObj != null)
-                totalCommission = Convert.ToDecimal(comObj);
-            else
-                totalCommission = 0;
+            if (dr.Read())
+            {
+                lblRevenue.Text = Convert.ToDecimal(dr["Revenue"]).ToString("N0");
+                lblCommission.Text = Convert.ToDecimal(dr["Commission"]).ToString("N0");
+                lblNet.Text = Convert.ToDecimal(dr["Net"]).ToString("N0");
+            }
 
-            // ===== SETTLED =====
-            SqlCommand settledCmd = new SqlCommand(@"
-        SELECT ISNULL(SUM(L.LeadAmount - ISNULL(L.CommissionAmount,0)),0)
-        FROM Leads L
-        INNER JOIN Bikes B ON L.BikeID=B.BikeID
-        WHERE B.DealerID=@d AND L.IsSettled=1", con);
-
-            settledCmd.Parameters.AddWithValue("@d", vendorId);
-
-            settled = Convert.ToDecimal(settledCmd.ExecuteScalar());
-
-
-            // ===== PENDING =====
-            SqlCommand pendingCmd = new SqlCommand(@"
-        SELECT ISNULL(SUM(L.LeadAmount - ISNULL(L.CommissionAmount,0)),0)
-        FROM Leads L
-        INNER JOIN Bikes B ON L.BikeID=B.BikeID
-        WHERE B.DealerID=@d
-        AND L.SettlementRequested=1
-        AND L.IsSettled=0", con);
-
-            pendingCmd.Parameters.AddWithValue("@d", vendorId);
-
-            pending = Convert.ToDecimal(pendingCmd.ExecuteScalar());
-
-
-            lblRevenue.Text = totalRevenue.ToString("N0");
-            lblCommission.Text = totalCommission.ToString("N0");
-            lblNet.Text = net.ToString("N0");
-            lblSettled.Text = settled.ToString("N0");
-            lblPending.Text = pending.ToString("N0");
+            dr.Close();
         }
     }
+
 
     void LoadEarnings()
     {
@@ -129,24 +79,54 @@ AND L.LeadAmount>0
         {
             con.Open();
 
-            string query = @"
-            SELECT L.LeadID,
-                   U.FullName,
-                   B.ModelName,
-                   L.LeadAmount,
-                   ISNULL(L.CommissionAmount,0) AS Commission,
-                   (L.LeadAmount - ISNULL(L.CommissionAmount,0)) AS NetAmount,
-                   L.CreatedAt,
-                   L.SettlementRequested,
-                   L.IsSettled
-            FROM Leads L
-            INNER JOIN Bikes B ON L.BikeID=B.BikeID
-            INNER JOIN Users U ON L.CustomerID=U.UserID
-            WHERE B.DealerID=@d AND L.LeadAmount>0
-            ORDER BY L.CreatedAt DESC";
+            int dealer = Convert.ToInt32(Session["VendorID"]);
 
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.Parameters.AddWithValue("@d", Session["VendorID"]);
+            SqlCommand cmd = new SqlCommand(@"
+
+SELECT
+LeadID RecordID,
+'Lead' Source,
+B.ModelName,
+U.FullName Customer,
+L.LeadAmount Amount,
+ISNULL(L.CommissionAmount,0) Commission,
+L.LeadAmount - ISNULL(L.CommissionAmount,0) Net,
+L.CreatedAt Date,
+CASE
+WHEN L.SettlementRequested=1 THEN 'Requested'
+WHEN L.IsSettled=1 THEN 'Settled'
+ELSE 'Not Requested'
+END Status
+
+FROM Leads L
+JOIN Bikes B ON L.BikeID=B.BikeID
+JOIN Users U ON L.CustomerID=U.UserID
+WHERE B.DealerID=@d
+
+UNION ALL
+
+SELECT
+RentalID,
+'Rental',
+B.ModelName,
+U.FullName,
+R.RentAmount,
+ISNULL(R.CommissionAmount,0),
+R.RentAmount - ISNULL(R.CommissionAmount,0),
+R.CreatedAt,
+'Completed'
+
+FROM RentalBookings R
+JOIN Bikes B ON R.BikeID=B.BikeID
+JOIN Users U ON R.CustomerID=U.UserID
+WHERE R.DealerID=@d
+AND R.Status='Completed'
+
+ORDER BY Date DESC
+
+", con);
+
+            cmd.Parameters.AddWithValue("@d", dealer);
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
@@ -154,48 +134,50 @@ AND L.LeadAmount>0
 
             gvEarnings.DataSource = dt;
             gvEarnings.DataBind();
+
         }
     }
 
-    protected void gvEarnings_RowCommand(object sender,
-        System.Web.UI.WebControls.GridViewCommandEventArgs e)
+
+    protected void btnMassSettlement_Click(object sender, EventArgs e)
     {
-        if (e.CommandName == "RequestSettlement")
+        using (SqlConnection con = new SqlConnection(constr))
         {
-            int leadId = Convert.ToInt32(e.CommandArgument);
+            con.Open();
 
-            using (SqlConnection con = new SqlConnection(constr))
+            foreach (GridViewRow row in gvEarnings.Rows)
             {
-                con.Open();
+                CheckBox chk = (CheckBox)row.FindControl("chkSelect");
 
-                SqlCommand freezeCmd = new SqlCommand(@"
-                UPDATE L
-                SET CommissionAmount =
-                ISNULL(L.CommissionAmount,
-                (L.LeadAmount *
-                (SELECT CommissionPercent FROM SiteSettings WHERE SettingID=1)/100)),
-                SettlementRequested=1
-                FROM Leads L
-                INNER JOIN Bikes B ON L.BikeID=B.BikeID
-                WHERE L.LeadID=@id 
-                AND B.DealerID=@d
-                AND L.IsSettled=0", con);
+                if (chk != null && chk.Checked)
+                {
+                    int id = Convert.ToInt32(gvEarnings.DataKeys[row.RowIndex].Values["RecordID"]);
+                    string source = gvEarnings.DataKeys[row.RowIndex].Values["Source"].ToString();
 
-                freezeCmd.Parameters.AddWithValue("@id", leadId);
-                freezeCmd.Parameters.AddWithValue("@d", Session["VendorID"]);
+                    if (source == "Lead")
+                    {
+                        SqlCommand cmd = new SqlCommand(
+                        "UPDATE Leads SET SettlementRequested=1 WHERE LeadID=@id", con);
 
-                freezeCmd.ExecuteNonQuery();
+                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
             }
-
-            LoadSummary();
-            LoadEarnings();
         }
+
+        LoadSummary();
+        LoadEarnings();
     }
 
     protected void gvEarnings_PageIndexChanging(object sender,
-        System.Web.UI.WebControls.GridViewPageEventArgs e)
+    System.Web.UI.WebControls.GridViewPageEventArgs e)
     {
         gvEarnings.PageIndex = e.NewPageIndex;
+
         LoadEarnings();
     }
+
+
+ 
 }

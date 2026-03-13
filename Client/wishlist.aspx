@@ -156,6 +156,8 @@ gap:30px;
 /* SIDEBAR */
 
 .account-sidebar{
+    position:sticky;
+top:90px;
 
 background:#fff;
 border-radius:16px;

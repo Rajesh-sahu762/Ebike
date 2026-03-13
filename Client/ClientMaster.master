@@ -358,6 +358,7 @@ background:linear-gradient(180deg,#071a2e,#020814);
 border-bottom:1px solid rgba(255,255,255,0.06);
 position:sticky;
 top:0;
+padding: 5px;
 z-index:1000;
 }
 
@@ -608,10 +609,11 @@ display:none;
 
 <div class="logo-icon">
 <i class="fa fa-bolt"></i>
+    <asp:Image ID="imgLogo" runat="server" Height="36px" />
 </div>
 
 <div class="logo-text">
-<span class="logo-title">EBikes Duniya</span>
+<asp:Label ID="lblSiteTitle" runat="server" CssClass="logo-title"></asp:Label>
 <span class="logo-sub">ELECTRIC · FREEDOM</span>
 </div>
 
@@ -731,56 +733,60 @@ onkeydown="if(event.key==='Enter'){window.location='Bikes.aspx?search='+this.val
         runat="server"></asp:ContentPlaceHolder>
 </div>
 
-<!-- ===== FOOTER ===== -->
 
-<footer class="premium-footer">
+<footer class="premium-footer" style="background:#060b14; color:#8899bb; padding:70px 0 28px;">
 <div class="container">
-
-    <div class="footer-grid">
-
-        <!-- Logo + About -->
-        <div class="footer-col">
-            <h4>EBikes Duniya</h4>
-            <p>
-                India’s trusted EV marketplace connecting buyers
-                with verified dealers. Compare smartly and switch electric.
-            </p>
+  <div class="footer-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:32px;">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#ff6b35,#e84400);display:flex;align-items:center;justify-content:center">
+          <i class="fa fa-bolt" style="color:white;font-size:16px"></i>
         </div>
-
-        <!-- Quick Links -->
-        <div class="footer-col">
-            <h5>Quick Links</h5>
-            <ul>
-                <li><a href="Bikes.aspx">Browse Bikes</a></li>
-                <li><a href="Compare.aspx">Compare Bikes</a></li>
-                <li><a href="Reviews.aspx">User Reviews</a></li>
-                <li><a href="Contact.aspx">Contact Us</a></li>
-            </ul>
-        </div>
-
-        <!-- Dealers -->
-        <div class="footer-col">
-            <h5>For Dealers</h5>
-            <ul>
-                <li><a href="DealerRegister.aspx">Become Dealer</a></li>
-                <li><a href="DealerLogin.aspx">Dealer Login</a></li>
-                <li><a href="#">Commission Policy</a></li>
-            </ul>
-        </div>
-
-        <!-- Newsletter -->
-        <div class="footer-col">
-            <h5>Stay Updated</h5>
-            <input type="email" placeholder="Enter your email" class="footer-input">
-            <button class="footer-btn">Subscribe</button>
-        </div>
-
+        <span style="font-family:'Outfit',sans-serif;font-size:17px;font-weight:800;color:#f0f4ff">EBikes Duniya</span>
+      </div>
+      <p style="font-size:14px;line-height:1.7;max-width:270px">India's trusted EV marketplace connecting buyers with verified dealers. Compare smartly and switch electric.</p>
+      <div style="display:flex;gap:10px;margin-top:18px">
+        <a href="#" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:#8899bb;transition:all 0.2s" onmouseover="this.style.background='rgba(0,212,255,0.1)';this.style.color='#00d4ff'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='#8899bb'"><i class="fab fa-instagram fa-sm"></i></a>
+        <a href="#" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:#8899bb;transition:all 0.2s" onmouseover="this.style.background='rgba(0,212,255,0.1)';this.style.color='#00d4ff'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='#8899bb'"><i class="fab fa-youtube fa-sm"></i></a>
+        <a href="#" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:#8899bb;transition:all 0.2s" onmouseover="this.style.background='rgba(0,212,255,0.1)';this.style.color='#00d4ff'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='#8899bb'"><i class="fab fa-twitter fa-sm"></i></a>
+      </div>
     </div>
-
-    <div class="footer-bottom">
-        © 2026 EBikes Duniya. All rights reserved.
+    <div>
+      <h5 style="color:#f0f4ff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;margin-bottom:18px">Quick Links</h5>
+      <ul style="list-style:none;padding:0">
+        <li style="margin-bottom:10px"><a href="Bikes.aspx"    style="color:#8899bb;text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#8899bb'"><i class="fa fa-chevron-right fa-xs me-2" style="color:#4a5a7a"></i>Browse Bikes</a></li>
+        <li style="margin-bottom:10px"><a href="Compare.aspx"  style="color:#8899bb;text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#8899bb'"><i class="fa fa-chevron-right fa-xs me-2" style="color:#4a5a7a"></i>Compare Bikes</a></li>
+        <li style="margin-bottom:10px"><a href="UsedBikes.aspx" style="color:#8899bb;text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#8899bb'"><i class="fa fa-chevron-right fa-xs me-2" style="color:#4a5a7a"></i>Used Bikes</a></li>
+        <li style="margin-bottom:10px"><a href="SellBike.aspx"  style="color:#8899bb;text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#8899bb'"><i class="fa fa-chevron-right fa-xs me-2" style="color:#4a5a7a"></i>Sell Bikes</a></li>
+      </ul>
     </div>
-
+    <div>
+      <h5 style="color:#f0f4ff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;margin-bottom:18px">For Dealers</h5>
+      <ul style="list-style:none;padding:0">
+        <li style="margin-bottom:10px"><a href="../Vendor/VendorRegister.aspx" style="color:#8899bb;text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#8899bb'"><i class="fa fa-chevron-right fa-xs me-2" style="color:#4a5a7a"></i>Become Dealer</a></li>
+        <li style="margin-bottom:10px"><a href="../Vendor/VendorLogin.aspx"    style="color:#8899bb;text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#8899bb'"><i class="fa fa-chevron-right fa-xs me-2" style="color:#4a5a7a"></i>Dealer Login</a></li>
+        <li style="margin-bottom:10px"><a href="CommissionPolicy.aspx"                   style="color:#8899bb;text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#8899bb'"><i class="fa fa-chevron-right fa-xs me-2" style="color:#4a5a7a"></i>Commission Policy</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 style="color:#f0f4ff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;margin-bottom:18px">Stay Updated</h5>
+      <p style="font-size:13.5px;margin-bottom:14px">Get the latest EV news and exclusive offers.</p>
+      <div style="display:flex;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;margin-bottom:10px">
+        <input type="email" placeholder="Your email address" style="flex:1;background:none;border:none;outline:none;padding:11px 14px;color:#f0f4ff;font-size:13.5px" />
+        <button style="background:linear-gradient(135deg,#00d4ff,#4f8bff);border:none;padding:0 18px;color:#040912;font-weight:700;cursor:pointer;transition:opacity 0.2s" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+          <i class="fa fa-paper-plane"></i>
+        </button>
+      </div>
+      <p style="font-size:13px"><i class="fa fa-phone me-2" style="color:#ff6b35"></i><asp:Label ID="lblFooterPhone" runat="server"></asp:Label></p>
+      <p style="font-size:13px;margin-top:6px"><i class="fa fa-envelope me-2" style="color:#ff6b35"></i><asp:Label ID="lblFooterEmail" runat="server"></asp:Label></p>
+    </div>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:22px;text-align:center;margin-top:48px;font-size:13.5px">
+    © 2026 EBikes Duniya. All rights reserved. &nbsp;|&nbsp;
+    <a href="PrivacyPolicy.aspx" style="color:#4a5a7a;text-decoration:none" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#4a5a7a'">Privacy Policy</a> &nbsp;|&nbsp;
+    <a href="Terms.aspx" style="color:#4a5a7a;text-decoration:none" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#4a5a7a'">Terms</a>
+    &nbsp;&nbsp; Made with ⚡ in India 🇮🇳
+  </div>
 </div>
 </footer>
 

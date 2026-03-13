@@ -13,94 +13,132 @@ public partial class Admin_Settings : System.Web.UI.Page
             Response.Redirect("AdminLogin.aspx");
 
         if (!IsPostBack)
+        {
             LoadSettings();
+        }
     }
 
     void LoadSettings()
     {
-        SqlConnection con = new SqlConnection(constr);
-        con.Open();
-
-        SqlCommand cmd = new SqlCommand("SELECT * FROM SiteSettings WHERE SettingID=1", con);
-        SqlDataReader dr = cmd.ExecuteReader();
-
-        if (dr.Read())
+        using (SqlConnection con = new SqlConnection(constr))
         {
-            txtSiteTitle.Text = dr["SiteTitle"].ToString();
-            txtTagline.Text = dr["Tagline"].ToString();
-            txtAdminEmail.Text = dr["AdminEmail"].ToString();
-            txtSupportPhone.Text = dr["SupportPhone"].ToString();
-            imgLogo.ImageUrl = dr["LogoPath"].ToString();
+            con.Open();
 
-            txtSMTPHost.Text = dr["SMTPHost"].ToString();
-            txtSMTPPort.Text = dr["SMTPPort"].ToString();
-            txtSMTPEmail.Text = dr["SMTPEmail"].ToString();
-            txtSMTPPassword.Attributes["value"] = dr["SMTPPassword"].ToString();
-            chkSSL.Checked = dr["EnableSSL"] != DBNull.Value && Convert.ToBoolean(dr["EnableSSL"]);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM SiteSettings WHERE SettingID=1", con);
 
-            txtLeadPrice.Text = dr["LeadPrice"].ToString();
-            txtCommission.Text = dr["CommissionPercent"].ToString();
-            chkMaintenance.Checked = dr["MaintenanceMode"] != DBNull.Value && Convert.ToBoolean(dr["MaintenanceMode"]);
-            txtMaintenanceMsg.Text = dr["MaintenanceMessage"].ToString();
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            if (dr.Read())
+            {
+                txtSiteTitle.Text = dr["SiteTitle"] == DBNull.Value ? "" : dr["SiteTitle"].ToString();
+                txtTagline.Text = dr["Tagline"] == DBNull.Value ? "" : dr["Tagline"].ToString();
+                txtAdminEmail.Text = dr["AdminEmail"] == DBNull.Value ? "" : dr["AdminEmail"].ToString();
+                txtSupportPhone.Text = dr["SupportPhone"] == DBNull.Value ? "" : dr["SupportPhone"].ToString();
+
+                txtSMTPHost.Text = dr["SMTPHost"] == DBNull.Value ? "" : dr["SMTPHost"].ToString();
+                txtSMTPPort.Text = dr["SMTPPort"] == DBNull.Value ? "" : dr["SMTPPort"].ToString();
+                txtSMTPEmail.Text = dr["SMTPEmail"] == DBNull.Value ? "" : dr["SMTPEmail"].ToString();
+
+                txtCommission.Text = dr["CommissionPercent"] == DBNull.Value ? "" : dr["CommissionPercent"].ToString();
+
+                chkSSL.Checked = dr["EnableSSL"] != DBNull.Value && Convert.ToBoolean(dr["EnableSSL"]);
+                chkMaintenance.Checked = dr["MaintenanceMode"] != DBNull.Value && Convert.ToBoolean(dr["MaintenanceMode"]);
+
+                txtMaintenanceMsg.Text = dr["MaintenanceMessage"] == DBNull.Value ? "" : dr["MaintenanceMessage"].ToString();
+
+                if (dr["LogoPath"] != DBNull.Value)
+                    imgLogo.ImageUrl = dr["LogoPath"].ToString();
+            }
+
+            dr.Close();
         }
-
-        con.Close();
     }
+
 
     protected void btnSave_Click(object sender, EventArgs e)
     {
-        SqlConnection con = new SqlConnection(constr);
-        con.Open();
-
-        string logoPath = imgLogo.ImageUrl;
-
-        if (fuLogo.HasFile)
+        using (SqlConnection con = new SqlConnection(constr))
         {
-            string ext = Path.GetExtension(fuLogo.FileName);
-            string fileName = Guid.NewGuid().ToString() + ext;
-            logoPath = "/Uploads/Site/" + fileName;
+            con.Open();
 
-            if (!Directory.Exists(Server.MapPath("/Uploads/Site/")))
-                Directory.CreateDirectory(Server.MapPath("/Uploads/Site/"));
+            string logoPath = imgLogo.ImageUrl;
 
-            fuLogo.SaveAs(Server.MapPath(logoPath));
+            // ===== LOGO UPLOAD =====
+
+            if (fuLogo.HasFile)
+            {
+                string folder = "~/Uploads/";
+                string fileName = "logo_" + DateTime.Now.Ticks + Path.GetExtension(fuLogo.FileName);
+
+                string serverPath = Server.MapPath(folder + fileName);
+
+                fuLogo.SaveAs(serverPath);
+
+                logoPath = folder + fileName;
+
+                imgLogo.ImageUrl = logoPath;
+            }
+
+            // ===== COMMISSION SAFE =====
+
+            decimal commission = 0;
+
+            if (!string.IsNullOrEmpty(txtCommission.Text))
+                commission = Convert.ToDecimal(txtCommission.Text);
+
+            // ===== SMTP PORT SAFE =====
+
+            int port = 0;
+
+            if (!string.IsNullOrEmpty(txtSMTPPort.Text))
+                port = Convert.ToInt32(txtSMTPPort.Text);
+
+            // ===== UPDATE SETTINGS =====
+
+            SqlCommand cmd = new SqlCommand(@"
+
+            UPDATE SiteSettings SET
+
+            SiteTitle=@SiteTitle,
+            Tagline=@Tagline,
+            AdminEmail=@AdminEmail,
+            SupportPhone=@SupportPhone,
+            LogoPath=@LogoPath,
+
+            SMTPHost=@SMTPHost,
+            SMTPPort=@SMTPPort,
+            SMTPEmail=@SMTPEmail,
+            EnableSSL=@EnableSSL,
+
+            CommissionPercent=@Commission,
+
+            MaintenanceMode=@MaintenanceMode,
+            MaintenanceMessage=@MaintenanceMessage
+
+            WHERE SettingID=1
+
+            ", con);
+
+            cmd.Parameters.AddWithValue("@SiteTitle", txtSiteTitle.Text.Trim());
+            cmd.Parameters.AddWithValue("@Tagline", txtTagline.Text.Trim());
+            cmd.Parameters.AddWithValue("@AdminEmail", txtAdminEmail.Text.Trim());
+            cmd.Parameters.AddWithValue("@SupportPhone", txtSupportPhone.Text.Trim());
+
+            cmd.Parameters.AddWithValue("@LogoPath", logoPath);
+
+            cmd.Parameters.AddWithValue("@SMTPHost", txtSMTPHost.Text.Trim());
+            cmd.Parameters.AddWithValue("@SMTPPort", port);
+            cmd.Parameters.AddWithValue("@SMTPEmail", txtSMTPEmail.Text.Trim());
+
+            cmd.Parameters.AddWithValue("@EnableSSL", chkSSL.Checked);
+
+            cmd.Parameters.AddWithValue("@Commission", commission);
+
+            cmd.Parameters.AddWithValue("@MaintenanceMode", chkMaintenance.Checked);
+            cmd.Parameters.AddWithValue("@MaintenanceMessage", txtMaintenanceMsg.Text.Trim());
+
+            cmd.ExecuteNonQuery();
         }
-
-        SqlCommand cmd = new SqlCommand(
-            @"UPDATE SiteSettings SET
-            SiteTitle=@title,
-            Tagline=@tagline,
-            AdminEmail=@email,
-            SupportPhone=@phone,
-            LogoPath=@logo,
-            SMTPHost=@host,
-            SMTPPort=@port,
-            SMTPEmail=@smtpEmail,
-            SMTPPassword=@smtpPass,
-            EnableSSL=@ssl,
-            LeadPrice=@price,
-            CommissionPercent=@commission,
-            MaintenanceMode=@maint,
-            MaintenanceMessage=@msg
-            WHERE SettingID=1", con);
-
-        cmd.Parameters.AddWithValue("@title", txtSiteTitle.Text);
-        cmd.Parameters.AddWithValue("@tagline", txtTagline.Text);
-        cmd.Parameters.AddWithValue("@email", txtAdminEmail.Text);
-        cmd.Parameters.AddWithValue("@phone", txtSupportPhone.Text);
-        cmd.Parameters.AddWithValue("@logo", logoPath);
-        cmd.Parameters.AddWithValue("@host", txtSMTPHost.Text);
-        cmd.Parameters.AddWithValue("@port", txtSMTPPort.Text);
-        cmd.Parameters.AddWithValue("@smtpEmail", txtSMTPEmail.Text);
-        cmd.Parameters.AddWithValue("@smtpPass", txtSMTPPassword.Text);
-        cmd.Parameters.AddWithValue("@ssl", chkSSL.Checked);
-        cmd.Parameters.AddWithValue("@price", txtLeadPrice.Text);
-        cmd.Parameters.AddWithValue("@commission", txtCommission.Text);
-        cmd.Parameters.AddWithValue("@maint", chkMaintenance.Checked);
-        cmd.Parameters.AddWithValue("@msg", txtMaintenanceMsg.Text);
-
-        cmd.ExecuteNonQuery();
-        con.Close();
 
         LoadSettings();
     }

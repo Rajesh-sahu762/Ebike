@@ -43,9 +43,8 @@ Inherits="Client_MyProfile" %>
 ❤️ Wishlist
 </a>
 
-<a href="MyEnquiries.aspx">
-📨 My Enquiries
-</a>
+<a href="MyRentals.aspx">🛵 My Rentals</a>
+
 
 <a href="Compare.aspx">
 ⚖ Compare
@@ -491,6 +490,22 @@ background:#ef4444;
 color:#fff;
 
 }
+
+}
+
+.account-sidebar{
+
+background:#fff;
+position:sticky;
+top:90px;
+
+border-radius:16px;
+
+overflow:hidden;
+
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+
+align-self:start;   /* ADD THIS */
 
 }
 

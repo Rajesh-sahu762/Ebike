@@ -9,7 +9,7 @@ Inherits="Client_MyRentals" %>
 .rental-wrapper{
 max-width:1200px;
 /*margin:60px auto;*/
-padding:20px;
+/*padding:20px;*/
 }
 
 .rental-header{
@@ -224,6 +224,8 @@ gap:15px;
 /* SIDEBAR */
 
 .account-sidebar{
+    position:sticky;
+top:90px;
 
 border-radius:12px;
 
