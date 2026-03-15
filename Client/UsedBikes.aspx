@@ -53,6 +53,10 @@ transform:translateY(-4px);
 box-shadow:0 12px 30px rgba(0,0,0,0.15);
 }
 
+.bike-img{
+position:relative;
+}
+
 .bike-img img{
 width:100%;
 height:200px;
@@ -304,7 +308,9 @@ Loading...
 
                 }
 
-                refreshWishlistCount();
+                if (window.updateWishCount) {
+                    window.updateWishCount();
+                }
 
             }
 

@@ -319,6 +319,35 @@ VALUES
     }
 
     [WebMethod]
+    public static string CheckWishlist(int bikeId)
+    {
+        if (HttpContext.Current.Session["CustomerID"] == null)
+            return "no";
+
+        int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);
+
+        string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand(
+            "SELECT COUNT(*) FROM Wishlist WHERE CustomerID=@u AND BikeID=@b", con);
+
+            cmd.Parameters.AddWithValue("@u", userId);
+            cmd.Parameters.AddWithValue("@b", bikeId);
+
+            int exists = Convert.ToInt32(cmd.ExecuteScalar());
+
+            if (exists > 0)
+                return "yes";
+            else
+                return "no";
+        }
+    }
+
+    [WebMethod]
     public static string ToggleWishlist(int bikeId)
     {
         if (HttpContext.Current.Session["CustomerID"] == null)

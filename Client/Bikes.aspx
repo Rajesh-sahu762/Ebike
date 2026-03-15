@@ -502,31 +502,47 @@ Apply Filters
 
         $.ajax({
             type: "POST",
-            url: "/Client/Bikes.aspx/ToggleWishlist",
+            url: "Bikes.aspx/ToggleWishlist",
             data: JSON.stringify({ bikeId: id }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
+
             success: function (res) {
 
                 if (res.d === "login") {
+
                     alert("Please login first");
                     window.location.href = "ClientLogin.aspx";
                     return;
+
                 }
 
                 if (res.d === "added") {
+
                     $(el).addClass("active");
-                }
-                else {
+
+                } else {
+
                     $(el).removeClass("active");
+
                 }
 
-                refreshWishlistCount();
+                /* ⭐ GLOBAL WISHLIST COUNT UPDATE */
+                if (window.updateWishCount) {
+                    window.updateWishCount();
+                }
+
+            },
+
+            error: function () {
+
+                alert("Wishlist error occurred");
+
             }
+
         });
+
     }
-
-
 </script>
 
 </asp:Content>

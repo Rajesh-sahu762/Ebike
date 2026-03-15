@@ -153,7 +153,8 @@ public partial class Admin_ManageLeads : System.Web.UI.Page
     }
 
 
-    protected void gvLeads_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
+    protected void gvLeads_RowCommand(object sender,
+      System.Web.UI.WebControls.GridViewCommandEventArgs e)
     {
         int leadId = Convert.ToInt32(e.CommandArgument);
 
@@ -161,23 +162,64 @@ public partial class Admin_ManageLeads : System.Web.UI.Page
         {
             con.Open();
 
+            // ===== VIEW LEAD MESSAGE =====
+
+            if (e.CommandName == "ViewLead")
+            {
+                SqlCommand cmd = new SqlCommand(@"
+
+            SELECT Message 
+            FROM Leads 
+            WHERE LeadID=@id
+
+            ", con);
+
+                cmd.Parameters.AddWithValue("@id", leadId);
+
+                object msg = cmd.ExecuteScalar();
+
+                if (msg != null)
+                    litLeadMessage.Text = msg.ToString();
+                else
+                    litLeadMessage.Text = "No message";
+
+              ClientScript.RegisterStartupScript(this.GetType(),
+"openModal",
+@"var myModal = new bootstrap.Modal(document.getElementById('leadModal'));
+myModal.show();",
+true);
+            }
+
+
+            // ===== APPROVE SETTLEMENT =====
+
             if (e.CommandName == "ApproveSettlement")
             {
                 SqlCommand cmd = new SqlCommand(@"
-                UPDATE Leads
-                SET IsSettled=1,
-                    SettledAt=GETDATE()
-                WHERE LeadID=@id", con);
+
+            UPDATE Leads
+            SET IsSettled=1,
+                SettlementApprovedAt=GETDATE()
+
+            WHERE LeadID=@id
+
+            ", con);
 
                 cmd.Parameters.AddWithValue("@id", leadId);
+
                 cmd.ExecuteNonQuery();
             }
+
+
+            // ===== DELETE LEAD =====
 
             if (e.CommandName == "DeleteLead")
             {
                 SqlCommand cmd = new SqlCommand(
-                    "DELETE FROM Leads WHERE LeadID=@id", con);
+                "DELETE FROM Leads WHERE LeadID=@id", con);
+
                 cmd.Parameters.AddWithValue("@id", leadId);
+
                 cmd.ExecuteNonQuery();
             }
         }

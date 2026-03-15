@@ -17,37 +17,34 @@ Inherits="Client_MyProfile" %>
 <div class="profile-banner"></div>
 
 <div class="profile-avatar">
-
 <asp:Image ID="imgProfile" runat="server" ImageUrl="~/Uploads/user.jpg" CssClass="avatar-img"/>
-
 </div>
 
 <div class="profile-info">
-
 <h3><asp:Literal ID="litName" runat="server"></asp:Literal></h3>
-
 <p><asp:Literal ID="litEmail" runat="server"></asp:Literal></p>
-
 </div>
 
 </div>
-
 
 <div class="account-menu">
 
-<a href="MyProfile.aspx" class="active">
-👤 Profile
-</a>
+<a href="MyProfile.aspx" class="active">👤 Profile</a>
 
-<a href="Wishlist.aspx">
-❤️ Wishlist
-</a>
+<a href="Wishlist.aspx">❤️ Wishlist</a>
 
 <a href="MyRentals.aspx">🛵 My Rentals</a>
 
+<a href="MyEnquiries.aspx">📩 My Enquiries</a>
 
-<a href="Compare.aspx">
-⚖ Compare
+<hr />
+
+<a href="Logout.aspx" class="logout-btn">
+🚪 Logout
+</a>
+
+<a href="#" class="delete-account" onclick="deleteAccount()">
+❌ Delete Account
 </a>
 
 </div>
@@ -528,5 +525,20 @@ grid-template-columns:1fr;
 }
 
 </style>
+
+
+    <script>
+
+        function deleteAccount() {
+
+            if (confirm("Are you sure you want to permanently delete your account?")) {
+
+                window.location = "DeleteAccount.aspx";
+
+            }
+
+        }
+
+</script>
 
 </asp:Content>

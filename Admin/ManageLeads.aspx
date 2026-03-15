@@ -4,6 +4,73 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
+    <style>
+        /* ===== PREMIUM MODAL ===== */
+
+.premium-modal{
+background: linear-gradient(145deg,#25215a,#1e1b4b);
+border:none;
+border-radius:18px;
+color:white;
+box-shadow:0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* HEADER */
+
+.premium-modal-header{
+border-bottom:1px solid rgba(255,255,255,0.08);
+padding:18px 22px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.modal-title-wrap{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.modal-icon{
+font-size:22px;
+color:#06b6d4;
+}
+
+/* BODY */
+
+.premium-modal-body{
+padding:25px;
+}
+
+.lead-message-box{
+background:#1a1740;
+padding:20px;
+border-radius:12px;
+font-size:15px;
+line-height:1.6;
+color:#e2e8f0;
+border:1px solid rgba(255,255,255,0.05);
+}
+
+/* FOOTER */
+
+.premium-modal-footer{
+border-top:1px solid rgba(255,255,255,0.08);
+padding:15px 20px;
+}
+
+/* MODAL ANIMATION */
+
+.modal.fade .modal-dialog{
+transform:scale(.9);
+transition:all .25s ease;
+}
+
+.modal.show .modal-dialog{
+transform:scale(1);
+}
+    </style>
+
 <div class="card-custom">
 
     <h4 class="mb-4">Manage Leads</h4>
@@ -147,20 +214,60 @@
 
 </div>
 
-<!-- Modal -->
+<asp:UpdatePanel ID="UpdatePanel1" runat="server">
+<ContentTemplate>
+
+<!-- PREMIUM LEAD MODAL -->
+
 <div class="modal fade" id="leadModal" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content custom-modal">
-      <div class="modal-header border-0">
-        <h5 class="modal-title">Lead Message</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <asp:Literal ID="litLeadMessage" runat="server"></asp:Literal>
-      </div>
-    </div>
-  </div>
+<div class="modal-dialog modal-dialog-centered modal-lg">
+
+<div class="modal-content premium-modal">
+
+<div class="modal-header premium-modal-header">
+
+<div class="modal-title-wrap">
+
+<i class="bi bi-chat-left-text modal-icon"></i>
+
+<h5 class="modal-title">Lead Message</h5>
+
 </div>
+
+<button type="button"
+class="btn-close btn-close-white"
+data-bs-dismiss="modal"></button>
+
+</div>
+
+<div class="modal-body premium-modal-body">
+
+<div class="lead-message-box">
+
+<asp:Literal ID="litLeadMessage" runat="server"></asp:Literal>
+
+</div>
+
+</div>
+
+<div class="modal-footer premium-modal-footer">
+
+<button class="btn btn-gradient"
+data-bs-dismiss="modal">
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</ContentTemplate>
+</asp:UpdatePanel>
 
 <script>
     function toggleAll(source) {

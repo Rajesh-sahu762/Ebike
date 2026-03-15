@@ -1481,40 +1481,46 @@ Contact Seller
 
             var bikeId = "<%= ViewState["BikeID"] %>";
 
-            $.ajax({
-                type:"POST",
-                url:"/Client/UsedBikeDetails.aspx/ToggleWishlist",
-                data: JSON.stringify({ bikeId: bikeId }),
-                contentType:"application/json; charset=utf-8",
-                dataType:"json",
+           $.ajax({
 
-                success:function(res){
+               type:"POST",
+               url:"/Client/UsedBikeDetails.aspx/ToggleWishlist",
+               data: JSON.stringify({ bikeId: bikeId }),
+               contentType:"application/json; charset=utf-8",
+               dataType:"json",
 
-                    if(res.d==="added"){
-                        $("#wishlistBtn").addClass("active").text("❤ Wishlisted");
-                    }
+               success:function(res){
 
-                    if(res.d==="removed"){
-                        $("#wishlistBtn").removeClass("active").text("♡ Wishlist");
-                    }
-                    refreshWishlistCount();
+                   if(res.d==="added"){
+                       $("#wishlistBtn").addClass("active").text("❤ Wishlisted");
+                   }
 
-                    if(res.d==="login"){
-                        alert("Please login first");
-                    }
+                   if(res.d==="removed"){
+                       $("#wishlistBtn").removeClass("active").text("♡ Wishlist");
+                   }
 
-                }
+                   if (window.updateWishCount) {
+                       window.updateWishCount();
+                   }
 
-            });
+                   if(res.d==="login"){
+                       alert("Please login first");
+                   }
+
+               }
+
+           });
 
         }
+
+
         function checkWishlist(){
 
             var bikeId = "<%= ViewState["BikeID"] %>";
 
             $.ajax({
                 type:"POST",
-                url:"/Client/UsedBikeDetails.aspx/ToggleWishlist",
+                url:"/Client/UsedBikeDetails.aspx/CheckWishlist",
                 data: JSON.stringify({ bikeId: bikeId }),
                 contentType:"application/json; charset=utf-8",
                 dataType:"json",

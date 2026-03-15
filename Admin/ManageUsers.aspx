@@ -51,7 +51,7 @@
 
         <asp:TemplateField HeaderText="Profile">
             <ItemTemplate>
-                <img src='<%# Eval("ProfileImage") %>'
+                <img src="../Uploads/user.jpg"
                      style="width:50px; height:50px; border-radius:50%; object-fit:cover;" />
             </ItemTemplate>
         </asp:TemplateField>
@@ -107,9 +107,7 @@
 
           <!-- Left Side Image -->
           <div class="col-md-4 text-center mb-3">
-            <img id="modalUserImage"
-                 src=""
-                 class="modal-profile-img" />
+            <img id="modalUserImage" src="../Uploads/user.jpg" class="modal-profile-img" />
           </div>
 
           <!-- Right Side Details -->

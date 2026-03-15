@@ -1448,10 +1448,14 @@ Enquire Now
                     if(res.d==="removed"){
                         $("#wishlistBtn").removeClass("active").text("♡ Wishlist");
                     }
-                    refreshWishlistCount();
 
                     if(res.d==="login"){
                         alert("Please login first");
+                    }
+
+                    // navbar wishlist count update
+                    if (window.updateWishCount) {
+                        window.updateWishCount();
                     }
 
                 }

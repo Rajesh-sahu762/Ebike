@@ -139,6 +139,10 @@ background:#fff;
 border-radius:16px;
 box-shadow:0 10px 30px rgba(0,0,0,0.08);
 overflow:hidden;
+
+position:sticky;
+top:90px;
+align-self:start;
 }
 
 .profile-header{
@@ -224,13 +228,8 @@ gap:15px;
 /* SIDEBAR */
 
 .account-sidebar{
-    position:sticky;
-top:90px;
-
 border-radius:12px;
-
 }
-
 /* MENU -> HORIZONTAL */
 
 .account-menu{
@@ -294,13 +293,17 @@ height:70px;
 
 } 
 
-
+    .account-content{
+display:flex;
+flex-direction:column;
+gap:25px;
+}
 
 
 
 </style>
 
-<div class="rental-wrapper">
+
 
 <section class="account-section">
 
@@ -334,6 +337,16 @@ height:70px;
 <a href="MyRentals.aspx" class="active">🛵 My Rentals</a>
 
 <a href="MyEnquiries.aspx">📨 My Enquiries</a>
+
+    <hr />
+
+<a href="Logout.aspx" class="logout-btn">
+🚪 Logout
+</a>
+
+<a href="#" class="delete-account" onclick="deleteAccount()">
+❌ Delete Account
+</a>
 
 </div>
 
@@ -378,6 +391,20 @@ My Rentals
 </div>
 
 </section>
+
+    <script>
+
+        function deleteAccount() {
+
+            if (confirm("Are you sure you want to permanently delete your account?")) {
+
+                window.location = "DeleteAccount.aspx";
+
+            }
+
+        }
+
+</script>
 
 <script>
 

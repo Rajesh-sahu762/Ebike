@@ -73,73 +73,100 @@
 
 <!-- ===== GRID ===== -->
 <asp:GridView ID="gvLeads" runat="server"
-    CssClass="table table-bordered table-hover"
-    AutoGenerateColumns="false"
-    AllowPaging="true"
-    PageSize="5"
-    OnPageIndexChanging="gvLeads_PageIndexChanging"
-    OnRowCommand="gvLeads_RowCommand"
-    DataKeyNames="LeadID">
+CssClass="table table-bordered table-hover"
+AutoGenerateColumns="false"
+AllowPaging="true"
+PageSize="5"
+OnPageIndexChanging="gvLeads_PageIndexChanging"
+OnRowCommand="gvLeads_RowCommand"
+DataKeyNames="LeadID">
 
-    <Columns>
+<Columns>
 
-        <asp:BoundField DataField="FullName" HeaderText="Customer" />
-        <asp:BoundField DataField="ModelName" HeaderText="Bike" />
-        <asp:BoundField DataField="LeadAmount" HeaderText="Amount (₹)" />
-        <asp:BoundField DataField="CommissionAmount" HeaderText="Platform Fee (₹)" />
+<asp:BoundField DataField="FullName" HeaderText="Customer" />
 
-        <asp:TemplateField HeaderText="Net (₹)">
-            <ItemTemplate>
-                <%# Convert.ToDecimal(Eval("LeadAmount")) - Convert.ToDecimal(Eval("CommissionAmount")) %>
-            </ItemTemplate>
-        </asp:TemplateField>
+<asp:BoundField DataField="Mobile" HeaderText="Phone" />
 
-        <asp:BoundField DataField="CreatedAt" HeaderText="Date" />
+<asp:BoundField DataField="Email" HeaderText="Email" />
 
-        <asp:TemplateField HeaderText="Lead Status">
-            <ItemTemplate>
-                <%# Convert.ToBoolean(Eval("IsViewed")) ?
-                "<span class='badge bg-success'>Viewed</span>" :
-                "<span class='badge bg-warning'>Unread</span>" %>
-            </ItemTemplate>
-        </asp:TemplateField>
+<asp:BoundField DataField="City" HeaderText="City" />
 
-        <asp:TemplateField HeaderText="Settlement">
-            <ItemTemplate>
-                <%# Convert.ToBoolean(Eval("IsSettled")) ?
-                "<span class='badge bg-success'>Settled</span>" :
-                (Convert.ToBoolean(Eval("SettlementRequested")) ?
-                "<span class='badge bg-warning'>Requested</span>" :
-                "<span class='badge bg-secondary'>Not Requested</span>") %>
-            </ItemTemplate>
-        </asp:TemplateField>
+<asp:BoundField DataField="ModelName" HeaderText="Bike" />
 
-        <asp:TemplateField HeaderText="Action">
-            <ItemTemplate>
+<asp:BoundField DataField="LeadAmount" HeaderText="Amount (₹)" />
 
-                <asp:Button ID="btnMark" runat="server"
-                    Text="Mark"
-                    CssClass="btn btn-sm btn-warning"
-                    CommandName="MarkViewed"
-                    CommandArgument='<%# Eval("LeadID") %>' />
+<asp:BoundField DataField="CommissionAmount" HeaderText="Platform Fee (₹)" />
 
-                <asp:Button ID="btnRequestSettlement" runat="server"
-                    Text="Request"
-                    CssClass="btn btn-sm btn-primary"
-                    CommandName="RequestSettlement"
-                    CommandArgument='<%# Eval("LeadID") %>'
-                    Visible='<%# !(Convert.ToBoolean(Eval("SettlementRequested")) || Convert.ToBoolean(Eval("IsSettled"))) %>' />
+<asp:TemplateField HeaderText="Net (₹)">
+<ItemTemplate>
+<%# Convert.ToDecimal(Eval("LeadAmount")) - Convert.ToDecimal(Eval("CommissionAmount")) %>
+</ItemTemplate>
+</asp:TemplateField>
 
-                <asp:Button ID="btnDelete" runat="server"
-                    Text="Delete"
-                    CssClass="btn btn-sm btn-danger"
-                    CommandName="DeleteLead"
-                    CommandArgument='<%# Eval("LeadID") %>' />
+<asp:BoundField DataField="CreatedAt" HeaderText="Date" />
 
-            </ItemTemplate>
-        </asp:TemplateField>
+<asp:TemplateField HeaderText="Lead Status">
+<ItemTemplate>
+<%# Convert.ToBoolean(Eval("IsViewed")) ?
+"<span class='badge bg-success'>Viewed</span>" :
+"<span class='badge bg-warning'>Unread</span>" %>
+</ItemTemplate>
+</asp:TemplateField>
 
-    </Columns>
+<asp:TemplateField HeaderText="Settlement">
+<ItemTemplate>
+<%# Convert.ToBoolean(Eval("IsSettled")) ?
+"<span class='badge bg-success'>Settled</span>" :
+(Convert.ToBoolean(Eval("SettlementRequested")) ?
+"<span class='badge bg-warning'>Requested</span>" :
+"<span class='badge bg-secondary'>Not Requested</span>") %>
+</ItemTemplate>
+</asp:TemplateField>
+
+<asp:TemplateField HeaderText="Contact">
+<ItemTemplate>
+
+<a href='tel:<%# Eval("Mobile") %>' class="btn btn-sm btn-success">
+Call
+</a>
+
+<a target="_blank"
+href='https://wa.me/91<%# Eval("Mobile") %>'
+class="btn btn-sm btn-success">
+
+WhatsApp
+
+</a>
+
+</ItemTemplate>
+</asp:TemplateField>
+
+<asp:TemplateField HeaderText="Action">
+<ItemTemplate>
+
+<asp:Button ID="btnMark" runat="server"
+Text="Mark"
+CssClass="btn btn-sm btn-warning"
+CommandName="MarkViewed"
+CommandArgument='<%# Eval("LeadID") %>' />
+
+<asp:Button ID="btnRequestSettlement" runat="server"
+Text="Request"
+CssClass="btn btn-sm btn-primary"
+CommandName="RequestSettlement"
+CommandArgument='<%# Eval("LeadID") %>'
+Visible='<%# !(Convert.ToBoolean(Eval("SettlementRequested")) || Convert.ToBoolean(Eval("IsSettled"))) %>' />
+
+<asp:Button ID="btnDelete" runat="server"
+Text="Delete"
+CssClass="btn btn-sm btn-danger"
+CommandName="DeleteLead"
+CommandArgument='<%# Eval("LeadID") %>' />
+
+</ItemTemplate>
+</asp:TemplateField>
+
+</Columns>
 </asp:GridView>
 
 

@@ -504,7 +504,9 @@ Apply Filters
                     $(el).removeClass("active");
                 }
 
-                refreshWishlistCount();
+                if (window.updateWishCount) {
+                    window.updateWishCount();
+                }
             }
         });
     }

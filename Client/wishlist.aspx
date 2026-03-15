@@ -39,6 +39,16 @@ Inherits="Client_Wishlist" %>
 
 <a href="MyEnquiries.aspx">📨 My Enquiries</a>
 
+    <hr />
+
+<a href="Logout.aspx" class="logout-btn">
+🚪 Logout
+</a>
+
+<a href="#" class="delete-account" onclick="deleteAccount()">
+❌ Delete Account
+</a>
+
 </div>
 
 </div>
@@ -57,7 +67,7 @@ Inherits="Client_Wishlist" %>
 </div>
 
 
-<div id="wishlistGrid" runat="server" class="wishlist-grid">
+<div id="wishlistGrid" runat="server" ClientIDMode="Static" class="wishlist-grid">
 
 <asp:Repeater ID="rptWishlist" runat="server">
 
@@ -111,7 +121,7 @@ Compare
 </div>
 
 
-<div id="emptyWishlist" runat="server" class="empty-wishlist" visible="false">
+<div id="emptyWishlist" runat="server" ClientIDMode="Static" visible="false">
 
 <div class="empty-icon">💔</div>
 
@@ -661,25 +671,24 @@ height:70px;
 </style>
 
 <script>
-
-    function removeWishlist(id, btn) {
+    function removeWishlist(id) {
 
         $.ajax({
 
             type: "POST",
-
             url: "Wishlist.aspx/Remove",
-
             data: JSON.stringify({ bikeId: id }),
-
             contentType: "application/json; charset=utf-8",
-
             dataType: "json",
 
             success: function (res) {
 
-                // reload page to sync UI with database
-                location.reload();
+                if (res.d === "Removed") {
+
+                    // reload page to rebind repeater
+                    location.reload();
+
+                }
 
             },
 
@@ -692,6 +701,19 @@ height:70px;
         });
 
     }
+</script>
+
+    <script>
+
+        function deleteAccount() {
+
+            if (confirm("Are you sure you want to permanently delete your account?")) {
+
+                window.location = "DeleteAccount.aspx";
+
+            }
+
+        }
 
 </script>
 

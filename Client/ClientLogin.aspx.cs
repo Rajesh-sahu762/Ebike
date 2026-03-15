@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Web;
 
 public partial class Client_ClientLogin : System.Web.UI.Page
 {
@@ -90,6 +91,17 @@ public partial class Client_ClientLogin : System.Web.UI.Page
                 // Create Session
                 Session["CustomerID"] = userId;
                 Session["CustomerName"] = fullName;
+
+                if (chkRemember.Checked)
+                {
+                    HttpCookie cookie = new HttpCookie("EBikesUser");
+                    cookie["UserID"] = userId.ToString();
+                    cookie["Name"] = fullName;
+
+                    cookie.Expires = DateTime.Now.AddDays(7);
+
+                    Response.Cookies.Add(cookie);
+                }
 
                 Response.Redirect("Home.aspx");
             }

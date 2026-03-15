@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Collections.Generic;
 using System.Web.Services;
+using System.Web;
 
 public partial class Client_ClientMaster : System.Web.UI.MasterPage
 {
@@ -10,27 +11,39 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+
+        if (Session["CustomerID"] == null && Request.Cookies["EBikesUser"] != null)
         {
-            LoadSiteSettings();
-            if (Session["CustomerID"] != null)
-            {
-                pnlLogin.Visible = false;
-                pnlUser.Visible = true;
+            Session["CustomerID"] =
+                Request.Cookies["EBikesUser"]["UserID"];
 
-                if (Session["CustomerName"] != null)
-                    lblUserName.Text = Session["CustomerName"].ToString();
-                else
-                    lblUserName.Text = "My Account";
+            Session["CustomerName"] =
+                Request.Cookies["EBikesUser"]["Name"];
+        }
+        // ✅ Prevent browser caching
+        Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        Response.Cache.SetNoStore();
+        Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
 
-                LoadWishlistCount();
-            }
+        LoadSiteSettings();
+
+        if (Session["CustomerID"] != null)
+        {
+            pnlLogin.Visible = false;
+            pnlUser.Visible = true;
+
+            if (Session["CustomerName"] != null)
+                lblUserName.Text = Session["CustomerName"].ToString();
             else
-            {
-                pnlLogin.Visible = true;
-                pnlUser.Visible = false;
-                wishCount.InnerText = "0";
-            }
+                lblUserName.Text = "My Account";
+
+            LoadWishlistCount();
+        }
+        else
+        {
+            pnlLogin.Visible = true;
+            pnlUser.Visible = false;
+            wishCount.InnerText = "0";
         }
     }
 
@@ -84,28 +97,28 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
         }
     }
 
-    [WebMethod(EnableSession = true)]
-    public static int GetWishlistCount()
-    {
-        if (System.Web.HttpContext.Current.Session["CustomerID"] == null)
-            return 0;
+    //[WebMethod(EnableSession = true)]
+    //public static int GetWishlistCount()
+    //{
+    //    if (System.Web.HttpContext.Current.Session["CustomerID"] == null)
+    //        return 0;
 
-        int userId = Convert.ToInt32(System.Web.HttpContext.Current.Session["CustomerID"]);
+    //    int userId = Convert.ToInt32(System.Web.HttpContext.Current.Session["CustomerID"]);
 
-        string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+    //    string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
-        using (SqlConnection con = new SqlConnection(constr))
-        {
-            con.Open();
+    //    using (SqlConnection con = new SqlConnection(constr))
+    //    {
+    //        con.Open();
 
-            SqlCommand cmd = new SqlCommand(
-            "SELECT COUNT(*) FROM Wishlist WHERE CustomerID=@id", con);
+    //        SqlCommand cmd = new SqlCommand(
+    //        "SELECT COUNT(*) FROM Wishlist WHERE CustomerID=@id", con);
 
-            cmd.Parameters.AddWithValue("@id", userId);
+    //        cmd.Parameters.AddWithValue("@id", userId);
 
-            return Convert.ToInt32(cmd.ExecuteScalar());
-        }
-    }
+    //        return Convert.ToInt32(cmd.ExecuteScalar());
+    //    }
+    //}
 
     void LoadWishlistCount()
     {

@@ -94,19 +94,32 @@ public partial class Vendor_VendorManageLeads : System.Web.UI.Page
             con.Open();
 
             string query = @"
-            SELECT L.LeadID,
-                   U.FullName,
-                   B.ModelName,
-                   L.LeadAmount,
-                   ISNULL(L.CommissionAmount,0) AS CommissionAmount,
-                   L.CreatedAt,
-                   L.IsViewed,
-                   L.SettlementRequested,
-                   L.IsSettled
-            FROM Leads L
-            INNER JOIN Bikes B ON L.BikeID=B.BikeID
-            INNER JOIN Users U ON L.CustomerID=U.UserID
-            WHERE B.DealerID=@d AND L.IsSpam=0";
+
+SELECT 
+L.LeadID,
+U.FullName,
+U.Mobile,
+U.Email,
+U.City,
+B.ModelName,
+L.LeadAmount,
+ISNULL(L.CommissionAmount,0) AS CommissionAmount,
+L.CreatedAt,
+L.IsViewed,
+L.SettlementRequested,
+L.IsSettled
+
+FROM Leads L
+
+INNER JOIN Bikes B 
+ON L.BikeID=B.BikeID
+
+INNER JOIN Users U 
+ON L.CustomerID=U.UserID
+
+WHERE B.DealerID=@d
+AND L.IsSpam=0
+";
 
             if (ddlBikeFilter.SelectedValue != "")
                 query += " AND B.BikeID=@bike";
@@ -120,6 +133,7 @@ public partial class Vendor_VendorManageLeads : System.Web.UI.Page
             query += " ORDER BY L.CreatedAt DESC";
 
             SqlCommand cmd = new SqlCommand(query, con);
+
             cmd.Parameters.AddWithValue("@d", Session["VendorID"]);
 
             if (ddlBikeFilter.SelectedValue != "")

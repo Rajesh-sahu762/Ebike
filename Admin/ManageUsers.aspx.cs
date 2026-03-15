@@ -155,7 +155,7 @@ public partial class Admin_ManageUsers : System.Web.UI.Page
             if (dr.Read())
             {
                 string profileImage = dr["ProfileImage"] == DBNull.Value
-                    ? "/Uploads/Users/default.png"
+                    ? "/Uploads/user.jpg"
                     : dr["ProfileImage"].ToString();
 
                 string roleBadge = "<span class='badge-role'>" + dr["Role"] + "</span>";
