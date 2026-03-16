@@ -13,7 +13,7 @@ CREATE TABLE Users (
     ShopName NVARCHAR(150) NULL,
     GSTNo NVARCHAR(50) NULL,
     City NVARCHAR(100) NULL,
-    Address NVARCHAR(500) NULL,
+    Address NVARCHAR(500) NULL,    
 
     -- Approval system (for Dealer)
     IsApproved BIT DEFAULT 1,  -- Dealer default 0, Admin auto 1
@@ -72,7 +72,6 @@ MaxBikes INT,
 IsActive BIT
 )
 
-delete from DealerSubscriptionRequests where Status ='Rejected'
 
 CREATE TABLE FeaturedBikes(
 FeatureID INT IDENTITY PRIMARY KEY,
@@ -152,15 +151,6 @@ CREATE TABLE Bikes (
     ApprovedAt DATETIME NULL,
 	CreatedAt DATETIME DEFAULT GETDATE()
 );
-
-
-
-select * from Users
-
-UPDATE Users SET IsEmailVerified = 1, IsApproved =1  WHERE UserID = 1003;
-
-
-
 
 ALTER TABLE Bikes ALTER COLUMN BatteryType NVARCHAR(255);
 ALTER TABLE Bikes ALTER COLUMN MotorPower NVARCHAR(255);
