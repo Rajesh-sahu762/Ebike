@@ -6,10 +6,12 @@ using System.Web.UI.WebControls;
 
 public partial class Vendor_VendorManageLeads : System.Web.UI.Page
 {
+
     string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
     protected void Page_Load(object sender, EventArgs e)
     {
+
         if (Session["VendorID"] == null)
             Response.Redirect("VendorLogin.aspx");
 
@@ -19,16 +21,19 @@ public partial class Vendor_VendorManageLeads : System.Web.UI.Page
             LoadSummary();
             LoadLeads();
         }
+
     }
 
     void LoadBikeFilter()
     {
+
         using (SqlConnection con = new SqlConnection(constr))
         {
+
             con.Open();
 
             SqlCommand cmd = new SqlCommand(
-                "SELECT BikeID, ModelName FROM Bikes WHERE DealerID=@d", con);
+            "SELECT BikeID,ModelName FROM Bikes WHERE DealerID=@d", con);
 
             cmd.Parameters.AddWithValue("@d", Session["VendorID"]);
 
@@ -38,87 +43,112 @@ public partial class Vendor_VendorManageLeads : System.Web.UI.Page
             ddlBikeFilter.DataBind();
 
             ddlBikeFilter.Items.Insert(0, new ListItem("All Bikes", ""));
+
         }
+
     }
 
     void LoadSummary()
     {
+
         using (SqlConnection con = new SqlConnection(constr))
         {
+
             con.Open();
 
             int dealerId = Convert.ToInt32(Session["VendorID"]);
 
-            SqlCommand cmdToday = new SqlCommand(
-                @"SELECT COUNT(*) FROM Leads L
-                  INNER JOIN Bikes B ON L.BikeID=B.BikeID
-                  WHERE B.DealerID=@d AND L.IsSpam=0
-                  AND CAST(L.CreatedAt AS DATE)=CAST(GETDATE() AS DATE)", con);
+            SqlCommand cmdToday = new SqlCommand(@"
+
+SELECT COUNT(*)
+FROM Leads L
+INNER JOIN Bikes B ON L.BikeID=B.BikeID
+WHERE B.DealerID=@d
+AND CAST(L.CreatedAt AS DATE)=CAST(GETDATE() AS DATE)
+
+", con);
 
             cmdToday.Parameters.AddWithValue("@d", dealerId);
+
             lblToday.Text = cmdToday.ExecuteScalar().ToString();
 
-            SqlCommand cmdMonth = new SqlCommand(
-                @"SELECT COUNT(*) FROM Leads L
-                  INNER JOIN Bikes B ON L.BikeID=B.BikeID
-                  WHERE B.DealerID=@d AND L.IsSpam=0
-                  AND MONTH(L.CreatedAt)=MONTH(GETDATE())
-                  AND YEAR(L.CreatedAt)=YEAR(GETDATE())", con);
+
+            SqlCommand cmdMonth = new SqlCommand(@"
+
+SELECT COUNT(*)
+FROM Leads L
+INNER JOIN Bikes B ON L.BikeID=B.BikeID
+WHERE B.DealerID=@d
+AND MONTH(L.CreatedAt)=MONTH(GETDATE())
+AND YEAR(L.CreatedAt)=YEAR(GETDATE())
+
+", con);
 
             cmdMonth.Parameters.AddWithValue("@d", dealerId);
+
             lblMonth.Text = cmdMonth.ExecuteScalar().ToString();
 
-            SqlCommand cmdUnread = new SqlCommand(
-                @"SELECT COUNT(*) FROM Leads L
-                  INNER JOIN Bikes B ON L.BikeID=B.BikeID
-                  WHERE B.DealerID=@d AND L.IsViewed=0 AND L.IsSpam=0", con);
+
+            SqlCommand cmdUnread = new SqlCommand(@"
+
+SELECT COUNT(*)
+FROM Leads L
+INNER JOIN Bikes B ON L.BikeID=B.BikeID
+WHERE B.DealerID=@d
+AND L.IsViewed=0
+
+", con);
 
             cmdUnread.Parameters.AddWithValue("@d", dealerId);
+
             lblUnread.Text = cmdUnread.ExecuteScalar().ToString();
 
-            SqlCommand cmdRevenue = new SqlCommand(
-                @"SELECT ISNULL(SUM(LeadAmount - ISNULL(CommissionAmount,0)),0)
-                  FROM Leads L
-                  INNER JOIN Bikes B ON L.BikeID=B.BikeID
-                  WHERE B.DealerID=@d AND L.IsSpam=0", con);
 
-            cmdRevenue.Parameters.AddWithValue("@d", dealerId);
-            lblRevenue.Text = cmdRevenue.ExecuteScalar().ToString();
+            SqlCommand cmdTotal = new SqlCommand(@"
+
+SELECT COUNT(*)
+FROM Leads L
+INNER JOIN Bikes B ON L.BikeID=B.BikeID
+WHERE B.DealerID=@d
+
+", con);
+
+            cmdTotal.Parameters.AddWithValue("@d", dealerId);
+
+            lblTotal.Text = cmdTotal.ExecuteScalar().ToString();
+
         }
+
     }
 
     void LoadLeads()
     {
+
         using (SqlConnection con = new SqlConnection(constr))
         {
+
             con.Open();
 
             string query = @"
 
-SELECT 
+SELECT
+
 L.LeadID,
 U.FullName,
 U.Mobile,
 U.Email,
 U.City,
 B.ModelName,
-L.LeadAmount,
-ISNULL(L.CommissionAmount,0) AS CommissionAmount,
 L.CreatedAt,
-L.IsViewed,
-L.SettlementRequested,
-L.IsSettled
+L.IsViewed
 
 FROM Leads L
 
-INNER JOIN Bikes B 
-ON L.BikeID=B.BikeID
-
-INNER JOIN Users U 
-ON L.CustomerID=U.UserID
+INNER JOIN Bikes B ON L.BikeID=B.BikeID
+INNER JOIN Users U ON L.CustomerID=U.UserID
 
 WHERE B.DealerID=@d
-AND L.IsSpam=0
+
 ";
 
             if (ddlBikeFilter.SelectedValue != "")
@@ -146,68 +176,75 @@ AND L.IsSpam=0
                 cmd.Parameters.AddWithValue("@search", "%" + txtSearch.Text + "%");
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
+
             DataTable dt = new DataTable();
+
             da.Fill(dt);
 
             gvLeads.DataSource = dt;
+
             gvLeads.DataBind();
+
         }
+
     }
 
     protected void btnFilter_Click(object sender, EventArgs e)
     {
+
         LoadLeads();
+
     }
 
     protected void gvLeads_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
+
         gvLeads.PageIndex = e.NewPageIndex;
+
         LoadLeads();
+
     }
 
     protected void gvLeads_RowCommand(object sender, GridViewCommandEventArgs e)
     {
+
         int leadId = Convert.ToInt32(e.CommandArgument);
 
         using (SqlConnection con = new SqlConnection(constr))
         {
+
             con.Open();
 
             if (e.CommandName == "MarkViewed")
             {
+
                 SqlCommand cmd = new SqlCommand(
-                    "UPDATE Leads SET IsViewed=1 WHERE LeadID=@id", con);
+                "UPDATE Leads SET IsViewed=1 WHERE LeadID=@id", con);
 
                 cmd.Parameters.AddWithValue("@id", leadId);
+
                 cmd.ExecuteNonQuery();
+
             }
 
             if (e.CommandName == "DeleteLead")
             {
+
                 SqlCommand cmd = new SqlCommand(
-                    "DELETE FROM Leads WHERE LeadID=@id AND IsSpam=0", con);
+                "DELETE FROM Leads WHERE LeadID=@id", con);
 
                 cmd.Parameters.AddWithValue("@id", leadId);
+
                 cmd.ExecuteNonQuery();
+
             }
 
-            if (e.CommandName == "RequestSettlement")
-            {
-                SqlCommand cmd = new SqlCommand(@"
-                UPDATE Leads
-                SET CommissionAmount =
-                ISNULL(CommissionAmount,
-                (LeadAmount *
-                (SELECT CommissionPercent FROM SiteSettings WHERE SettingID=1) / 100)),
-                SettlementRequested=1
-                WHERE LeadID=@id AND IsSettled=0", con);
-
-                cmd.Parameters.AddWithValue("@id", leadId);
-                cmd.ExecuteNonQuery();
-            }
         }
 
         LoadLeads();
+
         LoadSummary();
+
     }
+
 }
