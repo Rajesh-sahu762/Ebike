@@ -66,7 +66,7 @@ Inherits="Client_MyEnquiries" %>
 
 <div class="enquiry-bike">
 
-<img src='/Uploads/Bikes/<%# Eval("Image1") %>' />
+<img src='/Uploads/Bikes/<%# Eval("Image1") ?? "no-bike.jpg" %>' />
 
 </div>
 
@@ -90,9 +90,11 @@ Message: <%# Eval("Message") %>
 
 <span class="status">
 
-<%# Convert.ToBoolean(Eval("IsViewed")) ? 
-"<span class='badge viewed'>Viewed</span>" :
-"<span class='badge pending'>Pending</span>" %>
+<asp:Label 
+runat="server"
+Text='<%# Convert.ToBoolean(Eval("IsViewed")) ? "Viewed" : "Pending" %>'
+CssClass='<%# Convert.ToBoolean(Eval("IsViewed")) ? "badge viewed" : "badge pending" %>'>
+</asp:Label>
 
 </span>
 
@@ -657,7 +659,9 @@ grid-template-columns:1fr;
 
             success: function () {
 
-                btn.closest(".enquiry-card").remove();
+                $(btn).closest(".enquiry-card").fadeOut(200, function () {
+                    $(this).remove();
+                });
 
             }
 

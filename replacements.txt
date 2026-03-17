@@ -1,29 +1,6 @@
 ksch jicp cwye gbnk==>REMOVED
 
 
-check new bike system complete with earning 
-
-review system properly work 
-
-
-used bike system done check with the earning integration
-
-rental system in progress 
-
-
-Bikes.aspx
-
-Featured Bike Expiry
-
-Table में है:
-
-StartDate
-EndDate
-IsActive
-
-लेकिन auto expiry logic होना चाहिए।
-
---------------------------------------------
 1 Vendor Subscription activation logic
 2 Featured bike promotion
 3 Bike ranking algorithm
@@ -50,9 +27,6 @@ VendorAnalytics.aspx
 9 Bug fixes
 10 Query optimization
 
-
-
-wishlist,myprofile
 
 
 
@@ -142,3 +116,5 @@ height:70px;
 } 
 
 
+Add Service Center Features
+Auto parts sale 

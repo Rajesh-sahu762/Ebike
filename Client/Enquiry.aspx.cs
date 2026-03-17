@@ -81,6 +81,9 @@ WHERE b.Slug=@slug", con);
             return "login";
 
         int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);
+        if (HttpContext.Current.Session["EnquiryBikeID"] == null)
+            return "invalid";
+
         int bikeId = Convert.ToInt32(HttpContext.Current.Session["EnquiryBikeID"]);
 
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;

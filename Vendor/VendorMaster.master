@@ -97,7 +97,11 @@ body{
 
     <a href="VendorDashboard.aspx"><i class="fa fa-home"></i> Dashboard</a>
     <a href="AddBike.aspx"><i class="fa fa-plus"></i> Add Bike</a>
+    <a href="AddPart.aspx"><i class="fas fa-tools"></i> Add Parts</a>
+    <a href="AddChargingStation.aspx"><i class="fa fa-charging-station"></i> AddChargingStation</a>
+    <a href="AddServiceCenter.aspx"><i class="fa fa-wrench"></i> AddServiceCenter</a>
     <a href="ManageBikes.aspx"><i class="fa fa-motorcycle"></i> Manage Bikes</a>
+    <a href="ManageChargingStations.aspx"><i class="fa fa-cogs"></i> Stations Management</a>
     <a href="VendorManageLeads.aspx"><i class="fa fa-envelope"></i> Leads</a>
     <a href="DealerRatings.aspx"><i class="fa fa-star"></i> Ratings</a>   
     <a href="DealerRentalRequests.aspx"><i class="fa fa-key"></i> RentalRequest</a>   

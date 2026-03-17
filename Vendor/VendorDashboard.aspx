@@ -41,26 +41,6 @@ box-shadow:0 10px 25px rgba(0,0,0,0.08);
 </div>
 </div>
 
-<!-- Total Earnings -->
-<div class="col-md-3">
-<div class="card shadow-sm p-3 text-center">
-<h6>Total Earnings</h6>
-<h3 class="fw-bold text-dark">
-₹ <asp:Label ID="lblTotalEarnings" runat="server"></asp:Label>
-</h3>
-</div>
-</div>
-
-<!-- Admin Commission -->
-<div class="col-md-3">
-<div class="card shadow-sm p-3 text-center">
-<h6>Admin Commission</h6>
-<h3 class="fw-bold text-danger">
-₹ <asp:Label ID="lblAdminCommission" runat="server"></asp:Label>
-</h3>
-</div>
-</div>
-
 </div>
 
 <div class="row g-4">

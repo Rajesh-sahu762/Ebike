@@ -95,16 +95,20 @@ DataKeyNames="LeadID">
 
 <asp:BoundField DataField="ModelName" HeaderText="Bike"/>
 
-<asp:BoundField DataField="CreatedAt" HeaderText="Date"/>
+<asp:BoundField 
+DataField="CreatedAt" 
+HeaderText="Date" 
+DataFormatString="{0:dd MMM yyyy}"
+/>
 
 <asp:TemplateField HeaderText="Status">
 <ItemTemplate>
 
-<%# Convert.ToBoolean(Eval("IsViewed")) ?
-
-"<span class='badge bg-success'>Viewed</span>" :
-
-"<span class='badge bg-warning'>Unread</span>" %>
+<asp:Label
+runat="server"
+Text='<%# Convert.ToBoolean(Eval("IsViewed")) ? "Viewed" : "Unread" %>'
+CssClass='<%# Convert.ToBoolean(Eval("IsViewed")) ? "badge bg-success" : "badge bg-warning" %>'>
+</asp:Label>
 
 </ItemTemplate>
 </asp:TemplateField>

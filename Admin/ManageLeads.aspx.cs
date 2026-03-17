@@ -73,20 +73,28 @@ public partial class Admin_ManageLeads : System.Web.UI.Page
         using (SqlConnection con = new SqlConnection(constr))
         {
             string query = @"
-            SELECT L.LeadID,
-                   U.FullName,
-                   B.ModelName,
-                   D.ShopName AS DealerName,
-                   L.LeadAmount,
-                   ISNULL(L.CommissionAmount,0) AS CommissionAmount,
-                   L.SettlementRequested,
-                   L.IsSettled,
-                   L.CreatedAt
-            FROM Leads L
-            INNER JOIN Users U ON L.CustomerID = U.UserID
-            INNER JOIN Bikes B ON L.BikeID = B.BikeID
-            INNER JOIN Users D ON B.DealerID = D.UserID
-            WHERE 1=1";
+
+SELECT 
+L.LeadID,
+U.FullName,
+B.ModelName,
+D.ShopName AS DealerName,
+L.IsViewed,
+L.CreatedAt
+
+FROM Leads L
+
+INNER JOIN Users U 
+ON L.CustomerID = U.UserID
+
+INNER JOIN Bikes B 
+ON L.BikeID = B.BikeID
+
+INNER JOIN Users D 
+ON B.DealerID = D.UserID
+
+WHERE 1=1
+";
 
             if (ddlDealer.SelectedValue != "")
                 query += " AND D.UserID=@dealer";
@@ -111,7 +119,9 @@ public partial class Admin_ManageLeads : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@to", txtTo.Text);
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
+
             DataTable dt = new DataTable();
+
             da.Fill(dt);
 
             gvLeads.DataSource = dt;
@@ -190,25 +200,6 @@ myModal.show();",
 true);
             }
 
-
-            // ===== APPROVE SETTLEMENT =====
-
-            if (e.CommandName == "ApproveSettlement")
-            {
-                SqlCommand cmd = new SqlCommand(@"
-
-            UPDATE Leads
-            SET IsSettled=1,
-                SettlementApprovedAt=GETDATE()
-
-            WHERE LeadID=@id
-
-            ", con);
-
-                cmd.Parameters.AddWithValue("@id", leadId);
-
-                cmd.ExecuteNonQuery();
-            }
 
 
             // ===== DELETE LEAD =====

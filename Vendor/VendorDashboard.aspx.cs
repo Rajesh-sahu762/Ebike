@@ -64,27 +64,28 @@ public partial class Vendor_VendorDashboard : System.Web.UI.Page
 
             // Total Bikes
             SqlCommand totalBikes = new SqlCommand(
-                "SELECT COUNT(*) FROM Bikes WHERE DealerID=@id", con);
+            "SELECT COUNT(*) FROM Bikes WHERE DealerID=@id", con);
             totalBikes.Parameters.AddWithValue("@id", vendorId);
             lblTotalBikes.Text = totalBikes.ExecuteScalar().ToString();
 
             // Approved Bikes
             SqlCommand approved = new SqlCommand(
-                "SELECT COUNT(*) FROM Bikes WHERE DealerID=@id AND IsApproved=1", con);
+            "SELECT COUNT(*) FROM Bikes WHERE DealerID=@id AND IsApproved=1", con);
             approved.Parameters.AddWithValue("@id", vendorId);
             lblApprovedBikes.Text = approved.ExecuteScalar().ToString();
 
             // Pending Bikes
             SqlCommand pending = new SqlCommand(
-                "SELECT COUNT(*) FROM Bikes WHERE DealerID=@id AND IsApproved=0", con);
+            "SELECT COUNT(*) FROM Bikes WHERE DealerID=@id AND IsApproved=0", con);
             pending.Parameters.AddWithValue("@id", vendorId);
             lblPendingBikes.Text = pending.ExecuteScalar().ToString();
 
             // Total Leads
             SqlCommand leads = new SqlCommand(
             @"SELECT COUNT(*) FROM Leads L
-              INNER JOIN Bikes B ON L.BikeID=B.BikeID
-              WHERE B.DealerID=@id", con);
+          INNER JOIN Bikes B ON L.BikeID=B.BikeID
+          WHERE B.DealerID=@id", con);
+
             leads.Parameters.AddWithValue("@id", vendorId);
             lblTotalLeads.Text = leads.ExecuteScalar().ToString();
 
@@ -94,36 +95,11 @@ public partial class Vendor_VendorDashboard : System.Web.UI.Page
             totalRentals.Parameters.AddWithValue("@id", vendorId);
             lblTotalRentals.Text = totalRentals.ExecuteScalar().ToString();
 
-
             // Active Rentals
             SqlCommand activeRentals = new SqlCommand(
             "SELECT COUNT(*) FROM RentalBookings WHERE DealerID=@id AND Status='Active'", con);
             activeRentals.Parameters.AddWithValue("@id", vendorId);
             lblActiveRentals.Text = activeRentals.ExecuteScalar().ToString();
-
-
-            // Total Earnings
-            SqlCommand earnings = new SqlCommand(
-            @"SELECT ISNULL(SUM(RentAmount - CommissionAmount),0)
-FROM RentalBookings
-WHERE DealerID=@id AND Status IN ('Completed','Active')", con);
-
-            earnings.Parameters.AddWithValue("@id", vendorId);
-            lblTotalEarnings.Text =
-            Convert.ToDecimal(earnings.ExecuteScalar()).ToString("N0");
-
-
-            // Admin Commission
-            SqlCommand commission = new SqlCommand(
-            @"SELECT ISNULL(SUM(CommissionAmount),0)
-FROM RentalBookings
-WHERE DealerID=@id AND Status IN ('Completed','Active')", con);
-
-            commission.Parameters.AddWithValue("@id", vendorId);
-            lblAdminCommission.Text =
-            Convert.ToDecimal(commission.ExecuteScalar()).ToString("N0");
-        
-
         }
     }
 

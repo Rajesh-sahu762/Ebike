@@ -329,3 +329,94 @@ CREATE TABLE RentalBookings (
 
 
 SELECT * FROM SiteSettings
+
+
+
+CREATE TABLE ChargingStations
+(
+    StationID INT IDENTITY PRIMARY KEY,
+
+    VendorID INT NULL,   -- NULL = Admin Added
+
+    StationName NVARCHAR(150),
+    Phone NVARCHAR(20),
+
+    City NVARCHAR(100),
+    Address NVARCHAR(250),
+
+    Latitude DECIMAL(9,6) NULL,
+    Longitude DECIMAL(9,6) NULL,
+
+    ConnectorType NVARCHAR(100),
+
+    IsApproved BIT DEFAULT 0,
+    IsActive BIT DEFAULT 1,
+
+    CreatedAt DATETIME DEFAULT GETDATE()
+)
+
+CREATE TABLE ServiceCenters
+(
+    ServiceID INT IDENTITY PRIMARY KEY,
+
+    VendorID INT NULL,
+
+    CenterName NVARCHAR(150),
+    Phone NVARCHAR(20),
+
+    City NVARCHAR(100),
+    Address NVARCHAR(250),
+
+    ServiceType NVARCHAR(200),
+
+    IsApproved BIT DEFAULT 0,
+    IsActive BIT DEFAULT 1,
+
+    CreatedAt DATETIME DEFAULT GETDATE()
+)
+
+
+CREATE TABLE Parts
+(
+    PartID INT IDENTITY PRIMARY KEY,
+
+    VendorID INT,
+    PartName NVARCHAR(150),
+    Category NVARCHAR(100),
+
+    Price DECIMAL(10,2),
+    Stock INT,
+
+    Description NVARCHAR(MAX),
+    Image1 NVARCHAR(200),
+
+    IsApproved BIT DEFAULT 0,
+    CreatedAt DATETIME DEFAULT GETDATE()
+)
+
+
+select *from Parts
+
+
+delete from Parts
+
+
+INSERT INTO Parts (VendorID, PartName, Category, Price, Stock, Description, Image1, IsApproved)
+VALUES 
+(1, 'High-Performance Lithium Battery (60V 30Ah)', 'Battery', 18500.00, 12, 'Long-range lithium-ion battery pack with BMS protection and 2-year warranty.', 'https://images.unsplash.com/photo-1595115203358-1830495f5431?auto=format&fit=crop&w=500&q=80', 1),
+
+(1, 'Digital Smart LCD Display Control Unit', 'Electronics', 3200.00, 25, 'Waterproof LCD display showing speed, battery level, and ODO meter. Compatible with most controllers.', 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80', 1),
+
+(2, '250W Brushless DC Hub Motor (Rear)', 'Motor', 7500.00, 8, 'Quiet and efficient 250W BLDC motor for smooth city riding and uphill assistance.', 'https://images.unsplash.com/photo-1620311109405-f938a44d7003?auto=format&fit=crop&w=500&q=80', 1),
+
+(2, 'Hydraulic Disc Brake Kit (Front & Rear)', 'Brakes', 4500.00, 15, 'High-stopping power hydraulic brakes for maximum safety during high-speed rides.', 'https://images.unsplash.com/photo-1507133351264-39817f3bd70e?auto=format&fit=crop&w=500&q=80', 1),
+
+(3, 'Anti-Theft Intelligent Alarm System', 'Accessories', 1200.00, 50, 'Remote-controlled alarm system with motion sensor and wheel lock feature.', 'https://images.unsplash.com/photo-1558089687-f282ffca1265?auto=format&fit=crop&w=500&q=80', 1),
+
+(3, 'Puncture Resistant E-Bike Tire (2.4 inch)', 'Tires', 2200.00, 4, 'Extra-thick rubber compound with puncture-proof lining for rough terrains.', 'https://images.unsplash.com/photo-1582234053223-997656910793?auto=format&fit=crop&w=500&q=80', 1),
+
+(1, 'Fast Charger 5A (For Lithium Battery)', 'Charger', 2800.00, 20, 'Rapid charging technology with auto-cut off and overheat protection.', 'https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=500&q=80', 1),
+
+(2, 'Ergonomic Comfort Gel Saddle', 'Accessories', 1500.00, 18, 'Extra soft gel padding for long-distance comfort and shock absorption.', 'https://images.unsplash.com/photo-1618341147551-64d8583487c6?auto=format&fit=crop&w=500&q=80', 1),
+
+(3, 'LED Headlight with Integrated Horn', 'Electronics', 950.00, 0, 'Ultra-bright 12V LED light with high decibel horn for night safety.', 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=500&q=80', 1);

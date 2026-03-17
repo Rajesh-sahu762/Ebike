@@ -146,12 +146,15 @@ select option {
                 <a href="AdminDashboard.aspx">Dashboard</a>
                 <a href="ApproveDealers.aspx">Approve Dealers</a>
                 <a href="ApproveBikes.aspx">Approve Bikes</a>
+                <a href="AddChargingStation.aspx">Add Stations</a>
                 <a href="ManageUsers.aspx">ManageUsers</a>
+                <a href="AdminManageParts.aspx">ManageParts</a>
                 <a href="ManageLeads.aspx">ManageLeads</a>
                 <a href="ManageBrands.aspx">ManageBrands</a>
                 <a href="Reports.aspx">Report</a>
                 <a href="AdminRentalSettlement.aspx">RentalSettlement</a>
                 <a href="RentalManagement.aspx">RentalManagement</a>
+                <a href="ManageChargingStations.aspx">Stations Management</a>
                 <a href="AdminSubscriptionRequests.aspx">SubscriptionRequests</a>
                 <a href="Settings.aspx">Setting</a>
 

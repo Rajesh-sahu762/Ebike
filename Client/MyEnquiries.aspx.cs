@@ -60,9 +60,13 @@ ORDER BY L.CreatedAt DESC
             if (dt.Rows.Count == 0)
             {
                 emptyBox.Visible = true;
+                rptEnquiries.Visible = false;
             }
             else
             {
+                emptyBox.Visible = false;
+
+                rptEnquiries.Visible = true;
                 rptEnquiries.DataSource = dt;
                 rptEnquiries.DataBind();
             }
@@ -74,6 +78,9 @@ ORDER BY L.CreatedAt DESC
     public static string DeleteEnquiry(int id)
     {
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+
+        if (System.Web.HttpContext.Current.Session["CustomerID"] == null)
+            return "login";
 
         int user = Convert.ToInt32(System.Web.HttpContext.Current.Session["CustomerID"]);
 

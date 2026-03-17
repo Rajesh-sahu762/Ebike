@@ -732,7 +732,7 @@ body {
             <i class="fa fa-code-compare"></i> Compare
         </a>
 
-        <a href="Enquiry.aspx" id="lnkEnquiry">
+        <a href="MyEnquiries.aspx" id="lnkEnquiry">
             <i class="fa fa-envelope"></i> Enquiry
         </a>
 
