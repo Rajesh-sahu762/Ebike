@@ -5,84 +5,172 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
     <style>
-        body { background-color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .part-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #e2e8f0; background: white; }
-        .part-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05); border-color: #3b82f6; }
-        .category-pill { transition: 0.2s; cursor: pointer; white-space: nowrap; }
-        .category-pill:hover { background-color: #eff6ff; color: #1e40af; }
-        .badge-stock { font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 700; }
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
+        
+        /* Fixed Card Aspect & Quality */
+        .part-card { 
+            background: white; 
+            border-radius: 16px; 
+            overflow: hidden; 
+            border: 1px solid #e2e8f0;
+            transition: all 0.4s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .part-card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); 
+            border-color: #3b82f6; 
+        }
+
+        /* Image Container Fix */
+        .img-container {
+            position: relative;
+            width: 100%;
+            padding-top: 75%; /* 4:3 Aspect Ratio */
+            background: #f8fafc;
+            overflow: hidden;
+        }
+
+        .img-container img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+        }
+        
+        .part-card:hover .img-container img {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        /* Typography & Buttons */
+        .part-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 3rem;
+        }
+
+        .category-badge {
+            background: #eff6ff;
+            color: #3b82f6;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-add {
+            background: #1e293b;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .btn-add:hover {
+            background: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Scrollbar hide */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 
-    <div class="min-h-screen">
-        <div class="bg-white border-b border-slate-200 py-12 mb-8">
-            <div class="max-w-7xl mx-auto px-4 text-center">
-                <h1 class="text-3xl md:text-4xl font-black text-slate-900 mb-3">Genuine E-Bike Spare Parts</h1>
-                <p class="text-slate-500 max-w-xl mx-auto">High-quality batteries, motors, and accessories to keep your ride running smooth.</p>
+    <div class="min-h-screen pb-20">
+        <div class="bg-white py-14 border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-6">
+                <h1 class="text-4xl font-black text-slate-900 tracking-tight">Spare Parts <span class="text-blue-600">Store</span></h1>
+                <p class="mt-2 text-slate-500 text-lg">Genuine components for your electric vehicle.</p>
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row gap-8 pb-20">
-            <div class="w-full md:w-64 flex-shrink-0">
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 sticky top-5">
-                    <h3 class="font-bold text-slate-900 mb-4 flex items-center">
-                        <i class="fas fa-filter mr-2 text-blue-500"></i> Filters
-                    </h3>
-                    
-                    <div class="mb-6">
-                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Search</label>
-                        <input type="text" id="partSearch" onkeyup="filterParts()" placeholder="Search parts..." 
-                            class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 text-sm" />
-                    </div>
+        <div class="max-w-7xl mx-auto px-6 mt-10">
+            <div class="flex flex-col lg:flex-row gap-10">
+                
+                <div class="w-full lg:w-72 flex-shrink-0">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 sticky top-10 shadow-sm">
+                        <div class="mb-8">
+                            <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Search Part</h3>
+                            <div class="relative">
+                                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                                <input type="text" id="partSearch" onkeyup="filterParts()" placeholder="Type model or name..." 
+                                    class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" />
+                            </div>
+                        </div>
 
-                    <div>
-                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 block">Categories</label>
-                        <div class="space-y-1">
-                            <asp:Literal ID="LitCategories" runat="server"></asp:Literal>
+                        <div>
+                            <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Categories</h3>
+                            <div class="flex flex-wrap lg:flex-col gap-2">
+                                <asp:Literal ID="LitCategories" runat="server"></asp:Literal>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="flex-1">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="partsGrid">
-                    <asp:Repeater ID="rptParts" runat="server">
-                        <ItemTemplate>
-                            <div class="part-card rounded-2xl overflow-hidden flex flex-col h-full" 
-                                 data-category='<%# Eval("Category") %>' data-name='<%# Eval("PartName") %>'>
-                                
-                                <div class="relative h-48 bg-slate-100 flex items-center justify-center p-4">
-                                    <img src='/Uploads/Parts/<%# Eval("Image1") %>' class="max-h-full max-w-full object-contain mix-blend-multiply" 
-                                         onerror="this.src='/Uploads/Parts/no-image.png';" />
-                                    <div class="absolute top-3 left-3">
-                                        <%# GetStockBadge(Eval("Stock")) %>
-                                    </div>
-                                </div>
-
-                                <div class="p-5 flex flex-col flex-1">
-                                    <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1"><%# Eval("Category") %></span>
-                                    <h3 class="text-lg font-bold text-slate-900 mb-2 leading-tight h-14 overflow-hidden"><%# Eval("PartName") %></h3>
-                                    <p class="text-slate-500 text-xs line-clamp-2 mb-4"><%# Eval("Description") %></p>
+                <div class="flex-1">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8" id="partsGrid">
+                        <asp:Repeater ID="rptParts" runat="server">
+                            <ItemTemplate>
+                                <div class="part-card" data-category='<%# Eval("Category") %>' data-name='<%# Eval("PartName") %>'>
                                     
-                                    <div class="mt-auto flex items-center justify-between">
-                                        <div>
-                                            <span class="text-xs text-slate-400 block">Price</span>
-                                            <span class="text-xl font-black text-slate-900">₹<%# Eval("Price", "{0:N0}") %></span>
+                                    <div class="img-container">
+                                        <img src='<%# Eval("Image1").ToString().StartsWith("http") ? Eval("Image1") : "/Uploads/Parts/" + Eval("Image1") %>' 
+                                             alt="Ebike Part"
+                                             onerror="this.src='https://placehold.co/400x300?text=Part+Image';" />
+                                        
+                                        <div class="absolute top-4 left-4">
+                                            <%# GetStockBadge(Eval("Stock")) %>
                                         </div>
-                                        <button type="button" class="bg-slate-900 hover:bg-blue-600 text-white w-10 h-10 rounded-xl transition flex items-center justify-center shadow-lg shadow-slate-200">
-                                            <i class="fas fa-shopping-cart text-sm"></i>
-                                        </button>
+                                    </div>
+
+                                    <div class="p-6 flex flex-col flex-1">
+                                        <div class="mb-3">
+                                            <span class="category-badge"><%# Eval("Category") %></span>
+                                        </div>
+                                        
+                                        <h3 class="part-title mb-2"><%# Eval("PartName") %></h3>
+                                        <p class="text-slate-500 text-sm line-clamp-2 mb-6 leading-relaxed"><%# Eval("Description") %></p>
+                                        
+                                        <div class="mt-auto pt-5 border-t border-slate-100 flex items-center justify-between">
+                                            <div>
+                                                <p class="text-[10px] font-bold text-slate-400 uppercase">Best Price</p>
+                                                <p class="text-2xl font-black text-slate-900">₹<%# Eval("Price", "{0:N0}") %></p>
+                                            </div>
+                                            <button type="button" class="btn-add">
+                                                <i class="fas fa-plus mr-2"></i>Add
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </ItemTemplate>
-                    </asp:Repeater>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </div>
+
+                    <div id="noResults" class="hidden text-center py-24 bg-white rounded-3xl border border-dashed border-slate-300">
+                        <div class="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-box-open text-slate-300 text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">No Parts Found</h3>
+                        <p class="text-slate-500 mt-1">Try searching with a different keyword or category.</p>
+                    </div>
                 </div>
 
-                <div id="noResults" class="hidden text-center py-20 bg-white rounded-3xl border border-dashed border-slate-300">
-                    <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" class="w-20 mx-auto opacity-20 mb-4" />
-                    <h3 class="text-xl font-bold text-slate-400">No parts found matching your criteria</h3>
-                </div>
             </div>
         </div>
     </div>
@@ -92,6 +180,10 @@
             const search = document.getElementById('partSearch').value.toLowerCase();
             const cards = document.querySelectorAll('.part-card');
             let hasVisible = false;
+
+            // Simple visual active state for category buttons
+            const pills = document.querySelectorAll('.category-pill');
+            pills.forEach(p => p.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50'));
 
             cards.forEach(card => {
                 const catName = card.getAttribute('data-category').toLowerCase();

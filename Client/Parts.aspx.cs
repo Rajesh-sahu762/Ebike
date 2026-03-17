@@ -30,6 +30,7 @@ public partial class PartsPage : System.Web.UI.Page
         }
     }
 
+
     void LoadCategoryFilters()
     {
         using (SqlConnection con = new SqlConnection(constr))
