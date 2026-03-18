@@ -11,32 +11,23 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
 
     protected void Page_Load(object sender, EventArgs e)
     {
-
         if (Session["CustomerID"] == null && Request.Cookies["EBikesUser"] != null)
         {
-            Session["CustomerID"] =
-                Request.Cookies["EBikesUser"]["UserID"];
-
-            Session["CustomerName"] =
-                Request.Cookies["EBikesUser"]["Name"];
+            Session["CustomerID"] = Request.Cookies["EBikesUser"]["UserID"];
+            Session["CustomerName"] = Request.Cookies["EBikesUser"]["Name"];
         }
-        // ✅ Prevent browser caching
-        Response.Cache.SetCacheability(HttpCacheability.NoCache);
-        Response.Cache.SetNoStore();
-        Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
 
-        LoadSiteSettings();
+        if (!IsPostBack)
+        {
+            LoadSiteSettings();
+            UpdateMasterCartCount(); // Ab ye yahan refresh hoga
+        }
 
         if (Session["CustomerID"] != null)
         {
             pnlLogin.Visible = false;
             pnlUser.Visible = true;
-
-            if (Session["CustomerName"] != null)
-                lblUserName.Text = Session["CustomerName"].ToString();
-            else
-                lblUserName.Text = "My Account";
-
+            lblUserName.Text = Session["CustomerName"] != null ? Session["CustomerName"].ToString() : "My Account";
             LoadWishlistCount();
         }
         else
@@ -44,9 +35,25 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
             pnlLogin.Visible = true;
             pnlUser.Visible = false;
             wishCount.InnerText = "0";
+            litMasterCartCount.Text = "0";
         }
     }
 
+    public void UpdateMasterCartCount()
+    {
+        // Agar login nahi hai toh 0, warna session wala ID
+        int userId = Session["CustomerID"] != null ? Convert.ToInt32(Session["CustomerID"]) : 0;
+
+        if (userId == 0) { litMasterCartCount.Text = "0"; return; }
+
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            SqlCommand cmd = new SqlCommand("SELECT ISNULL(SUM(Qty), 0) FROM Cart WHERE UserID = @UID", con);
+            cmd.Parameters.AddWithValue("@UID", userId);
+            con.Open();
+            litMasterCartCount.Text = cmd.ExecuteScalar().ToString();
+        }
+    }
 
     void LoadSiteSettings()
     {
@@ -97,28 +104,7 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
         }
     }
 
-    //[WebMethod(EnableSession = true)]
-    //public static int GetWishlistCount()
-    //{
-    //    if (System.Web.HttpContext.Current.Session["CustomerID"] == null)
-    //        return 0;
-
-    //    int userId = Convert.ToInt32(System.Web.HttpContext.Current.Session["CustomerID"]);
-
-    //    string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
-
-    //    using (SqlConnection con = new SqlConnection(constr))
-    //    {
-    //        con.Open();
-
-    //        SqlCommand cmd = new SqlCommand(
-    //        "SELECT COUNT(*) FROM Wishlist WHERE CustomerID=@id", con);
-
-    //        cmd.Parameters.AddWithValue("@id", userId);
-
-    //        return Convert.ToInt32(cmd.ExecuteScalar());
-    //    }
-    //}
+   
 
     void LoadWishlistCount()
     {

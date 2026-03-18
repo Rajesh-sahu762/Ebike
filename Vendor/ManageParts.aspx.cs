@@ -14,7 +14,32 @@ public partial class Vendor_ManageParts : System.Web.UI.Page
 
         if (!IsPostBack)
         {
+            LoadCategories();
             LoadParts();
+        }
+    }
+
+    void LoadCategories()
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT DISTINCT Category FROM Parts", con);
+
+            ddlCategory.DataSource = cmd.ExecuteReader();
+            ddlCategory.DataTextField = "Category";
+            ddlCategory.DataValueField = "Category";
+            ddlCategory.DataBind();
+        }
+
+        // Default categories अगर DB empty हो
+        if (ddlCategory.Items.Count == 0)
+        {
+            ddlCategory.Items.Add("Battery");
+            ddlCategory.Items.Add("Motor");
+            ddlCategory.Items.Add("Controller");
+            ddlCategory.Items.Add("Charger");
         }
     }
 
@@ -96,6 +121,8 @@ VALUES
 
         LoadParts();
     }
+
+
 
     protected void gvParts_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
     {

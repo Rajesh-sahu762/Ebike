@@ -739,52 +739,51 @@ body {
     </div>
 
     <!-- ═══ RIGHT ACTIONS ═══ -->
-    <div class="nav-actions">
+<div class="nav-actions">
 
-        <!-- ✅ FIXED SEARCH PILL -->
-        <div class="search-pill-wrap">
-            <div class="search-pill" id="searchPill">
-                <button type="button" class="search-pill-btn" id="searchToggleBtn" aria-label="Search">
-                    <i class="fa fa-magnifying-glass"></i>
-                </button>
-                <%-- ✅ FIX: ID is now txtSearch --%>
-                <input type="text" id="txtSearch" name="txtSearch"
-                       placeholder="Search bikes, brands…"
-                       autocomplete="off" />
-                <button type="button" class="s-clear" id="searchClearBtn">
-                    <i class="fa fa-xmark"></i>
-                </button>
-            </div>
-            <div id="searchDropdown"></div>
+    <div class="search-pill-wrap">
+        <div class="search-pill" id="searchPill">
+            <button type="button" class="search-pill-btn" id="searchToggleBtn" aria-label="Search">
+                <i class="fa fa-magnifying-glass"></i>
+            </button>
+            <input type="text" id="txtSearch" name="txtSearch" placeholder="Search bikes, brands…" autocomplete="off" />
+            <button type="button" class="s-clear" id="searchClearBtn">
+                <i class="fa fa-xmark"></i>
+            </button>
         </div>
-
-        <!-- ✅ FIXED WISHLIST — live count -->
-        <a href="Wishlist.aspx" class="icon-btn" title="Wishlist">
-            <i class="fa fa-heart"></i>
-            <span id="wishCount" runat="server" class="badge-count">0</span>
-        </a>
-
-        <!-- Login / User -->
-        <asp:Panel ID="pnlLogin" runat="server">
-            <a href="ClientLogin.aspx" class="btn-login">
-                <i class="fa fa-arrow-right-to-bracket"></i>
-                <span>Sign In</span>
-            </a>
-        </asp:Panel>
-
-        <asp:Panel ID="pnlUser" runat="server" Visible="false">
-            <a href="myprofile.aspx" class="btn-login">
-                <i class="fa fa-user-circle"></i>
-                <asp:Label ID="lblUserName" runat="server"></asp:Label>
-            </a>
-        </asp:Panel>
-
-        <!-- Mobile hamburger -->
-        <div class="menu-toggle" onclick="toggleMenu()" id="menuToggle">
-            <i class="fa fa-bars"></i>
-        </div>
-
+        <div id="searchDropdown"></div>
     </div>
+
+    <a href="Cart.aspx" class="icon-btn" title="My Cart">
+        <i class="fa fa-shopping-bag"></i>
+        <span id="Span1" class="badge-count">
+            <asp:Literal ID="Literal1" runat="server">0</asp:Literal>
+        </span>
+    </a>
+
+    <a href="Wishlist.aspx" class="icon-btn" title="Wishlist">
+        <i class="fa fa-heart"></i>
+        <span id="wishCount" runat="server" class="badge-count">0</span>
+    </a>
+
+    <asp:Panel ID="pnlLogin" runat="server">
+        <a href="ClientLogin.aspx" class="btn-login">
+            <i class="fa fa-arrow-right-to-bracket"></i>
+            <span>Sign In</span>
+        </a>
+    </asp:Panel>
+
+    <asp:Panel ID="pnlUser" runat="server" Visible="false">
+        <a href="myprofile.aspx" class="btn-login">
+            <i class="fa fa-user-circle"></i>
+            <asp:Label ID="lblUserName" runat="server"></asp:Label>
+        </a>
+    </asp:Panel>
+
+    <div class="menu-toggle" onclick="toggleMenu()" id="menuToggle">
+        <i class="fa fa-bars"></i>
+    </div>
+</div>
 
 </div>
 </nav>
@@ -856,6 +855,57 @@ body {
 </form>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <div class="relative inline-block mr-4">
+ <a href="Cart.aspx" class="icon-btn">
+        <i class="fa fa-shopping-bag"></i>
+        <span class="badge-count">
+            <asp:Literal ID="litMasterCartCount" runat="server" ClientIDMode="Static">0</asp:Literal>
+        </span>
+    </a>
+</div>
+
+<div id="floatingCart" class="fixed bottom-8 right-8 z-50 transform translate-y-24 transition-all duration-500">
+    <a href="Cart.aspx" class="bg-slate-900 text-white flex items-center gap-4 px-6 py-4 rounded-2xl shadow-2xl hover:bg-blue-600 transition-all group">
+        <div class="relative">
+            <i class="fas fa-bag-shopping text-xl"></i>
+            <span id="floatingCount" class="absolute -top-2 -right-2 bg-blue-500 text-[10px] px-1.5 rounded-full border border-slate-900">0</span>
+        </div>
+        <div class="pr-2">
+            <p class="text-[10px] font-bold uppercase text-slate-400 group-hover:text-blue-100">View Cart</p>
+            <p class="font-black text-sm">Proceed to Order</p>
+        </div>
+        <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+    </a>
+</div>
+
+<script>
+    function updateCartUI(newCount) {
+        // 1. Update Navbar Badge
+        var badge = document.getElementById('cartBadge');
+        if (badge) {
+            badge.innerText = newCount;
+            badge.classList.add('bump'); // Animation effect
+            setTimeout(function () { badge.classList.remove('bump'); }, 300);
+        }
+
+        // 2. Update & Show Floating Button
+        var floatBtn = document.getElementById('floatingCart');
+        var floatCount = document.getElementById('floatingCount');
+        if (floatBtn && floatCount) {
+            floatCount.innerText = newCount;
+            floatBtn.classList.remove('translate-y-24');
+            floatBtn.classList.add('translate-y-0');
+
+            // 5 second baad automatically niche bhej do (Professional feel)
+            setTimeout(function () {
+                floatBtn.classList.remove('translate-y-0');
+                floatBtn.classList.add('translate-y-24');
+            }, 5000);
+        }
+    }
+</script>
 
 <script>
     /* ═══════════════════════════════════════════════════════════

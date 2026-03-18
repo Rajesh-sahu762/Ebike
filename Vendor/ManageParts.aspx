@@ -20,9 +20,6 @@ Inherits="Vendor_ManageParts" %>
 <asp:TextBox ID="txtName" runat="server" CssClass="form-control mb-2" placeholder="Part Name"></asp:TextBox>
 
 <asp:DropDownList ID="ddlCategory" runat="server" CssClass="form-control mb-2">
-<asp:ListItem>Battery</asp:ListItem>
-<asp:ListItem>Motor</asp:ListItem>
-<asp:ListItem>Controller</asp:ListItem>
 </asp:DropDownList>
 
 <asp:TextBox ID="txtPrice" runat="server" CssClass="form-control mb-2" placeholder="Price"></asp:TextBox>
@@ -55,11 +52,8 @@ DataKeyNames="PartID">
 <Columns>
 
 <asp:BoundField DataField="PartName" HeaderText="Name"/>
-
 <asp:BoundField DataField="Category" HeaderText="Category"/>
-
 <asp:BoundField DataField="Price" HeaderText="Price"/>
-
 <asp:BoundField DataField="Stock" HeaderText="Stock"/>
 
 <asp:TemplateField HeaderText="Image">
@@ -68,15 +62,22 @@ DataKeyNames="PartID">
 </ItemTemplate>
 </asp:TemplateField>
 
+
+<asp:TemplateField HeaderText="Status">
+<ItemTemplate>
+<%# Convert.ToBoolean(Eval("IsApproved")) ?
+"<span class='badge bg-success'>Approved</span>" :
+"<span class='badge bg-warning'>Pending</span>" %>
+</ItemTemplate>
+</asp:TemplateField>
+
 <asp:TemplateField>
 <ItemTemplate>
-
-<asp:Button ID="Button1" runat="server"
+<asp:Button ID="btnDelete" runat="server"
 Text="Delete"
 CssClass="btn btn-danger btn-sm"
 CommandName="DeletePart"
 CommandArgument='<%# Eval("PartID") %>'/>
-
 </ItemTemplate>
 </asp:TemplateField>
 
