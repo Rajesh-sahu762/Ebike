@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Web.Services;
+using System.Web;
 
 public partial class PartsPage : System.Web.UI.Page
 {
@@ -57,45 +58,38 @@ public partial class PartsPage : System.Web.UI.Page
         return "<span class='bg-emerald-100 text-emerald-600 px-2 py-1 rounded text-[10px] font-bold uppercase'>In Stock</span>";
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string AddToCart(int partId)
     {
-        // Yahan Session["UserID"] check karein, abhi humne dummy ID 1 li hai
-        int userId = 1;
+        if (HttpContext.Current.Session["CustomerID"] == null)
+            return "LoginRequired";
+
+        int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);
 
         try
         {
             using (SqlConnection con = new SqlConnection(constr))
             {
                 con.Open();
-                // Check if item already exists in cart
-                SqlCommand checkCmd = new SqlCommand("SELECT Qty FROM Cart WHERE UserID=@UID AND PartID=@PID", con);
-                checkCmd.Parameters.AddWithValue("@UID", userId);
-                checkCmd.Parameters.AddWithValue("@PID", partId);
-                object existingQty = checkCmd.ExecuteScalar();
 
-                if (existingQty != null)
-                {
-                    // Update quantity
-                    SqlCommand upCmd = new SqlCommand("UPDATE Cart SET Qty = Qty + 1 WHERE UserID=@UID AND PartID=@PID", con);
-                    upCmd.Parameters.AddWithValue("@UID", userId);
-                    upCmd.Parameters.AddWithValue("@PID", partId);
-                    upCmd.ExecuteNonQuery();
-                }
-                else
-                {
-                    // Insert new item
-                    SqlCommand insCmd = new SqlCommand("INSERT INTO Cart (UserID, PartID, Qty) VALUES (@UID, @PID, 1)", con);
-                    insCmd.Parameters.AddWithValue("@UID", userId);
-                    insCmd.Parameters.AddWithValue("@PID", partId);
-                    insCmd.ExecuteNonQuery();
-                }
+                SqlCommand cmd = new SqlCommand(@"
+IF EXISTS (SELECT 1 FROM Cart WHERE UserID=@UID AND PartID=@PID)
+    UPDATE Cart SET Qty = Qty + 1 WHERE UserID=@UID AND PartID=@PID
+ELSE
+    INSERT INTO Cart (UserID, PartID, Qty) VALUES (@UID, @PID, 1)
+", con);
+
+                cmd.Parameters.AddWithValue("@UID", userId);
+                cmd.Parameters.AddWithValue("@PID", partId);
+
+                cmd.ExecuteNonQuery();
             }
+
             return "Success";
         }
         catch (Exception ex)
         {
-            return "Error: " + ex.Message;
+            return "Error";
         }
     }
 }

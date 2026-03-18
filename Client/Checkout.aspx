@@ -72,16 +72,7 @@
                         <i class="fas fa-credit-card mr-3 text-blue-500"></i> Payment Method
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <label class="relative cursor-pointer">
-                            <input type="radio" name="pay" class="hidden payment-radio" checked />
-                            <div class="payment-option">
-                                <i class="fas fa-university text-blue-600 text-xl"></i>
-                                <div>
-                                    <p class="font-bold text-slate-900 text-sm">Online Payment</p>
-                                    <p class="text-[10px] text-slate-500 uppercase">Cards, UPI, Netbanking</p>
-                                </div>
-                            </div>
-                        </label>
+                    
                         <label class="relative cursor-pointer">
                             <input type="radio" name="pay" class="hidden payment-radio" />
                             <div class="payment-option">
@@ -120,9 +111,12 @@
                         </div>
                     </div>
 
-                    <asp:Button ID="btnPlaceOrder" runat="server" Text="Complete Purchase" 
-                        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl transition-all shadow-lg shadow-blue-900/50 cursor-pointer" />
-                    
+<asp:Button ID="btnPlaceOrder" runat="server" Text="Complete Purchase"
+OnClick="btnPlaceOrder_Click"
+CausesValidation="false"
+UseSubmitBehavior="false"
+class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl transition-all shadow-lg shadow-blue-900/50 cursor-pointer" />
+                                        
                     <p class="text-[10px] text-slate-500 text-center mt-6">
                         <i class="fas fa-shield-halved mr-1"></i> Secure 256-bit SSL Encrypted Payment
                     </p>

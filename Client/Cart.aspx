@@ -95,7 +95,7 @@
                             <span class="font-bold text-slate-900">₹<asp:Literal ID="litSubtotal" runat="server">0</asp:Literal></span>
                         </div>
                         <div class="flex justify-between text-sm">
-                            <span class="text-slate-500 font-medium">Tax (GST 18%)</span>
+                            <span class="text-slate-500 font-medium">Tax</span>
                             <span class="font-bold text-slate-900">₹<asp:Literal ID="litTax" runat="server">0</asp:Literal></span>
                         </div>
                         <div class="flex justify-between text-sm">
