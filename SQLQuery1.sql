@@ -1,4 +1,4 @@
-CREATE TABLE Users (
+﻿CREATE TABLE Users (
     UserID INT PRIMARY KEY IDENTITY(1,1),
 
     -- Role system (No separate Roles table)
@@ -394,18 +394,6 @@ CREATE TABLE Parts
     CreatedAt DATETIME DEFAULT GETDATE()
 )
 
-select * from Parts
-select * from Cart
-select * from orders
-select * from OrderItems
-select * from Users
-
-
-
-
-delete from cart
-delete from Orders
-delete from OrderItems
 
 CREATE TABLE Cart(
 CartID INT IDENTITY PRIMARY KEY,
@@ -432,4 +420,36 @@ Price DECIMAL(10,2),
 Qty INT
 )
 
+
+
+SELECT * FROM SiteSettings
+
+
+INSERT INTO BikeReviews 
+(BikeID, CustomerID, Rating, ReviewTitle, ReviewText, IsVerified, IsApproved)
+VALUES
+
+(2, 1003, 5, 'Amazing Scooter 🔥',
+ 'Smooth ride and great pickup. Best for city.', 1, 1),
+
+(5, 1003, 4, 'Nice Performance',
+ 'Comfortable and stylish. Range is decent.', 1, 1),
+
+(6, 1003, 5, 'Powerful Ride ⚡',
+ 'Acceleration is amazing. Totally worth it.', 1, 1),
+
+(7, 1003, 3, 'Average Experience',
+ 'Good but charging time is high.', 1, 1),
+
+(8, 1003, 4, 'Good for Daily Use',
+ 'Lightweight and easy handling.', 1, 1),
+
+(12, 1003, 5, 'Best Value',
+ 'Affordable and reliable EV.', 1, 1),
+
+(13, 1003, 2, 'Not Satisfied',
+ 'Facing battery issues.', 1, 1),
+
+(1012, 1003, 4, 'Decent Bike',
+ 'Good for beginners.', 1, 1);
 

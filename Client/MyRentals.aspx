@@ -336,7 +336,7 @@ gap:25px;
 
 <a href="MyRentals.aspx" class="active">🛵 My Rentals</a>
 
-<a href="MyEnquiries.aspx">📨 My Enquiries</a>
+<a href="MyEnquiries.aspx">📨 My Enquiries & Orders</a>
 
     <hr />
 

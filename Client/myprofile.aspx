@@ -35,7 +35,7 @@ Inherits="Client_MyProfile" %>
 
 <a href="MyRentals.aspx">🛵 My Rentals</a>
 
-<a href="MyEnquiries.aspx">📩 My Enquiries</a>
+<a href="MyEnquiries.aspx">📩 My Enquiries & Orders</a>
 
 <hr />
 

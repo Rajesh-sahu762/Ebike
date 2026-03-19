@@ -92,4 +92,23 @@ ELSE
             return "Error";
         }
     }
+
+    [WebMethod]
+    public static string GetCartCount()
+    {
+        if (HttpContext.Current.Session["CustomerID"] == null) return "0";
+
+        string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+        int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);
+
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            SqlCommand cmd = new SqlCommand("SELECT ISNULL(SUM(Qty), 0) FROM Cart WHERE UserID = @UID", con);
+            cmd.Parameters.AddWithValue("@UID", userId);
+            con.Open();
+            return cmd.ExecuteScalar().ToString();
+        }
+    }
+
+
 }

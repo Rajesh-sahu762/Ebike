@@ -178,7 +178,6 @@
 
 <script type="text/javascript">
     function addToCart(id) {
-        console.log("Adding Item ID:", id);
 
         $.ajax({
             type: "POST",
@@ -187,8 +186,9 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (res) {
+
                 if (res.d === "Success") {
-                    // 1. SwAl Alert (Optional but looks good)
+
                     Swal.fire({
                         title: 'Added!',
                         icon: 'success',
@@ -198,33 +198,14 @@
                         timer: 1500
                     });
 
-                    // 2. MasterPage wala function call karo
-                    // Pehle check karo ki function exist karta hai ya nahi
-                    if (typeof updateCartUI === "function") {
-                        // Current count uthao badge se
-                        var badge = document.getElementById('cartBadge') || document.getElementById('litMasterCartCount');
-                        var currentCount = 0;
-                        if (badge) {
-                            currentCount = parseInt(badge.innerText.replace(/[^\d]/g, '')) || 0;
-                        }
-
-                        // MasterPage ka function trigger karo
-                        updateCartUI(currentCount + 1);
-                    } else {
-                        console.error("MasterPage ka updateCartUI function nahi mila!");
-                        // Fallback: Agar function na mile toh manual update
-                        var fBtn = document.getElementById('floatingCart');
-                        if (fBtn) {
-                            fBtn.classList.remove('translate-y-24');
-                            fBtn.classList.add('translate-y-0');
-                        }
+                    // ✅ REAL FIX (live DB count)
+                    if (typeof updateLiveCartCount === "function") {
+                        updateLiveCartCount();
                     }
+
                 } else if (res.d === "LoginRequired") {
                     Swal.fire('Please Login', 'Login first', 'warning');
                 }
-            },
-            error: function (xhr) {
-                console.error("Error details:", xhr.responseText);
             }
         });
     }

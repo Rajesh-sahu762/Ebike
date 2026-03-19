@@ -85,7 +85,7 @@ WHERE OI.VendorID=@v";
     }
 
 
-    [WebMethod(EnableSession = true)]
+    [System.Web.Services.WebMethod(EnableSession = true)]
     public static string GetOrderItems(int orderId)
     {
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
@@ -95,22 +95,25 @@ WHERE OI.VendorID=@v";
             con.Open();
 
             SqlCommand cmd = new SqlCommand(@"
-SELECT 
-    OI.PartID,
-    OI.Qty,
-    OI.Price,
-    P.PartName
+SELECT P.PartName, OI.Qty, OI.Price
 FROM OrderItems OI
 INNER JOIN Parts P ON OI.PartID = P.PartID
 WHERE OI.OrderID = @id", con);
 
             cmd.Parameters.AddWithValue("@id", orderId);
 
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
+            SqlDataReader dr = cmd.ExecuteReader();
 
-            return Newtonsoft.Json.JsonConvert.SerializeObject(dt);
+            string result = "";
+
+            while (dr.Read())
+            {
+                result += dr["PartName"].ToString() + "~" +
+                          dr["Qty"].ToString() + "~" +
+                          dr["Price"].ToString() + "|";
+            }
+
+            return result;
         }
     }
 

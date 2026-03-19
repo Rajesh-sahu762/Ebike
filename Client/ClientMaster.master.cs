@@ -35,7 +35,7 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
             pnlLogin.Visible = true;
             pnlUser.Visible = false;
             wishCount.InnerText = "0";
-            litMasterCartCount.Text = "0";
+            cartCount.InnerText = "0";
         }
     }
 
@@ -44,14 +44,14 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
         // Agar login nahi hai toh 0, warna session wala ID
         int userId = Session["CustomerID"] != null ? Convert.ToInt32(Session["CustomerID"]) : 0;
 
-        if (userId == 0) { litMasterCartCount.Text = "0"; return; }
+        if (userId == 0) { cartCount.InnerText = "0"; return; }
 
         using (SqlConnection con = new SqlConnection(constr))
         {
             SqlCommand cmd = new SqlCommand("SELECT ISNULL(SUM(Qty), 0) FROM Cart WHERE UserID = @UID", con);
             cmd.Parameters.AddWithValue("@UID", userId);
             con.Open();
-            litMasterCartCount.Text = cmd.ExecuteScalar().ToString();
+            cartCount.InnerText = cmd.ExecuteScalar().ToString();
         }
     }
 

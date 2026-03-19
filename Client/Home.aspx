@@ -1303,7 +1303,8 @@
                     <div class="compare-visual-wrapper">
                         <div class="vs-circle">VS</div>
                         <div class="bike-placeholder left-bike">
-                             <i class="fa-solid fa-moped fa-3x text-white-50"></i>
+                             <div class="fa-solid fa-3x text-white-50">🛵</div>
+
                         </div>
                         <div class="bike-placeholder right-bike">
                              <i class="fa-solid fa-motorcycle fa-3x text-white-50"></i>
