@@ -91,31 +91,36 @@
                 <div class="bg-slate-900 text-white p-8 rounded-3xl sticky top-10 shadow-xl">
                     <h3 class="text-lg font-bold mb-6 border-b border-slate-700 pb-4">Order Summary</h3>
                     
-                    <div class="space-y-4 mb-8">
-                        <div class="flex justify-between items-center text-sm">
-                            <span class="text-slate-400">High-Performance Battery x 1</span>
-                            <span class="font-bold">₹18,500</span>
-                        </div>
-                        <div class="flex justify-between items-center text-sm">
-                            <span class="text-slate-400">LED Headlight x 2</span>
-                            <span class="font-bold">₹1,900</span>
-                        </div>
-                        <div class="h-[1px] bg-slate-700 my-4"></div>
-                        <div class="flex justify-between items-center text-sm">
-                            <span class="text-slate-400">Delivery Charges</span>
-                            <span class="text-emerald-400 font-bold uppercase text-[10px]">Free</span>
-                        </div>
-                        <div class="flex justify-between items-center text-xl pt-4">
-                            <span class="font-black">Total</span>
-                            <span class="font-black text-blue-400">₹20,400</span>
-                        </div>
-                    </div>
+                    <asp:Repeater ID="rptSummary" runat="server">
+<ItemTemplate>
+    <div class="flex justify-between items-center text-sm">
+        <span class="text-slate-400">
+            <%# Eval("PartName") %> x <%# Eval("Qty") %>
+        </span>
+        <span class="font-bold">
+            ₹<%# (Convert.ToDecimal(Eval("Price")) * Convert.ToInt32(Eval("Qty"))).ToString("N0") %>
+        </span>
+    </div>
+</ItemTemplate>
+</asp:Repeater>
+
+<div class="h-[1px] bg-slate-700 my-4"></div>
+
+<div class="flex justify-between items-center text-sm">
+    <span class="text-slate-400">Delivery Charges</span>
+    <span class="text-emerald-400 font-bold uppercase text-[10px]">Free</span>
+</div>
+
+<div class="flex justify-between items-center text-xl pt-4">
+    <span class="font-black">Total</span>
+    <span class="font-black text-blue-400">₹<asp:Literal ID="litTotal" runat="server"></asp:Literal></span>
+</div>
 
 <asp:Button ID="btnPlaceOrder" runat="server" Text="Complete Purchase"
 OnClick="btnPlaceOrder_Click"
 CausesValidation="false"
 UseSubmitBehavior="false"
-class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl transition-all shadow-lg shadow-blue-900/50 cursor-pointer" />
+class="w-full mt-4 bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl transition-all shadow-lg shadow-blue-900/50 cursor-pointer" />
                                         
                     <p class="text-[10px] text-slate-500 text-center mt-6">
                         <i class="fas fa-shield-halved mr-1"></i> Secure 256-bit SSL Encrypted Payment

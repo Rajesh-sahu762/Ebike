@@ -400,7 +400,12 @@ select * from orders
 select * from OrderItems
 select * from Users
 
+
+
+
 delete from cart
+delete from Orders
+delete from OrderItems
 
 CREATE TABLE Cart(
 CartID INT IDENTITY PRIMARY KEY,

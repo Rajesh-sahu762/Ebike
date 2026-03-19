@@ -101,6 +101,8 @@ body{
     <a href="AddChargingStation.aspx"><i class="fa fa-charging-station"></i> AddChargingStation</a>
     <a href="AddServiceCenter.aspx"><i class="fa fa-wrench"></i> AddServiceCenter</a>
     <a href="ManageBikes.aspx"><i class="fa fa-motorcycle"></i> Manage Bikes</a>
+    <a href="VendorOrders.aspx"><i class="fa - fa-shopping-basket
+"></i> Manage Orders</a>
     <a href="ManageChargingStations.aspx"><i class="fa fa-cogs"></i> Stations Management</a>
     <a href="VendorManageLeads.aspx"><i class="fa fa-envelope"></i> Leads</a>
     <a href="DealerRatings.aspx"><i class="fa fa-star"></i> Ratings</a>   

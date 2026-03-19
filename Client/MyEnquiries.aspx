@@ -87,13 +87,16 @@ Inherits="Client_MyEnquiries" %>
                                         <span class="text-xs font-medium text-gray-600"><%# Eval("TotalItems") %> Items Ordered</span>
                                     </div>
                                 </div>
-                                <div class="w-full sm:w-fit">
-                                    <a href='OrderDetails.aspx?id=<%# Eval("OrderID") %>' class="block text-center bg-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">Track Order</a>
-                                </div>
+                                
+                                <div class="w-full sm:w-fit flex flex-col gap-2">
+    <a href='<%# "OrderDetails.aspx?id=" + Eval("OrderID") %>' class="block text-center bg-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">Track Order</a>
+    
+    <%# Eval("OrderStatus").ToString() == "Pending" ? "<button type='button' onclick='cancelOrder(" + Eval("OrderID") + ", this)' class='block text-center bg-red-50 text-red-500 px-6 py-2 rounded-xl text-xs font-bold hover:bg-red-500 hover:text-white transition-all'>Cancel Order</button>" : "" %>
+</div>
                             </div>
                         </ItemTemplate>
                     </asp:Repeater>
-                    <div id="emptyOrd" runat="server" visible="true" class="py-20 text-center bg-white rounded-3xl border border-dashed border-gray-200">
+                    <div id="emptyOrd" runat="server" visible="false" class="py-20 text-center bg-white rounded-3xl border border-dashed border-gray-200">
                          <p class="text-gray-400 font-medium">You haven't ordered any parts yet</p>
                     </div>
                 </div>
@@ -130,6 +133,31 @@ Inherits="Client_MyEnquiries" %>
                 dataType: "json",
                 success: function () {
                     $(btn).closest(".enquiry-card").fadeOut(300, function () { $(this).remove(); });
+                }
+            });
+        }
+
+
+        function cancelOrder(id, btn) {
+            if (!confirm("Are you sure you want to cancel this order?")) return;
+
+            $.ajax({
+                type: "POST",
+                url: "MyEnquiries.aspx/CancelOrder", // Backend function ka naam
+                data: JSON.stringify({ orderId: id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    if (res.d === "ok") {
+                        alert("Order cancelled successfully!");
+                        // Card ko gayab karne ke bajaye status text update kar sakte ho ya page reload
+                        location.reload();
+                    } else {
+                        alert("Error: " + res.d);
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr.responseText);
                 }
             });
         }

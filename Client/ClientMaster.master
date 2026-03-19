@@ -85,11 +85,9 @@ body {
     position: sticky;
     top: 0;
     z-index: 1000;
-    /* ✅ FIX: top glow line */
     box-shadow: 0 1px 0 rgba(0,212,255,0.12), 0 4px 24px rgba(0,0,0,0.4);
 }
 
-/* Thin cyan accent line on top */
 .eb-navbar::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
@@ -151,7 +149,6 @@ body {
 
 /* ═══════════════════════════════════════════════
    NAV MENU — DESKTOP
-   ✅ FIX: hover color, underline animation, icon visibility
 ═══════════════════════════════════════════════ */
 .nav-menu {
     display: flex;
@@ -161,7 +158,6 @@ body {
     justify-content: center;
 }
 
-/* Every direct link / dropdown trigger */
 .nav-menu > a,
 .nav-menu > .dropdown > a {
     color: #8aa0c0;
@@ -179,18 +175,16 @@ body {
     white-space: nowrap;
 }
 
-/* ✅ FIX: Icon visibility — always visible, never hidden */
 .nav-menu > a i,
 .nav-menu > .dropdown > a i {
     font-size: 13px;
     width: 14px;
     text-align: center;
-    color: inherit;         /* inherits from parent color */
+    color: inherit;
     flex-shrink: 0;
     transition: color 0.22s, transform 0.22s;
 }
 
-/* ✅ FIX: Hover state — white text + subtle bg */
 .nav-menu > a:hover,
 .nav-menu > .dropdown:hover > a,
 .nav-menu > a.active,
@@ -199,7 +193,6 @@ body {
     background: rgba(255,255,255,0.07);
 }
 
-/* ✅ FIX: Hover underline animation */
 .nav-menu > a::after,
 .nav-menu > .dropdown > a::after {
     content: '';
@@ -220,7 +213,6 @@ body {
     transform: scaleX(1);
 }
 
-/* Chevron on dropdown trigger */
 .nav-menu > .dropdown > a .fa-chevron-down {
     font-size: 9px !important;
     margin-left: 1px;
@@ -234,7 +226,6 @@ body {
 
 /* ═══════════════════════════════════════════════
    DROPDOWN MENU
-   ✅ FIX: visibility, icons, hover, animation
 ═══════════════════════════════════════════════ */
 .dropdown { position: relative; }
 
@@ -248,8 +239,7 @@ body {
     border: 1px solid rgba(255,255,255,0.07);
     border-radius: 13px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.65), 0 0 0 1px rgba(0,212,255,0.05);
-    /* ✅ FIX: use opacity+pointer-events instead of display:none for smooth animation */
-    display: flex !important; /* override Bootstrap's display:none from JS */
+    display: flex !important;
     flex-direction: column;
     opacity: 0;
     pointer-events: none;
@@ -266,7 +256,6 @@ body {
     transform: translateX(-50%) translateY(0);
 }
 
-/* ✅ FIX: Dropdown section label */
 .drop-section-label {
     font-size: 9.5px;
     font-weight: 700;
@@ -276,7 +265,6 @@ body {
     padding: 8px 12px 4px;
 }
 
-/* ✅ FIX: Dropdown items with icons */
 .dropdown-menu a {
     display: flex;
     align-items: center;
@@ -291,7 +279,6 @@ body {
     position: relative;
 }
 
-/* ✅ FIX: Dropdown icon wrapper */
 .dropdown-menu a .d-icon {
     width: 28px; height: 28px;
     border-radius: 7px;
@@ -314,7 +301,6 @@ body {
     color: #00d4ff;
 }
 
-/* Divider inside dropdown */
 .drop-divider {
     height: 1px;
     background: rgba(255,255,255,0.06);
@@ -331,10 +317,7 @@ body {
     flex-shrink: 0;
 }
 
-/* ✅ FIX: Search pill */
-.search-pill-wrap {
-    position: relative;
-}
+.search-pill-wrap { position: relative; }
 
 .search-pill {
     display: flex;
@@ -373,7 +356,6 @@ body {
 
 .search-pill.open .search-pill-btn { color: #00d4ff; }
 
-/* ✅ FIX: Correct ID — txtSearch */
 #txtSearch {
     flex: 1;
     background: none;
@@ -405,7 +387,6 @@ body {
 .search-pill.open .s-clear { display: flex; align-items: center; }
 .search-pill .s-clear:hover { color: #8aa0c0; }
 
-/* ✅ FIX: Live search dropdown */
 #searchDropdown {
     position: absolute;
     top: calc(100% + 8px);
@@ -464,7 +445,6 @@ body {
 }
 .sd-footer-link:hover { gap: 10px; color: #5de0f5; }
 
-/* Icon buttons (wishlist, compare) */
 .icon-btn {
     width: 36px; height: 36px;
     text-decoration: none;
@@ -485,7 +465,6 @@ body {
     transform: translateY(-1px);
 }
 
-/* ✅ FIX: Wishlist badge — animated */
 .badge-count {
     position: absolute;
     top: -5px; right: -5px;
@@ -513,7 +492,6 @@ body {
     100%{ transform: scale(1); }
 }
 
-/* Login / User button */
 .btn-login {
     background: linear-gradient(135deg, #00d4ff, #4f8bff);
     border: none;
@@ -536,7 +514,6 @@ body {
 
 .btn-login i { font-size: 12px; }
 
-/* Hamburger */
 .menu-toggle {
     display: none;
     width: 36px; height: 36px;
@@ -584,7 +561,6 @@ body {
 
     .logo-sub { display: none; }
 
-    /* Mobile dropdowns */
     .dropdown-menu {
         position: static;
         transform: none;
@@ -624,7 +600,7 @@ body {
 .main-content { min-height: 75vh; }
 
 /* ═══════════════════════════════════════════════
-   FOOTER (unchanged from your version)
+   FOOTER
 ═══════════════════════════════════════════════ */
 .premium-footer {
     background: #060b14;
@@ -637,7 +613,6 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(230px,1fr));
     gap: 32px;
 }
-
 </style>
 
     <asp:ContentPlaceHolder ID="HeadContent" runat="server"></asp:ContentPlaceHolder>
@@ -677,14 +652,14 @@ body {
         </div>
     </a>
 
-    <!-- ═══ DESKTOP MENU ═══ -->
+    <!-- ═══ NAV MENU — UPDATED WITH NEW PAGES ═══ -->
     <div class="nav-menu" id="navMenu">
 
         <a href="Home.aspx" id="lnkHome">
             <i class="fa fa-house"></i> Home
         </a>
 
-        <!-- Buy Bikes Dropdown -->
+        <!-- Buy Bikes dropdown (now includes Parts) -->
         <div class="dropdown" id="ddBuy">
             <a href="Bikes.aspx">
                 <i class="fa fa-bolt"></i> Buy Bikes
@@ -700,7 +675,11 @@ body {
                     <span class="d-icon"><i class="fa fa-recycle"></i></span>
                     <span>Used Bikes</span>
                 </a>
-             
+                <!-- NEW: Parts Selling -->
+                <a href="Parts.aspx">
+                    <span class="d-icon"><i class="fa fa-gear"></i></span>
+                    <span>Parts & Accessories</span>
+                </a>
             </div>
         </div>
 
@@ -708,7 +687,7 @@ body {
             <i class="fa fa-tag"></i> Sell Bike
         </a>
 
-        <!-- Rental Dropdown -->
+        <!-- Rentals dropdown (unchanged) -->
         <div class="dropdown" id="ddRent">
             <a href="Rental.aspx">
                 <i class="fa fa-motorcycle"></i> Rentals
@@ -720,7 +699,6 @@ body {
                     <span class="d-icon"><i class="fa fa-calendar-check"></i></span>
                     <span>Browse Rentals</span>
                 </a>
-               
                 <a href="MyRentals.aspx">
                     <span class="d-icon"><i class="fa fa-clock-rotate-left"></i></span>
                     <span>My Rentals</span>
@@ -732,70 +710,87 @@ body {
             <i class="fa fa-code-compare"></i> Compare
         </a>
 
+        <!-- NEW: Services dropdown (Charging Stations + Service Centers) -->
+        <div class="dropdown" id="ddServices">
+            <a href="#">
+                <i class="fa fa-bolt"></i> Services
+                <i class="fa fa-chevron-down" style="font-size:9px;margin-left:2px;"></i>
+            </a>
+            <div class="dropdown-menu">
+                <span class="drop-section-label">EV Support</span>
+                <a href="ChargingStations.aspx">
+                    <span class="d-icon"><i class="fa fa-charging-station"></i></span>
+                    <span>Charging Stations</span>
+                </a>
+                <a href="ServiceCenters.aspx">
+                    <span class="d-icon"><i class="fa fa-wrench"></i></span>
+                    <span>Service Centers</span>
+                </a>
+            </div>
+        </div>
+
         <a href="MyEnquiries.aspx" id="lnkEnquiry">
             <i class="fa fa-envelope"></i> Enquiry
         </a>
 
     </div>
 
-    <!-- ═══ RIGHT ACTIONS ═══ -->
-<div class="nav-actions">
+    <!-- ═══ RIGHT ACTIONS (unchanged) ═══ -->
+    <div class="nav-actions">
 
-    <div class="search-pill-wrap">
-        <div class="search-pill" id="searchPill">
-            <button type="button" class="search-pill-btn" id="searchToggleBtn" aria-label="Search">
-                <i class="fa fa-magnifying-glass"></i>
-            </button>
-            <input type="text" id="txtSearch" name="txtSearch" placeholder="Search bikes, brands…" autocomplete="off" />
-            <button type="button" class="s-clear" id="searchClearBtn">
-                <i class="fa fa-xmark"></i>
-            </button>
+        <div class="search-pill-wrap">
+            <div class="search-pill" id="searchPill">
+                <button type="button" class="search-pill-btn" id="searchToggleBtn" aria-label="Search">
+                    <i class="fa fa-magnifying-glass"></i>
+                </button>
+                <input type="text" id="txtSearch" name="txtSearch" placeholder="Search bikes, brands…" autocomplete="off" />
+                <button type="button" class="s-clear" id="searchClearBtn">
+                    <i class="fa fa-xmark"></i>
+                </button>
+            </div>
+            <div id="searchDropdown"></div>
         </div>
-        <div id="searchDropdown"></div>
-    </div>
 
-    <a href="Cart.aspx" class="icon-btn" title="My Cart">
-        <i class="fa fa-shopping-bag"></i>
-        <span id="Span1" class="badge-count">
-            <asp:Literal ID="Literal1" runat="server">0</asp:Literal>
-        </span>
-    </a>
-
-    <a href="Wishlist.aspx" class="icon-btn" title="Wishlist">
-        <i class="fa fa-heart"></i>
-        <span id="wishCount" runat="server" class="badge-count">0</span>
-    </a>
-
-    <asp:Panel ID="pnlLogin" runat="server">
-        <a href="ClientLogin.aspx" class="btn-login">
-            <i class="fa fa-arrow-right-to-bracket"></i>
-            <span>Sign In</span>
+        <a href="Cart.aspx" class="icon-btn" title="My Cart">
+            <i class="fa fa-shopping-bag"></i>
+            <span id="Span1" class="badge-count">
+                <asp:Literal ID="Literal1" runat="server">0</asp:Literal>
+            </span>
         </a>
-    </asp:Panel>
 
-    <asp:Panel ID="pnlUser" runat="server" Visible="false">
-        <a href="myprofile.aspx" class="btn-login">
-            <i class="fa fa-user-circle"></i>
-            <asp:Label ID="lblUserName" runat="server"></asp:Label>
+        <a href="Wishlist.aspx" class="icon-btn" title="Wishlist">
+            <i class="fa fa-heart"></i>
+            <span id="wishCount" runat="server" class="badge-count">0</span>
         </a>
-    </asp:Panel>
 
-    <div class="menu-toggle" onclick="toggleMenu()" id="menuToggle">
-        <i class="fa fa-bars"></i>
+        <asp:Panel ID="pnlLogin" runat="server">
+            <a href="ClientLogin.aspx" class="btn-login">
+                <i class="fa fa-arrow-right-to-bracket"></i>
+                <span>Sign In</span>
+            </a>
+        </asp:Panel>
+
+        <asp:Panel ID="pnlUser" runat="server" Visible="false">
+            <a href="myprofile.aspx" class="btn-login">
+                <i class="fa fa-user-circle"></i>
+                <asp:Label ID="lblUserName" runat="server"></asp:Label>
+            </a>
+        </asp:Panel>
+
+        <div class="menu-toggle" onclick="toggleMenu()" id="menuToggle">
+            <i class="fa fa-bars"></i>
+        </div>
     </div>
-</div>
 
 </div>
 </nav>
-
 
 <!-- ═══ PAGE CONTENT ═══ -->
 <div class="main-content">
     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
 </div>
 
-
-<!-- ═══ FOOTER (your original) ═══ -->
+<!-- ═══ FOOTER (unchanged) ═══ -->
 <footer class="premium-footer" style="background:#060b14; color:#8899bb; padding:70px 0 28px;">
 <div class="container">
   <div class="footer-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:32px;">
@@ -856,9 +851,8 @@ body {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-
-    <div class="relative inline-block mr-4">
- <a href="Cart.aspx" class="icon-btn">
+<div class="relative inline-block mr-4">
+    <a href="Cart.aspx" class="icon-btn">
         <i class="fa fa-shopping-bag"></i>
         <span class="badge-count">
             <asp:Literal ID="litMasterCartCount" runat="server" ClientIDMode="Static">0</asp:Literal>
@@ -882,15 +876,13 @@ body {
 
 <script>
     function updateCartUI(newCount) {
-        // 1. Update Navbar Badge
         var badge = document.getElementById('cartBadge');
         if (badge) {
             badge.innerText = newCount;
-            badge.classList.add('bump'); // Animation effect
+            badge.classList.add('bump');
             setTimeout(function () { badge.classList.remove('bump'); }, 300);
         }
 
-        // 2. Update & Show Floating Button
         var floatBtn = document.getElementById('floatingCart');
         var floatCount = document.getElementById('floatingCount');
         if (floatBtn && floatCount) {
@@ -898,7 +890,6 @@ body {
             floatBtn.classList.remove('translate-y-24');
             floatBtn.classList.add('translate-y-0');
 
-            // 5 second baad automatically niche bhej do (Professional feel)
             setTimeout(function () {
                 floatBtn.classList.remove('translate-y-0');
                 floatBtn.classList.add('translate-y-24');
@@ -910,71 +901,45 @@ body {
 <script>
     /* ═══════════════════════════════════════════════════════════
        EBIKES DUNIYA — CLIENTMASTER.MASTER JS
-       Fixes: 1) Wishlist live count  2) Search  3) Navbar mobile
-       ═══════════════════════════════════════════════════════════ */
-
-    /* ──────────────────────────────────────────────
-       1. WISHLIST LIVE COUNT
-       ✅ FIX: Correct WebMethod URL + called on load
-       ✅ FIX: Poll every 60s + bump animation on change
-    ──────────────────────────────────────────────── */
+       Includes updated active nav mapping for new pages.
+    ═══════════════════════════════════════════════════════════ */
 
     var _lastWishCount = -1;
 
-
     function updateWishCount() {
-
         $.ajax({
             type: "POST",
             url: "/Client/Bikes.aspx/GetWishlistCount",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-
             success: function (res) {
-
                 var badge = document.getElementById("wishCount");
                 if (!badge) return;
-
                 var count = parseInt(res.d) || 0;
-
                 badge.innerText = count;
-
-                if (count > 0)
-                    badge.style.display = "flex";
-                else
-                    badge.style.display = "none";
+                badge.style.display = count > 0 ? "flex" : "none";
             }
         });
-
     }
 
-    /* page load */
     document.addEventListener("DOMContentLoaded", function () {
-
         updateWishCount();
-
     });
 
-    /* ──────────────────────────────────────────────
-       2. SEARCH PILL — EXPAND / LIVE SUGGESTIONS
-       ✅ FIX: Uses correct #txtSearch ID
-       ✅ FIX: Enter key works, results dropdown shown
-    ──────────────────────────────────────────────── */
-    var searchTimer = null;
-
+    /* Search pill */
     var pill = document.getElementById("searchPill");
     var toggleBtn = document.getElementById("searchToggleBtn");
     var clearBtn = document.getElementById("searchClearBtn");
     var input = document.getElementById("txtSearch");
     var dropdown = document.getElementById("searchDropdown");
+    var searchTimer = null;
 
-    /* Toggle pill open/close */
     toggleBtn.addEventListener("click", function (e) {
         e.stopPropagation();
         if (pill.classList.contains("open")) {
             var q = input.value.trim();
             if (q.length > 0) {
-                doSearch(q);           /* Enter if text is present */
+                doSearch(q);
             } else {
                 closePill();
             }
@@ -988,7 +953,6 @@ body {
         closePill();
     });
 
-    /* ✅ FIX: Live typing → suggestions */
     input.addEventListener("input", function () {
         clearTimeout(searchTimer);
         var q = this.value.trim();
@@ -996,7 +960,6 @@ body {
         searchTimer = setTimeout(function () { loadSuggestions(q); }, 280);
     });
 
-    /* ✅ FIX: Enter key → navigate */
     input.addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
             e.preventDefault();
@@ -1006,7 +969,6 @@ body {
         if (e.key === "Escape") closePill();
     });
 
-    /* Close on outside click */
     document.addEventListener("click", function (e) {
         var wrap = document.querySelector(".search-pill-wrap");
         if (wrap && !wrap.contains(e.target)) closePill();
@@ -1024,15 +986,12 @@ body {
     }
 
     function doSearch(q) {
-        /* ✅ FIX: Build correct URL regardless of current page location */
         var base = window.location.pathname;
         var dir = base.substring(0, base.lastIndexOf("/") + 1);
         window.location.href = dir + "Bikes.aspx?search=" + encodeURIComponent(q);
     }
 
-    /* AJAX live suggestions */
     function loadSuggestions(q) {
-        /* ✅ FIX: Call your SearchSuggestions handler */
         $.ajax({
             type: "GET",
             url: window.location.pathname.split("/").slice(0, -1).join("/") +
@@ -1042,7 +1001,6 @@ body {
                 renderSuggestions(data, q);
             },
             error: function () {
-                /* If handler not available, hide silently */
                 hideDropdown();
             }
         });
@@ -1094,9 +1052,7 @@ body {
             .replace(/"/g, "&quot;");
     }
 
-    /* ──────────────────────────────────────────────
-       3. MOBILE MENU TOGGLE
-    ──────────────────────────────────────────────── */
+    /* Mobile menu toggle */
     function toggleMenu() {
         var menu = document.getElementById("navMenu");
         var toggle = document.getElementById("menuToggle");
@@ -1108,15 +1064,12 @@ body {
 
     /* Mobile dropdown accordion */
     document.querySelectorAll(".dropdown").forEach(function (dd) {
-        /* On mobile: clicking the trigger toggles open class */
         var trigger = dd.querySelector("a");
         if (!trigger) return;
 
         trigger.addEventListener("click", function (e) {
-            /* Only intercept on mobile widths */
             if (window.innerWidth > 992) return;
             e.preventDefault();
-            /* Close siblings */
             document.querySelectorAll(".dropdown.mob-open").forEach(function (other) {
                 if (other !== dd) other.classList.remove("mob-open");
             });
@@ -1124,7 +1077,6 @@ body {
         });
     });
 
-    /* Close mobile menu when a leaf link is clicked */
     document.querySelectorAll(".nav-menu a:not(.dropdown > a)").forEach(function (a) {
         a.addEventListener("click", function () {
             if (window.innerWidth <= 992) {
@@ -1134,25 +1086,23 @@ body {
         });
     });
 
-    /* ──────────────────────────────────────────────
-       4. ACTIVE NAV LINK
-    ──────────────────────────────────────────────── */
+    /* Active nav link mapping (updated with new pages) */
     function setActiveNavLink() {
         var page = window.location.pathname.split("/").pop().toLowerCase();
 
-        /* Map page → nav element ID or dropdown ID */
         var map = {
             "home.aspx": "lnkHome",
             "bikes.aspx": "ddBuy",
-            "usedbikedetails.aspx": "ddBuy",
-            "usedBikes.aspx": "ddBuy",
-            "bikedetails.aspx": "ddBuy",
+            "usedbikes.aspx": "ddBuy",
+            "parts.aspx": "ddBuy",                  // Parts under Buy dropdown
             "sellbike.aspx": "lnkSell",
             "rental.aspx": "ddRent",
             "myrentals.aspx": "ddRent",
-            "rentalbikedetails.aspx": "ddRent",
             "compare.aspx": "lnkCompare",
-            "enquiry.aspx": "lnkEnquiry",
+            "chargingstations.aspx": "ddServices",   // Charging Stations under Services
+            "servicecenters.aspx": "ddServices",     // Service Centers under Services
+            "myenquiries.aspx": "lnkEnquiry",
+            "enquiry.aspx": "lnkEnquiry"
         };
 
         var targetId = map[page];
@@ -1168,10 +1118,7 @@ body {
         }
     }
 
-    /* ──────────────────────────────────────────────
-       5. LOGO IMAGE FALLBACK
-       If imgLogo loads a real image, hide the bolt icon
-    ──────────────────────────────────────────────── */
+    /* Logo fallback */
     (function () {
         var logoImg = document.getElementById("imgLogo");
         var logoIcon = document.getElementById("iconFallback");
@@ -1188,9 +1135,7 @@ body {
         };
     })();
 
-    /* ──────────────────────────────────────────────
-       6. STICKY NAVBAR — shadow on scroll
-    ──────────────────────────────────────────────── */
+    /* Sticky navbar shadow */
     window.addEventListener("scroll", function () {
         var nav = document.getElementById("ebNav");
         if (!nav) return;
@@ -1203,9 +1148,10 @@ body {
         }
     }, { passive: true });
 
+    setActiveNavLink();
 </script>
 
-    <asp:ContentPlaceHolder ID="PageScripts" runat="server"></asp:ContentPlaceHolder>
+<asp:ContentPlaceHolder ID="PageScripts" runat="server"></asp:ContentPlaceHolder>
 
 </body>
 </html>

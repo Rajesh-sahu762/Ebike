@@ -50,18 +50,18 @@ public partial class Client_MyEnquiries : System.Web.UI.Page
 SELECT 
     O.OrderID,
     O.OrderID AS OrderNumber,
-    O.CreatedAt,
     O.TotalAmount,
-    O.OrderStatus,
-    COUNT(OI.ItemID) AS TotalItems
+    O.OrderStatus AS Status,
+    O.CreatedAt,
+    ISNULL(COUNT(OI.ItemID),0) AS TotalItems
 FROM Orders O
 LEFT JOIN OrderItems OI ON O.OrderID = OI.OrderID
 WHERE O.UserID = @c
-GROUP BY O.OrderID, O.CreatedAt, O.TotalAmount, O.OrderStatus
+GROUP BY O.OrderID, O.TotalAmount, O.OrderStatus, O.CreatedAt
 ORDER BY O.CreatedAt DESC
 ", con);
 
-            cmdOrd.Parameters.AddWithValue("@c", Session["CustomerID"]);
+            cmdOrd.Parameters.Add("@c", SqlDbType.Int).Value = Convert.ToInt32(Session["CustomerID"]);
             SqlDataAdapter daOrd = new SqlDataAdapter(cmdOrd);
             DataTable dtOrd = new DataTable();
 
@@ -70,11 +70,8 @@ ORDER BY O.CreatedAt DESC
                 daOrd.Fill(dtOrd);
                 rptOrders.DataSource = dtOrd;
                 rptOrders.DataBind();
-                if (dtOrd.Rows.Count == 0)
-                {
-                    rptOrders.DataSource = null;
-                    rptOrders.DataBind();
-                }
+
+                emptyOrd.Visible = (dtOrd.Rows.Count == 0);
             }
             catch (Exception ex)
             {
@@ -86,6 +83,35 @@ ORDER BY O.CreatedAt DESC
         }
 
     }
+
+
+    [WebMethod(EnableSession = true)]
+public static string CancelOrder(int orderId)
+{
+    string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+
+    if (System.Web.HttpContext.Current.Session["CustomerID"] == null)
+        return "login";
+
+    try
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+            // Order ko delete nahi kar rahe, status 'Cancelled' kar rahe hain (Best Practice)
+            SqlCommand cmd = new SqlCommand("UPDATE Orders SET OrderStatus = 'Cancelled' WHERE OrderID = @id AND UserID = @u AND OrderStatus = 'Pending'", con);
+            cmd.Parameters.AddWithValue("@id", orderId);
+            cmd.Parameters.AddWithValue("@u", System.Web.HttpContext.Current.Session["CustomerID"]);
+
+            int rows = cmd.ExecuteNonQuery();
+            return rows > 0 ? "ok" : "Order cannot be cancelled at this stage.";
+        }
+    }
+    catch (Exception ex)
+    {
+        return ex.Message;
+    }
+}
 
     [WebMethod(EnableSession = true)]
     public static string DeleteEnquiry(int id)

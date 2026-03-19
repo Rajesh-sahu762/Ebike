@@ -29,24 +29,32 @@ public partial class CheckoutPage : System.Web.UI.Page
         using (SqlConnection con = new SqlConnection(constr))
         {
             string query = @"
-SELECT SUM(p.Price * c.Qty) 
-FROM Cart c 
-JOIN Parts p ON c.PartID = p.PartID 
+SELECT 
+    p.PartName,
+    p.Price,
+    c.Qty
+FROM Cart c
+INNER JOIN Parts p ON c.PartID = p.PartID
 WHERE c.UserID = @UID";
 
             SqlCommand cmd = new SqlCommand(query, con);
             cmd.Parameters.AddWithValue("@UID", currentUserID);
 
-            con.Open();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
 
-            object result = cmd.ExecuteScalar();
+            rptSummary.DataSource = dt;
+            rptSummary.DataBind();
 
             decimal total = 0;
 
-            if (result != DBNull.Value && result != null)
-                total = Convert.ToDecimal(result);
+            foreach (DataRow row in dt.Rows)
+            {
+                total += Convert.ToDecimal(row["Price"]) * Convert.ToInt32(row["Qty"]);
+            }
 
-            // 👉 अगर तू future में label add करे तो यहाँ bind कर सकता है
+            litTotal.Text = total.ToString("N0");
         }
     }
 

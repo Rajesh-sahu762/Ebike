@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Web.UI.WebControls;
 
 public partial class Client_Home : System.Web.UI.Page
 {
@@ -15,9 +16,22 @@ public partial class Client_Home : System.Web.UI.Page
             LoadHeroBrands();
             LoadBrowseBrands();
             LoadFeaturedBikes(null, null);
+            LoadSpareParts();
         }
     }
 
+    void LoadSpareParts()
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            // No changes here, same fields: PartName, Price, Category, Image1
+            SqlDataAdapter da = new SqlDataAdapter("SELECT TOP 4 PartID, PartName, Price, Category, Image1 FROM Parts WHERE IsApproved=1 ORDER BY CreatedAt DESC", con);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            rptSpareParts.DataSource = dt;
+            rptSpareParts.DataBind();
+        }
+    }
 
     void LoadReviews()
     {
@@ -48,22 +62,21 @@ public partial class Client_Home : System.Web.UI.Page
     {
         using (SqlConnection con = new SqlConnection(constr))
         {
+            // SQL Schema ke hisaab se: BrandID aur BrandName
+            SqlCommand cmd = new SqlCommand("SELECT BrandID, BrandName FROM Brands WHERE IsActive=1 ORDER BY BrandName", con);
             con.Open();
-
-            SqlCommand cmd = new SqlCommand(
-                "SELECT BrandID, BrandName FROM Brands WHERE IsActive=1 ORDER BY BrandName",
-                con);
-
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            ddlBrand.DataSource = dr;
+            ddlBrand.DataSource = cmd.ExecuteReader();
             ddlBrand.DataTextField = "BrandName";
             ddlBrand.DataValueField = "BrandID";
             ddlBrand.DataBind();
-
-            ddlBrand.Items.Insert(0,
-                new System.Web.UI.WebControls.ListItem("Select Brand", ""));
+            ddlBrand.Items.Insert(0, new ListItem("Choose Brand", ""));
         }
+    }
+
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+        // Jab search click ho, tab ye parameters pass honge
+        LoadFeaturedBikes(ddlBudget.SelectedValue, ddlBrand.SelectedValue);
     }
 
 
@@ -111,29 +124,19 @@ public partial class Client_Home : System.Web.UI.Page
     {
         using (SqlConnection con = new SqlConnection(constr))
         {
-            con.Open();
+            // Search filter logic as requested
+            string query = @"SELECT TOP 10 BikeID, ModelName, Price, RangeKM, Image1, Slug 
+                         FROM Bikes 
+                         WHERE IsApproved=1 AND IsUsed=0 AND IsForRent=0";
 
-            string query = @"SELECT TOP 6 BikeID, ModelName, Price,
-                             RangeKM, Image1, Slug
-                             FROM Bikes
-                             WHERE IsApproved=1 AND IsUsed = 0
-AND IsForRent = 0";
+            if (!string.IsNullOrEmpty(budget)) query += " AND Price <= @budget";
+            if (!string.IsNullOrEmpty(brandId)) query += " AND BrandID = @brand";
 
-            if (!string.IsNullOrEmpty(budget))
-                query += " AND Price <= @budget";
-
-            if (!string.IsNullOrEmpty(brandId))
-                query += " AND BrandID = @brand";
-
-            query += " ORDER BY CASE WHEN BikeID IN (SELECT BikeID FROM FeaturedBikes WHERE IsActive=1 AND EndDate >= GETDATE()) THEN 0 ELSE 1 END, CreatedAt DESC";
+            query += " ORDER BY CreatedAt DESC";
 
             SqlCommand cmd = new SqlCommand(query, con);
-
-            if (!string.IsNullOrEmpty(budget))
-                cmd.Parameters.AddWithValue("@budget", budget);
-
-            if (!string.IsNullOrEmpty(brandId))
-                cmd.Parameters.AddWithValue("@brand", brandId);
+            if (!string.IsNullOrEmpty(budget)) cmd.Parameters.AddWithValue("@budget", budget);
+            if (!string.IsNullOrEmpty(brandId)) cmd.Parameters.AddWithValue("@brand", brandId);
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
@@ -158,10 +161,5 @@ AND IsForRent = 0";
     }
 
 
-    protected void btnSearch_Click(object sender, EventArgs e)
-    {
-        LoadFeaturedBikes(
-            ddlBudget.SelectedValue,
-            ddlBrand.SelectedValue);
-    }
+   
 }
