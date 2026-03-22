@@ -1160,22 +1160,42 @@ body {
 
             var url = "#";
 
-            if (item.Type === "Bike")
-                url = "BikeDetails.aspx?id=" + item.ID;
+            // 🔥 SLUG BASED ROUTING
+            if (item.Type === "Bike") {
 
-            else if (item.Type === "Part")
-                url = "PartDetails.aspx?id=" + item.ID;
+                if (item.IsForRent === true)
+                    url = "RentalBikeDetails.aspx?slug=" + item.Slug;
 
-            else if (item.Type === "Station")
+                else if (item.IsUsed === true)
+                    url = "UsedBikeDetails.aspx?slug=" + item.Slug;
+
+                else
+                    url = "BikeDetails.aspx?slug=" + item.Slug;
+            }
+
+            else if (item.Type === "Part") {
+                url = "Parts.aspx";
+            }
+
+            else if (item.Type === "Station") {
                 url = "ChargingStations.aspx";
+            }
 
-            else if (item.Type === "Service")
+            else if (item.Type === "Service") {
                 url = "ServiceCenters.aspx";
+            }
 
+            // 🔥 IMAGE PATH FIX (AS PER YOUR FOLDER)
+            var imgHtml = "";
 
-            var imgHtml = item.ImagePath
-                ? '<img src="' + item.ImagePath + '" />'
-                : '<span>⚡</span>';
+            if (item.Type === "Bike" && item.ImagePath)
+                imgHtml = '<img src="/Uploads/Bikes/' + item.ImagePath + '" />';
+
+            else if (item.Type === "Part" && item.ImagePath)
+                imgHtml = '<img src="/Uploads/Parts/' + item.ImagePath + '" />';
+
+            else
+                imgHtml = '<span>⚡</span>';
 
             html += '<a class="sd-item" href="' + url + '">' +
                 '<div class="sd-img">' + imgHtml + '</div>' +

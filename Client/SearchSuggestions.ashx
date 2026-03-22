@@ -27,20 +27,21 @@ public class SearchSuggestions : IHttpHandler
         {
             string query = @"
 
--- BIKES (ALL TYPES: NEW + USED + RENTAL)
+-- BIKES (ALL TYPES)
 SELECT TOP 5 
 'Bike' AS Type,
 BikeID AS ID,
 ModelName AS Name,
 Price,
 Image1 AS ImagePath,
-Slug
+Slug,
+IsUsed,
+IsForRent
 FROM Bikes
 WHERE IsApproved = 1
 AND (
     ModelName LIKE '%' + @q + '%'
     OR BatteryType LIKE '%' + @q + '%'
-    OR MotorPower LIKE '%' + @q + '%'
 )
 
 UNION ALL
@@ -52,7 +53,9 @@ PartID,
 PartName,
 Price,
 Image1,
-'' 
+'' AS Slug,
+0,
+0
 FROM Parts
 WHERE IsApproved = 1
 AND (
@@ -68,8 +71,10 @@ SELECT TOP 5
 StationID,
 StationName,
 0,
-NULL,
-''
+'' AS ImagePath,
+'' AS Slug,
+0,
+0
 FROM ChargingStations
 WHERE IsApproved = 1
 AND (
@@ -85,15 +90,16 @@ SELECT TOP 5
 ServiceID,
 CenterName,
 0,
-NULL,
-''
+'' AS ImagePath,
+'' AS Slug,
+0,
+0
 FROM ServiceCenters
 WHERE IsApproved = 1
 AND (
     CenterName LIKE '%' + @q + '%'
     OR City LIKE '%' + @q + '%'
 )
-
 ";
 
             SqlCommand cmd = new SqlCommand(query, con);
@@ -111,7 +117,9 @@ AND (
                     Name = dr["Name"].ToString(),
                     Price = dr["Price"].ToString(),
                     ImagePath = dr["ImagePath"] != DBNull.Value ? dr["ImagePath"].ToString() : "",
-                    Slug = dr["Slug"].ToString()
+                    Slug = dr["Slug"] != DBNull.Value ? dr["Slug"].ToString() : "",
+                    IsUsed = Convert.ToBoolean(dr["IsUsed"]),
+                    IsForRent = Convert.ToBoolean(dr["IsForRent"])
                 });
             }
         }
