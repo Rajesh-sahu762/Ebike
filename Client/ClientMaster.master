@@ -1146,33 +1146,45 @@ body {
     }
 
     function renderSuggestions(items, q) {
+
         if (!items || items.length === 0) {
             dropdown.innerHTML =
-                '<div class="sd-no-result"><i class="fa fa-magnifying-glass" style="margin-right:6px;color:#3d506e"></i>No results for "<strong style="color:#8aa0c0">' +
-                escHtml(q) + '</strong>"</div>';
+                '<div class="sd-no-result">No results found</div>';
             dropdown.classList.add("show");
             return;
         }
 
         var html = "";
-        items.slice(0, 5).forEach(function (item) {
-            var imgHtml = item.ImagePath
-                ? '<img src="' + escHtml(item.ImagePath) + '" alt="' + escHtml(item.ModelName) + '"/>'
-                : '<span style="font-size:18px">⚡</span>';
 
-            html += '<a class="sd-item" href="BikeDetails.aspx?id=' + (item.BikeID || "") + '">' +
+        items.forEach(function (item) {
+
+            var url = "#";
+
+            if (item.Type === "Bike")
+                url = "BikeDetails.aspx?id=" + item.ID;
+
+            else if (item.Type === "Part")
+                url = "PartDetails.aspx?id=" + item.ID;
+
+            else if (item.Type === "Station")
+                url = "ChargingStations.aspx";
+
+            else if (item.Type === "Service")
+                url = "ServiceCenters.aspx";
+
+
+            var imgHtml = item.ImagePath
+                ? '<img src="' + item.ImagePath + '" />'
+                : '<span>⚡</span>';
+
+            html += '<a class="sd-item" href="' + url + '">' +
                 '<div class="sd-img">' + imgHtml + '</div>' +
                 '<div class="sd-info">' +
-                    '<div class="sd-name">' + escHtml(item.ModelName || "") + '</div>' +
-                    '<div class="sd-brand">' + escHtml(item.BrandName || "") + '</div>' +
+                    '<div class="sd-name">' + item.Name + '</div>' +
+                    '<div class="sd-brand">' + item.Type + '</div>' +
                 '</div>' +
-                (item.Price ? '<span class="sd-price">₹' + escHtml(item.Price) + '</span>' : "") +
             '</a>';
         });
-
-        html += '<a class="sd-footer-link" href="Bikes.aspx?search=' + encodeURIComponent(q) + '">' +
-                'See all results <i class="fa fa-arrow-right fa-xs"></i>' +
-            '</a>';
 
         dropdown.innerHTML = html;
         dropdown.classList.add("show");
