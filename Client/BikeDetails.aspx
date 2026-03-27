@@ -926,7 +926,7 @@ background:#f59e0b;
 </div>
 
 <div class="bike-price">
-₹ <asp:Literal ID="litPrice" runat="server"></asp:Literal>
+₹ <asp:Literal ID="litPrice" runat="server"></asp:Literal> /-
 </div>
 
 <div class="bike-emi">
@@ -1208,7 +1208,7 @@ Based on <asp:Literal ID="litReviewCount" runat="server"></asp:Literal>
 <asp:Literal ID="litStickyName" runat="server"></asp:Literal>
 </div>
 <div class="sticky-price">
-₹ <asp:Literal ID="litStickyPrice" runat="server"></asp:Literal>
+₹ <asp:Literal ID="litStickyPrice" runat="server"></asp:Literal> /-
 </div>
 </div>
 

@@ -171,7 +171,7 @@ searchFilter +
 
                     html.Append("<div class='price'>₹ " +
                     Convert.ToDecimal(dr["Price"]).ToString("N0") +
-                    "</div>");
+                    " /-</div>");
 
                     html.Append("<div>Range: " + dr["RangeKM"] + " KM</div>");
 

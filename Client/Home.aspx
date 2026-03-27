@@ -904,7 +904,7 @@
                                         <span><i class="fa-solid fa-gauge-high mr-1"></i>80 km/h</span>
                                     </div>
                                     <div class="footer-row-v7">
-                                        <div class="price-v7">₹<%# Eval("Price", "{0:N0}") %></div>
+                                        <div class="price-v7">₹<%# Eval("Price", "{0:N0}") %> /-</div>
                                         <a href='BikeDetails.aspx?slug=<%# Eval("Slug") %>' class="go-btn-v7">
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </a>
@@ -1100,7 +1100,7 @@
                             <div class="part-info-v9">
                                 <h3 class="part-title-v9"><%# Eval("PartName") %></h3>
                                 <div class="part-price-row-v9">
-                                    <div class="part-price-v9">₹<%# Eval("Price", "{0:N0}") %></div>
+                                    <div class="part-price-v9">₹<%# Eval("Price", "{0:N0}") %> /-</div>
                                     <span class="stock-status"><i class="fa-solid fa-circle-check mr-1"></i> In Stock</span>
                                 </div>
                             </div>

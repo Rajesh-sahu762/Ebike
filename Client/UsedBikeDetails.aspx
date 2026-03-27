@@ -949,7 +949,7 @@ font-weight:600;
 </div>
 
 <div class="bike-price">
-₹ <asp:Literal ID="litPrice" runat="server"></asp:Literal>
+₹ <asp:Literal ID="litPrice" runat="server"></asp:Literal> /-
 </div>
 
 <div class="bike-emi">
@@ -1255,7 +1255,7 @@ placeholder="Share your experience"></textarea>
 <asp:Literal ID="litStickyName" runat="server"></asp:Literal>
 </div>
 <div class="sticky-price">
-₹ <asp:Literal ID="litStickyPrice" runat="server"></asp:Literal>
+₹ <asp:Literal ID="litStickyPrice" runat="server"></asp:Literal> /-
 </div>
 </div>
 

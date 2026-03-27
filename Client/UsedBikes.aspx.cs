@@ -124,7 +124,7 @@ AND ISNULL(B.IsForRent,0)=0
 
                     html.Append("<div class='price'>₹ " +
                     Convert.ToDecimal(dr["Price"]).ToString("N0") +
-                    "</div>");
+                    " /-</div>");
 
                     html.Append("<div>" +
                     dr["ManufactureYear"] +
