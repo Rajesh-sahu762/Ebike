@@ -140,30 +140,44 @@ select option {
         <div class="admin-wrapper d-flex">
 
             <!-- Sidebar -->
-            <div class="sidebar">
-                <h4 class="mb-4">EBikes Admin</h4>
+          <div class="sidebar">
+    <h4 class="mb-4">EBikes Admin</h4>
 
-                <a href="AdminDashboard.aspx">Dashboard</a>
-                <a href="ApproveDealers.aspx">Approve Dealers</a>
-                <a href="ApproveBikes.aspx">Approve Bikes</a>
-                <a href="AddChargingStation.aspx">Add Stations</a>
-                <a href="ManageUsers.aspx">ManageUsers</a>
-                <a href="AdminManageParts.aspx">ManageParts</a>
-                <a href="ManageLeads.aspx">ManageLeads</a>
-                <a href="ManageBrands.aspx">ManageBrands</a>
-                <a href="Reports.aspx">Report</a>
-                <a href="AdminRentalSettlement.aspx">RentalSettlement</a>
-                <a href="RentalManagement.aspx">RentalManagement</a>
-                <a href="ManageChargingStations.aspx">Stations Management</a>
-                <a href="AdminSubscriptionRequests.aspx">SubscriptionRequests</a>
-                <a href="Settings.aspx">Setting</a>
+    <!-- Dashboard -->
+    <a href="AdminDashboard.aspx">Dashboard</a>
 
-                <hr style="border-color:#444;" />
+    <!-- Approvals -->
+    <a href="ApproveDealers.aspx">Approve Dealers</a>
+    <a href="ApproveBikes.aspx">Approve Bikes</a>
 
-                <asp:Button ID="btnLogout" runat="server" Text="Logout"
-                    CssClass="btn btn-danger w-100 mt-3"
-                    OnClick="btnLogout_Click" />
-            </div>
+    <!-- Management -->
+    <a href="ManageUsers.aspx">Manage Users</a>
+    <a href="ManageBrands.aspx">Manage Brands</a>
+    <a href="ManageParts.aspx">Manage Parts</a>
+    <a href="ManageLeads.aspx">Manage Leads</a>
+
+    <!-- Charging Stations -->
+    <a href="AddChargingStation.aspx">Add Station</a>
+    <a href="ManageChargingStations.aspx">Stations Management</a>
+
+    <!-- Rentals -->
+    <a href="RentalManagement.aspx">Rental Management</a>
+    <a href="AdminRentalSettlement.aspx">Rental Settlement</a>
+
+    <!-- Subscriptions -->
+    <a href="AdminSubscriptionRequests.aspx">Subscription Requests</a>
+
+    <!-- Reports & Settings -->
+    <a href="Reports.aspx">Reports</a>
+    <a href="Settings.aspx">Settings</a>
+
+    <hr style="border-color:#444;" />
+
+    <!-- Logout -->
+    <asp:Button ID="btnLogout" runat="server" Text="Logout"
+        CssClass="btn btn-danger w-100 mt-3"
+        OnClick="btnLogout_Click" />
+</div>
 
             <!-- Main Content -->
             <div class="content w-100">
