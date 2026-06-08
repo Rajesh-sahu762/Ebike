@@ -127,13 +127,13 @@ Administrators have full control over users, dealers, bikes, approvals, and mark
 
 ## Homepage
 
-![Homepage](http://localhost:9310/Uploads/images/Screenshot 2026-06-09 002636.png)
+![Homepage](http://localhost:9310/Uploads/images/admin.png)
 
 ---
 
 ## Bike Details
 
-![Bike Details](/Uploads/images/Screenshot 2026-06-09 002727.png)
+![Bike Details](/Uploads/images/bike.png)
 
 ---
 
