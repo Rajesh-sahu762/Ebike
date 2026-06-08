@@ -127,25 +127,30 @@ Administrators have full control over users, dealers, bikes, approvals, and mark
 
 ## Homepage
 
-![Homepage](screenshots/homepage.png)
+![Homepage](/Uploads/images/Screenshot 2026-06-09 002636.png)
 
 ---
 
 ## Bike Details
 
-![Bike Details](screenshots/bike-details.png)
+![Bike Details](/Uploads/images/Screenshot 2026-06-09 002727.png)
 
 ---
 
-## Compare Bikes
+## Spare Parts
 
-![Compare Bikes](screenshots/compare-bikes.png)
+![Spare Parts](/Uploads/images/Screenshot 2026-06-09 002757.png)
 
 ---
 
 ## Dealer Dashboard
 
-![Dealer Dashboard](screenshots/dealer-dashboard.png)
+![Dealer Dashboard](/Uploads/images/Screenshot 2026-06-09 003228.png)
+
+## Admin Dashboard
+
+![Admin Dashboard](/Uploads/images/Screenshot 2026-06-09 003334.png)
+
 
 ---
 
