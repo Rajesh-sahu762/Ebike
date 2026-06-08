@@ -127,7 +127,7 @@ Administrators have full control over users, dealers, bikes, approvals, and mark
 
 ## Homepage
 
-![Homepage](http://localhost:9310/Uploads/images/admin.png)
+![Homepage](/Uploads/images/admin.png)
 
 ---
 
@@ -139,17 +139,17 @@ Administrators have full control over users, dealers, bikes, approvals, and mark
 
 ## Spare Parts
 
-![Spare Parts](/Uploads/images/Screenshot 2026-06-09 002757.png)
+![Spare Parts](/Uploads/images/parts.png)
 
 ---
 
 ## Dealer Dashboard
 
-![Dealer Dashboard](/Uploads/images/Screenshot 2026-06-09 003228.png)
+![Dealer Dashboard](/Uploads/images/dealer.png)
 
 ## Admin Dashboard
 
-![Admin Dashboard](/Uploads/images/Screenshot 2026-06-09 003334.png)
+![Admin Dashboard](/Uploads/images/admin.png)
 
 
 ---
