@@ -127,7 +127,7 @@ Administrators have full control over users, dealers, bikes, approvals, and mark
 
 ## Homepage
 
-![Homepage](/Uploads/images/admin.png)
+![Homepage](/Uploads/images/home.png)
 
 ---
 
