@@ -74,7 +74,7 @@ WHERE b.Slug=@slug", con);
 
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string SubmitLead(string message)
     {
         if (HttpContext.Current.Session["CustomerID"] == null)
