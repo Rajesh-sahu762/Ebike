@@ -63,7 +63,7 @@ AND B.IsUsed=1
                 ViewState["BikeID"] = dr["BikeID"].ToString();
                 ViewState["Price"] = price;
 
-                imgMain.ImageUrl = "/Uploads/Bikes/" + dr["Image1"].ToString();
+                imgMain.ImageUrl = "/Uploads/Bikes/" + SafeBikeImageFileName(dr["Image1"]);
 
                 // Seller Info
 
@@ -87,7 +87,7 @@ AND B.IsUsed=1
 
                 litCharge.Text = dr["OwnerNumber"] == DBNull.Value ? "N/A" : dr["OwnerNumber"] + " Owner";
 
-                litMotor.Text = dr["BikeCondition"] == DBNull.Value ? "N/A" : dr["BikeCondition"].ToString();
+                litMotor.Text = dr["BikeCondition"] == DBNull.Value ? "N/A" : System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["BikeCondition"]));
 
                 // Overview
 
@@ -113,11 +113,12 @@ AND B.IsUsed=1
                 {
                     string col = "Image" + i;
 
-                    if (dr[col] != DBNull.Value && dr[col].ToString() != "")
+                    string imageFile = SafeBikeImageFileName(dr[col]);
+                    if (!String.IsNullOrEmpty(imageFile))
                     {
                         thumbs += "<img src='/Uploads/Bikes/" +
-                                  dr[col] +
-                                  "' onclick=\"changeImage(this.src)\" />";
+                                  System.Web.HttpUtility.HtmlAttributeEncode(imageFile) +
+                                  "' alt='Bike image' loading='lazy' onclick=\"changeImage(this.src)\" />";
                     }
                 }
 
@@ -251,7 +252,8 @@ ORDER BY CreatedAt DESC
             html += "<div class='similar-card'>";
 
             html += "<div class='similar-img'>";
-            html += "<img src='/Uploads/Bikes/" + dr["Image1"] + "'>";
+            string similarImage = SafeBikeImageFileName(dr["Image1"]);
+                html += "<img src='/Uploads/Bikes/" + System.Web.HttpUtility.HtmlAttributeEncode(similarImage) + "' alt='Bike image' loading='lazy'>";
             html += "</div>";
 
             html += "<div class='similar-body'>";
@@ -261,8 +263,13 @@ ORDER BY CreatedAt DESC
             html += "<div class='similar-price'>₹ "
             + Convert.ToDecimal(dr["Price"]).ToString("N0") + "</div>";
 
-            html += "<a class='similar-btn' href='UsedBikeDetails.aspx?slug="
-            + dr["Slug"] + "'>View Details</a>";
+            string similarSlug = Convert.ToString(dr["Slug"]);
+            if (System.Text.RegularExpressions.Regex.IsMatch(similarSlug, @"^[A-Za-z0-9_-]{1,255}$"))
+            {
+                html += "<a class='similar-btn' href='UsedBikeDetails.aspx?slug="
+                + System.Web.HttpUtility.HtmlAttributeEncode(System.Web.HttpUtility.UrlEncode(similarSlug))
+                + "'>View Details</a>";
+            }
 
             html += "</div></div>";
         }
@@ -393,5 +400,14 @@ VALUES
             }
 
         }
+    }
+
+    private static string SafeBikeImageFileName(object value)
+    {
+        string name = System.IO.Path.GetFileName(Convert.ToString(value));
+        return System.Text.RegularExpressions.Regex.IsMatch(
+            name, @"^[A-Za-z0-9_-]{1,180}[.](jpg|jpeg|png|webp)$",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+            ? name : String.Empty;
     }
 }
