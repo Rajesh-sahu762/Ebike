@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using System.Text.RegularExpressions;
+using EBIke.Security;
 
 public partial class Vendor_AddBike : System.Web.UI.Page
 {
@@ -126,9 +127,19 @@ WHERE DealerID=@d AND IsActive=1", con);
                 return;
             }
 
-            string img1 = SaveImage(fu1);
-            string img2 = SaveImage(fu2);
-            string img3 = SaveImage(fu3);
+            string img1, img2, img3;
+            try
+            {
+                img1 = SaveImage(fu1);
+                img2 = SaveImage(fu2);
+                img3 = SaveImage(fu3);
+            }
+            catch (InvalidOperationException ex)
+            {
+                lblMsg.Text = Server.HtmlEncode(ex.Message);
+                lblMsg.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
 
             SqlCommand cmd = new SqlCommand(@"INSERT INTO Bikes
 (DealerID, BrandID, ModelName, Slug, Price,
@@ -286,43 +297,7 @@ AND EndDate >= GETDATE()
 
     string SaveImage(System.Web.UI.WebControls.FileUpload fu)
     {
-        if (fu.HasFile)
-        {
-            string ext = Path.GetExtension(fu.FileName).ToLower();
-
-            if (ext != ".jpg" && ext != ".jpeg" && ext != ".png")
-                return null;
-
-            if (fu.PostedFile.ContentLength > 2 * 1024 * 1024)
-                return null;
-
-            string folder = Server.MapPath("~/Uploads/Bikes/");
-
-            if (!Directory.Exists(folder))
-                Directory.CreateDirectory(folder);
-
-            // ✅ ORIGINAL FILE NAME
-            string fileName = Path.GetFileName(fu.FileName);
-            string fullPath = Path.Combine(folder, fileName);
-
-            // 🔒 Prevent overwrite
-            int count = 1;
-            string nameOnly = Path.GetFileNameWithoutExtension(fileName);
-            string extension = Path.GetExtension(fileName);
-
-            while (File.Exists(fullPath))
-            {
-                fileName = nameOnly + "_" + count + extension;
-                fullPath = Path.Combine(folder, fileName);
-                count++;
-            }
-
-            fu.SaveAs(fullPath);
-
-            return fileName;   // ✅ ONLY FILE NAME
-        }
-
-        return null;
+        return UploadSecurity.SaveImage(fu, Server.MapPath("~/Uploads/Bikes/"));
     }
 
 
