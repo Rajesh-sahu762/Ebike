@@ -73,7 +73,7 @@ VALUES
                 }
 
                 using (SqlCommand updateOtp = new SqlCommand(@"
-UPDATE dbo.Users SET OTPCode=@Otp, OTPExpiry=DATEADD(MINUTE,10,GETDATE())
+UPDATE dbo.Users SET OTPCode=@Otp, OTPExpiry=DATEADD(MINUTE,10,GETDATE()), OTPFailedAttempts=0, OTPResendAt=GETDATE()
 WHERE Email=@Email AND Role='Dealer';", con, tx))
                 {
                     updateOtp.Parameters.Add("@Otp", SqlDbType.NVarChar, 10).Value = otp;
