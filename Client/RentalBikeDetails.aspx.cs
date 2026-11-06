@@ -60,8 +60,8 @@ AND b.IsForRent=1
             if (dr.Read())
             {
 
-                litBikeName.Text = dr["ModelName"].ToString();
-                litBrand.Text = dr["BrandName"].ToString();
+                litBikeName.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ModelName"]));
+                litBrand.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["BrandName"]));
 
                 decimal rent = Convert.ToDecimal(dr["RentPerDay"]);
 
@@ -81,23 +81,23 @@ AND b.IsForRent=1
                 : "N/A";
 
                 litCharge.Text = dr["ChargingTime"] != DBNull.Value
-                ? dr["ChargingTime"].ToString()
+                ? System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ChargingTime"]))
                 : "N/A";
 
                 litMotor.Text = dr["MotorPower"] != DBNull.Value
-                ? dr["MotorPower"].ToString()
+                ? System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["MotorPower"]))
                 : "N/A";
                 litOverview.Text = dr["Description"] != DBNull.Value
-? dr["Description"].ToString()
+? System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["Description"]))
 : "No overview available.";
 
                 string specsHtml = "";
 
                 specsHtml += "<tr><td>Range</td><td>" + dr["RangeKM"] + " KM</td></tr>";
                 specsHtml += "<tr><td>Top Speed</td><td>" + dr["TopSpeed"] + " km/h</td></tr>";
-                specsHtml += "<tr><td>Charging Time</td><td>" + dr["ChargingTime"] + "</td></tr>";
-                specsHtml += "<tr><td>Motor Power</td><td>" + dr["MotorPower"] + "</td></tr>";
-                specsHtml += "<tr><td>Battery Type</td><td>" + dr["BatteryType"] + "</td></tr>";
+                specsHtml += "<tr><td>Charging Time</td><td>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ChargingTime"])) + "</td></tr>";
+                specsHtml += "<tr><td>Motor Power</td><td>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["MotorPower"])) + "</td></tr>";
+                specsHtml += "<tr><td>Battery Type</td><td>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["BatteryType"])) + "</td></tr>";
 
                 litSpecsTable.Text = specsHtml;
                 litFeatures.Text =
@@ -108,14 +108,14 @@ AND b.IsForRent=1
                 // Dealer Info
 
                 litDealerName.Text = dr["ShopName"] != DBNull.Value
-                ? dr["ShopName"].ToString()
-                : dr["FullName"].ToString();
+                ? System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ShopName"]))
+                : System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["FullName"]));
 
-                litDealerPhone.Text = dr["Mobile"].ToString();
+                litDealerPhone.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["Mobile"]));
 
-                litDealerEmail.Text = dr["Email"].ToString();
+                litDealerEmail.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["Email"]));
 
-                litDealerCity.Text = dr["City"].ToString();
+                litDealerCity.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["City"]));
 
                 ViewState["DealerID"] = dr["UserID"].ToString();
 
@@ -245,7 +245,7 @@ ORDER BY NEWID()
 
                 html += "<div class='similar-body'>";
 
-                html += "<div class='similar-name'>" + dr["ModelName"] + "</div>";
+                html += "<div class='similar-name'>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ModelName"])) + "</div>";
 
                 html += "<div class='similar-price'>₹ "
                 + Convert.ToDecimal(dr["RentPerDay"]).ToString("N0")
