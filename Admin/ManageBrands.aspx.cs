@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.IO;
+using EBIke.Security;
 
 public partial class Admin_ManageBrands : System.Web.UI.Page
 {
@@ -102,29 +103,14 @@ public partial class Admin_ManageBrands : System.Web.UI.Page
 
             if (fuLogo.HasFile)
             {
-                string folder = Server.MapPath("~/Uploads/Brands/");
-
-                if (!Directory.Exists(folder))
-                    Directory.CreateDirectory(folder);
-
-                // ✅ ONLY FILE NAME
-                logoFileName = Path.GetFileName(fuLogo.FileName);
-
-                string fullPath = Path.Combine(folder, logoFileName);
-
-                // 🔒 Prevent overwrite
-                int count = 1;
-                string nameOnly = Path.GetFileNameWithoutExtension(logoFileName);
-                string ext = Path.GetExtension(logoFileName);
-
-                while (File.Exists(fullPath))
+                try
                 {
-                    logoFileName = nameOnly + "_" + count + ext;
-                    fullPath = Path.Combine(folder, logoFileName);
-                    count++;
+                    logoFileName = UploadSecurity.SaveImage(fuLogo, Server.MapPath("~/Uploads/Brands/"));
                 }
-
-                fuLogo.SaveAs(fullPath);
+                catch (InvalidOperationException ex)
+                {
+                    return;
+                }
             }
 
             SqlCommand cmd = new SqlCommand(
