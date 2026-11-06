@@ -49,7 +49,7 @@ public partial class Client_Bikes : System.Web.UI.Page
         con.Close();
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static object GetBikes(int page, int minPrice, int maxPrice,
      string range, string sort, string[] brands, string search, string dealer)
     {
