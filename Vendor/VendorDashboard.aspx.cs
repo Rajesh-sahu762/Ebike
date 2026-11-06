@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -9,6 +9,12 @@ public partial class Vendor_VendorDashboard : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+        {
+            Response.Redirect("VendorLogin.aspx");
+            return;
+        }
+
         if (!IsPostBack)
         {
             LoadSummary();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -9,8 +9,11 @@ public partial class Vendor_ManageParts : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["VendorID"] == null)
+        if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+        {
             Response.Redirect("VendorLogin.aspx");
+            return;
+        }
 
         if (!IsPostBack)
         {
@@ -80,14 +83,17 @@ public partial class Vendor_ManageParts : System.Web.UI.Page
 
         if (fuImage.HasFile)
         {
-            fileName = fuImage.FileName;
+            string folder = Server.MapPath("~/Uploads/Parts/");
+            string savedName;
+            string err;
 
-            if (fileName.Contains("\\"))
-                fileName = fileName.Substring(fileName.LastIndexOf("\\") + 1);
+            if (!FileUploadHelper.TrySaveImage(fuImage, folder, out savedName, out err))
+            {
+                lblMsg.Text = "Image upload failed: " + err;
+                return;
+            }
 
-            string path = Server.MapPath("~/Uploads/Parts/" + fileName);
-
-            fuImage.SaveAs(path);
+            fileName = savedName;
         }
 
         using (SqlConnection con = new SqlConnection(constr))

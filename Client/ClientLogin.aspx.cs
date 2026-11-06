@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Web;
@@ -9,6 +9,15 @@ public partial class Client_ClientLogin : System.Web.UI.Page
 
     protected void btnLogin_Click(object sender, EventArgs e)
     {
+        string email = txtEmail.Text.Trim();
+        string inputPassword = txtPassword.Text.Trim();
+
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(inputPassword))
+        {
+            lblMsg.Text = "Please enter both email and password.";
+            return;
+        }
+
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
@@ -22,7 +31,7 @@ public partial class Client_ClientLogin : System.Web.UI.Page
             FROM Users
             WHERE Email=@Email AND Role='Customer'", con);
 
-            cmd.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
+            cmd.Parameters.AddWithValue("@Email", email);
 
             SqlDataReader dr = cmd.ExecuteReader();
 
@@ -33,11 +42,11 @@ public partial class Client_ClientLogin : System.Web.UI.Page
             }
 
             int userId = Convert.ToInt32(dr["UserID"]);
-            string fullName = dr["FullName"].ToString();
-            string dbPass = dr["PasswordHash"].ToString();
-            int failed = Convert.ToInt32(dr["FailedLoginAttempts"]);
-            bool isActive = Convert.ToBoolean(dr["IsActive"]);
-            bool isVerified = Convert.ToBoolean(dr["IsEmailVerified"]);
+            string fullName = dr["FullName"] != DBNull.Value ? dr["FullName"].ToString() : string.Empty;
+            string dbPass = dr["PasswordHash"] != DBNull.Value ? dr["PasswordHash"].ToString() : string.Empty;
+            int failed = dr["FailedLoginAttempts"] != DBNull.Value ? Convert.ToInt32(dr["FailedLoginAttempts"]) : 0;
+            bool isActive = dr["IsActive"] != DBNull.Value && Convert.ToBoolean(dr["IsActive"]);
+            bool isVerified = dr["IsEmailVerified"] != DBNull.Value && Convert.ToBoolean(dr["IsEmailVerified"]);
             object lockObj = dr["LockoutEndTime"];
 
             dr.Close();
@@ -79,28 +88,36 @@ public partial class Client_ClientLogin : System.Web.UI.Page
                 }
             }
 
-            // Password Check
-            if (dbPass == txtPassword.Text.Trim())
+            // Password Check with PBKDF2 support and safe legacy migration
+            bool needsUpgrade;
+            if (SecurityHelper.VerifyPassword(inputPassword, dbPass, out needsUpgrade))
             {
-                SqlCommand success = new SqlCommand(
-                "UPDATE Users SET FailedLoginAttempts=0 WHERE UserID=@id", con);
-
-                success.Parameters.AddWithValue("@id", userId);
-                success.ExecuteNonQuery();
+                // If legacy plaintext password matched, upgrade immediately to PBKDF2
+                if (needsUpgrade)
+                {
+                    string newHash = SecurityHelper.HashPassword(inputPassword);
+                    SqlCommand upgradeCmd = new SqlCommand(
+                        "UPDATE Users SET PasswordHash=@p, FailedLoginAttempts=0 WHERE UserID=@id", con);
+                    upgradeCmd.Parameters.AddWithValue("@p", newHash);
+                    upgradeCmd.Parameters.AddWithValue("@id", userId);
+                    upgradeCmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    SqlCommand success = new SqlCommand(
+                        "UPDATE Users SET FailedLoginAttempts=0 WHERE UserID=@id", con);
+                    success.Parameters.AddWithValue("@id", userId);
+                    success.ExecuteNonQuery();
+                }
 
                 // Create Session
                 Session["CustomerID"] = userId;
                 Session["CustomerName"] = fullName;
+                Session["Role"] = "Customer";
 
                 if (chkRemember.Checked)
                 {
-                    HttpCookie cookie = new HttpCookie("EBikesUser");
-                    cookie["UserID"] = userId.ToString();
-                    cookie["Name"] = fullName;
-
-                    cookie.Expires = DateTime.Now.AddDays(7);
-
-                    Response.Cookies.Add(cookie);
+                    AuthHelper.IssueRememberMeCookie(userId, Response, constr);
                 }
 
                 Response.Redirect("Home.aspx");

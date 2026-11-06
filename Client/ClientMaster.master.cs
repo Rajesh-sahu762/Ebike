@@ -1,26 +1,37 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Collections.Generic;
 using System.Web.Services;
 using System.Web;
+using System.Web.Caching;
 
 public partial class Client_ClientMaster : System.Web.UI.MasterPage
 {
     string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
+    [Serializable]
+    private class CachedSiteSettings
+    {
+        public string SiteTitle { get; set; }
+        public string LogoPath { get; set; }
+        public string AdminEmail { get; set; }
+        public string SupportPhone { get; set; }
+        public bool MaintenanceMode { get; set; }
+    }
+
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["CustomerID"] == null && Request.Cookies["EBikesUser"] != null)
+        // Server-validated, cryptographically secure Remember Me check
+        if (Session["CustomerID"] == null)
         {
-            Session["CustomerID"] = Request.Cookies["EBikesUser"]["UserID"];
-            Session["CustomerName"] = Request.Cookies["EBikesUser"]["Name"];
+            AuthHelper.ValidateRememberMeCookie(Request, Response, Session, constr);
         }
 
         if (!IsPostBack)
         {
             LoadSiteSettings();
-            UpdateMasterCartCount(); // Ab ye yahan refresh hoga
+            UpdateMasterCartCount();
         }
 
         if (Session["CustomerID"] != null)
@@ -28,7 +39,10 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
             pnlLogin.Visible = false;
             pnlUser.Visible = true;
             lblUserName.Text = Session["CustomerName"] != null ? Session["CustomerName"].ToString() : "My Account";
-            LoadWishlistCount();
+            if (!IsPostBack)
+            {
+                LoadWishlistCount();
+            }
         }
         else
         {
@@ -41,7 +55,6 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
 
     public void UpdateMasterCartCount()
     {
-        // Agar login nahi hai toh 0, warna session wala ID
         int userId = Session["CustomerID"] != null ? Convert.ToInt32(Session["CustomerID"]) : 0;
 
         if (userId == 0) { cartCount.InnerText = "0"; return; }
@@ -51,60 +64,76 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
             SqlCommand cmd = new SqlCommand("SELECT ISNULL(SUM(Qty), 0) FROM Cart WHERE UserID = @UID", con);
             cmd.Parameters.AddWithValue("@UID", userId);
             con.Open();
-            cartCount.InnerText = cmd.ExecuteScalar().ToString();
+            object res = cmd.ExecuteScalar();
+            cartCount.InnerText = res != null ? res.ToString() : "0";
         }
     }
 
     void LoadSiteSettings()
     {
-        using (SqlConnection con = new SqlConnection(constr))
+        const string cacheKey = "SiteSettings_1";
+        CachedSiteSettings settings = HttpRuntime.Cache[cacheKey] as CachedSiteSettings;
+
+        if (settings == null)
         {
-            con.Open();
-
-            SqlCommand cmd = new SqlCommand(
-            "SELECT * FROM SiteSettings WHERE SettingID=1", con);
-
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            if (dr.Read())
+            settings = new CachedSiteSettings();
+            using (SqlConnection con = new SqlConnection(constr))
             {
-                if (dr["SiteTitle"] != DBNull.Value)
-                {
-                    Page.Title = dr["SiteTitle"].ToString();
-                    lblSiteTitle.Text = dr["SiteTitle"].ToString();
-                }
+                con.Open();
 
-                if (dr["LogoPath"] != DBNull.Value)
+                SqlCommand cmd = new SqlCommand("SELECT * FROM SiteSettings WHERE SettingID=1", con);
+                using (SqlDataReader dr = cmd.ExecuteReader())
                 {
-                    imgLogo.ImageUrl = dr["LogoPath"].ToString();
-                }
-
-                if (dr["AdminEmail"] != DBNull.Value)
-                {
-                    lblFooterEmail.Text = dr["AdminEmail"].ToString();
-                }
-
-                if (dr["SupportPhone"] != DBNull.Value)
-                {
-                    lblFooterPhone.Text = dr["SupportPhone"].ToString();
-                }
-
-                if (dr["MaintenanceMode"] != DBNull.Value)
-                {
-                    bool maintenance = Convert.ToBoolean(dr["MaintenanceMode"]);
-
-                    if (maintenance)
+                    if (dr.Read())
                     {
-                        Response.Redirect("~/Client/Maintenance.aspx");
+                        if (dr["SiteTitle"] != DBNull.Value)
+                            settings.SiteTitle = dr["SiteTitle"].ToString();
+
+                        if (dr["LogoPath"] != DBNull.Value)
+                            settings.LogoPath = dr["LogoPath"].ToString();
+
+                        if (dr["AdminEmail"] != DBNull.Value)
+                            settings.AdminEmail = dr["AdminEmail"].ToString();
+
+                        if (dr["SupportPhone"] != DBNull.Value)
+                            settings.SupportPhone = dr["SupportPhone"].ToString();
+
+                        if (dr["MaintenanceMode"] != DBNull.Value)
+                            settings.MaintenanceMode = Convert.ToBoolean(dr["MaintenanceMode"]);
                     }
                 }
             }
 
-            dr.Close();
+            // Cache site settings for 20 minutes to reduce master page database load
+            HttpRuntime.Cache.Insert(cacheKey, settings, null, DateTime.Now.AddMinutes(20), Cache.NoSlidingExpiration);
+        }
+
+        if (!string.IsNullOrEmpty(settings.SiteTitle))
+        {
+            Page.Title = settings.SiteTitle;
+            lblSiteTitle.Text = settings.SiteTitle;
+        }
+
+        if (!string.IsNullOrEmpty(settings.LogoPath))
+        {
+            imgLogo.ImageUrl = settings.LogoPath;
+        }
+
+        if (!string.IsNullOrEmpty(settings.AdminEmail))
+        {
+            lblFooterEmail.Text = settings.AdminEmail;
+        }
+
+        if (!string.IsNullOrEmpty(settings.SupportPhone))
+        {
+            lblFooterPhone.Text = settings.SupportPhone;
+        }
+
+        if (settings.MaintenanceMode)
+        {
+            Response.Redirect("~/Client/Maintenance.aspx");
         }
     }
-
-   
 
     void LoadWishlistCount()
     {
@@ -133,5 +162,4 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
                 wishCount.InnerText = "0";
         }
     }
-
 }

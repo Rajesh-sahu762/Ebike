@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,20 +8,42 @@ using System.Web.Services;
 using System.Data.SqlClient;
 using System.Configuration;
 
-
 public partial class Admin_AdminMaster : System.Web.UI.MasterPage
 {
-    protected void Page_Load(object sender, EventArgs e)
+    protected void Page_Init(object sender, EventArgs e)
     {
-        if (Session["AdminID"] == null)
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
         {
             Response.Redirect("AdminLogin.aspx");
         }
     }
 
-    [WebMethod]
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
+        {
+            Response.Redirect("AdminLogin.aspx");
+        }
+    }
+
+    [WebMethod(EnableSession = true)]
     public static object GetNotifications()
     {
+        if (HttpContext.Current == null ||
+            HttpContext.Current.Session == null ||
+            HttpContext.Current.Session["AdminID"] == null ||
+            HttpContext.Current.Session["Role"] == null ||
+            HttpContext.Current.Session["Role"].ToString() != "Admin")
+        {
+            return new
+            {
+                PendingDealers = 0,
+                PendingBikes = 0,
+                UnreadLeads = 0,
+                Total = 0
+            };
+        }
+
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
         using (SqlConnection con = new SqlConnection(constr))
@@ -46,7 +68,6 @@ public partial class Admin_AdminMaster : System.Web.UI.MasterPage
             };
         }
     }
-
 
     protected void btnLogout_Click(object sender, EventArgs e)
     {

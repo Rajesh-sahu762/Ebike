@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -107,32 +107,39 @@ AND ISNULL(B.IsForRent,0)=0
                 foreach (DataRow dr in dt.Rows)
                 {
                     string active = dr["IsWishlisted"].ToString() == "1" ? "active" : "";
+                    string safeImg = System.Web.HttpUtility.HtmlAttributeEncode(dr["Image1"] == DBNull.Value ? "" : dr["Image1"].ToString());
+                    string safeModel = System.Web.HttpUtility.HtmlEncode(dr["ModelName"] == DBNull.Value ? "" : dr["ModelName"].ToString());
+                    string safePrice = Convert.ToDecimal(dr["Price"]).ToString("N0");
+                    string safeYear = System.Web.HttpUtility.HtmlEncode(dr["ManufactureYear"] == DBNull.Value ? "" : dr["ManufactureYear"].ToString());
+                    string safeKm = System.Web.HttpUtility.HtmlEncode(dr["KMDriven"] == DBNull.Value ? "" : dr["KMDriven"].ToString());
+                    string safeSlug = System.Web.HttpUtility.UrlEncode(dr["Slug"] == DBNull.Value ? "" : dr["Slug"].ToString());
+                    int safeBikeId = Convert.ToInt32(dr["BikeID"]);
 
                     html.Append("<div class='bike-card'>");
 
                     html.Append("<div class='bike-img'>");
 
-                    html.Append("<img src='/Uploads/Bikes/" + dr["Image1"] + "'/>");
+                    html.Append("<img src='/Uploads/Bikes/" + safeImg + "' alt='" + safeModel + "'/>");
 
-                    html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + dr["BikeID"] + ")'>♥</div>");
+                    html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + safeBikeId + ")'>♥</div>");
 
                     html.Append("</div>");
 
                     html.Append("<div class='bike-body'>");
 
-                    html.Append("<h6>" + dr["ModelName"] + "</h6>");
+                    html.Append("<h6>" + safeModel + "</h6>");
 
                     html.Append("<div class='price'>₹ " +
-                    Convert.ToDecimal(dr["Price"]).ToString("N0") +
+                    safePrice +
                     " /-</div>");
 
                     html.Append("<div>" +
-                    dr["ManufactureYear"] +
-                    " • " + dr["KMDriven"] + " KM" +
+                    safeYear +
+                    " • " + safeKm + " KM" +
                     "</div>");
 
                     html.Append("<a href='UsedBikeDetails.aspx?slug=" +
-                    dr["Slug"] +
+                    safeSlug +
                     "' class='view-btn'>View</a>");
 
                     html.Append("</div>");

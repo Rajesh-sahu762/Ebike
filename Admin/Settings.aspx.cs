@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.IO;
+using System.Web;
 
 public partial class Admin_Settings : System.Web.UI.Page
 {
@@ -9,8 +10,11 @@ public partial class Admin_Settings : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["AdminID"] == null)
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
+        {
             Response.Redirect("AdminLogin.aspx");
+            return;
+        }
 
         if (!IsPostBack)
         {
@@ -54,91 +58,79 @@ public partial class Admin_Settings : System.Web.UI.Page
         }
     }
 
-
     protected void btnSave_Click(object sender, EventArgs e)
     {
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
+        {
+            Response.Redirect("AdminLogin.aspx");
+            return;
+        }
+
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
 
             string logoPath = imgLogo.ImageUrl;
 
-            // ===== LOGO UPLOAD =====
-
+            // ===== SECURE LOGO UPLOAD =====
             if (fuLogo.HasFile)
             {
-                string folder = "~/Uploads/";
-                string fileName = "logo_" + DateTime.Now.Ticks + Path.GetExtension(fuLogo.FileName);
+                string folder = Server.MapPath("~/Uploads/");
+                string savedName;
+                string uploadErr;
 
-                string serverPath = Server.MapPath(folder + fileName);
-
-                fuLogo.SaveAs(serverPath);
-
-                logoPath = folder + fileName;
-
-                imgLogo.ImageUrl = logoPath;
+                if (FileUploadHelper.TrySaveImage(fuLogo, folder, out savedName, out uploadErr))
+                {
+                    logoPath = "~/Uploads/" + savedName;
+                    imgLogo.ImageUrl = logoPath;
+                }
             }
 
             // ===== COMMISSION SAFE =====
-
             decimal commission = 0;
-
             if (!string.IsNullOrEmpty(txtCommission.Text))
-                commission = Convert.ToDecimal(txtCommission.Text);
+                decimal.TryParse(txtCommission.Text.Trim(), out commission);
 
             // ===== SMTP PORT SAFE =====
-
             int port = 0;
-
             if (!string.IsNullOrEmpty(txtSMTPPort.Text))
-                port = Convert.ToInt32(txtSMTPPort.Text);
+                int.TryParse(txtSMTPPort.Text.Trim(), out port);
 
             // ===== UPDATE SETTINGS =====
-
             SqlCommand cmd = new SqlCommand(@"
-
             UPDATE SiteSettings SET
-
             SiteTitle=@SiteTitle,
             Tagline=@Tagline,
             AdminEmail=@AdminEmail,
             SupportPhone=@SupportPhone,
             LogoPath=@LogoPath,
-
             SMTPHost=@SMTPHost,
             SMTPPort=@SMTPPort,
             SMTPEmail=@SMTPEmail,
             EnableSSL=@EnableSSL,
-
             CommissionPercent=@Commission,
-
             MaintenanceMode=@MaintenanceMode,
             MaintenanceMessage=@MaintenanceMessage
-
-            WHERE SettingID=1
-
-            ", con);
+            WHERE SettingID=1", con);
 
             cmd.Parameters.AddWithValue("@SiteTitle", txtSiteTitle.Text.Trim());
             cmd.Parameters.AddWithValue("@Tagline", txtTagline.Text.Trim());
             cmd.Parameters.AddWithValue("@AdminEmail", txtAdminEmail.Text.Trim());
             cmd.Parameters.AddWithValue("@SupportPhone", txtSupportPhone.Text.Trim());
-
-            cmd.Parameters.AddWithValue("@LogoPath", logoPath);
-
+            cmd.Parameters.AddWithValue("@LogoPath", logoPath ?? "");
             cmd.Parameters.AddWithValue("@SMTPHost", txtSMTPHost.Text.Trim());
             cmd.Parameters.AddWithValue("@SMTPPort", port);
             cmd.Parameters.AddWithValue("@SMTPEmail", txtSMTPEmail.Text.Trim());
-
             cmd.Parameters.AddWithValue("@EnableSSL", chkSSL.Checked);
-
             cmd.Parameters.AddWithValue("@Commission", commission);
-
             cmd.Parameters.AddWithValue("@MaintenanceMode", chkMaintenance.Checked);
             cmd.Parameters.AddWithValue("@MaintenanceMessage", txtMaintenanceMsg.Text.Trim());
 
             cmd.ExecuteNonQuery();
         }
+
+        // Invalidate cached site settings so changes take effect immediately
+        HttpRuntime.Cache.Remove("SiteSettings_1");
 
         LoadSettings();
     }

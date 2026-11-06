@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -9,9 +9,10 @@ public partial class Admin_ApproveBikes : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["AdminID"] == null)
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
         {
             Response.Redirect("AdminLogin.aspx");
+            return;
         }
 
         if (!IsPostBack)
@@ -188,26 +189,26 @@ WHERE B.IsApproved = 0";
 
             if (dr.Read())
             {
-                string details = "<b>Model:</b> " + dr["ModelName"] + "<br/>";
-                details += "<b>Price:</b> ₹" + dr["Price"] + "<br/>";
-                details += "<b>Range:</b> " + dr["RangeKM"] + " KM<br/>";
-                details += "<b>Battery:</b> " + dr["BatteryType"] + "<br/>";
-                details += "<b>Description:</b><br/>" + dr["Description"] + "<br/><br/>";
+                string details = "<b>Model:</b> " + System.Web.HttpUtility.HtmlEncode(dr["ModelName"] == DBNull.Value ? "" : dr["ModelName"].ToString()) + "<br/>";
+                details += "<b>Price:</b> ₹" + System.Web.HttpUtility.HtmlEncode(dr["Price"] == DBNull.Value ? "" : dr["Price"].ToString()) + "<br/>";
+                details += "<b>Range:</b> " + System.Web.HttpUtility.HtmlEncode(dr["RangeKM"] == DBNull.Value ? "" : dr["RangeKM"].ToString()) + " KM<br/>";
+                details += "<b>Battery:</b> " + System.Web.HttpUtility.HtmlEncode(dr["BatteryType"] == DBNull.Value ? "" : dr["BatteryType"].ToString()) + "<br/>";
+                details += "<b>Description:</b><br/>" + System.Web.HttpUtility.HtmlEncode(dr["Description"] == DBNull.Value ? "" : dr["Description"].ToString()).Replace("\n", "<br/>") + "<br/><br/>";
 
-                string img1 = dr["Image1"] == DBNull.Value ? "" : dr["Image1"].ToString();
-                string img2 = dr["Image2"] == DBNull.Value ? "" : dr["Image2"].ToString();
-                string img3 = dr["Image3"] == DBNull.Value ? "" : dr["Image3"].ToString();
+                string img1 = dr["Image1"] == DBNull.Value ? "" : dr["Image1"].ToString().Replace("\"", "").Replace("'", "");
+                string img2 = dr["Image2"] == DBNull.Value ? "" : dr["Image2"].ToString().Replace("\"", "").Replace("'", "");
+                string img3 = dr["Image3"] == DBNull.Value ? "" : dr["Image3"].ToString().Replace("\"", "").Replace("'", "");
 
                 string gallery = "";
 
                 if (!string.IsNullOrEmpty(img1))
-                    gallery += "<img src='/Uploads/Bikes/" + img1 + "' style=\"width:100%;margin-bottom:10px;border-radius:10px;\" />";
+                    gallery += "<img src='/Uploads/Bikes/" + System.Web.HttpUtility.HtmlAttributeEncode(img1) + "' style=\"width:100%;margin-bottom:10px;border-radius:10px;\" />";
 
                 if (!string.IsNullOrEmpty(img2))
-                    gallery += "<img src='/Uploads/Bikes/" + img2 + "' style=\"width:100%;margin-bottom:10px;border-radius:10px;\" />";
+                    gallery += "<img src='/Uploads/Bikes/" + System.Web.HttpUtility.HtmlAttributeEncode(img2) + "' style=\"width:100%;margin-bottom:10px;border-radius:10px;\" />";
 
                 if (!string.IsNullOrEmpty(img3))
-                    gallery += "<img src='/Uploads/Bikes/" + img3 + "' style=\"width:100%;border-radius:10px;\" />";
+                    gallery += "<img src='/Uploads/Bikes/" + System.Web.HttpUtility.HtmlAttributeEncode(img3) + "' style=\"width:100%;border-radius:10px;\" />";
 
                 dr.Close();
 

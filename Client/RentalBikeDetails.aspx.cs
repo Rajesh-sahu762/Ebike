@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -459,14 +459,21 @@ AND Status IN ('Pending','Approved','Active')
     }
 
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string SubmitReview(int rating, string title, string review)
     {
-
-        if (HttpContext.Current.Session["CustomerID"] == null)
+        if (HttpContext.Current == null ||
+            HttpContext.Current.Session == null ||
+            HttpContext.Current.Session["CustomerID"] == null)
+        {
             return "login";
+        }
 
         int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);
+
+        if (HttpContext.Current.Session["BikeID"] == null)
+            return "invalid";
+
         int bikeId = Convert.ToInt32(HttpContext.Current.Session["BikeID"]);
 
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;

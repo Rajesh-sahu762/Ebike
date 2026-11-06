@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -21,8 +21,11 @@ public partial class Vendor_DealerRatings : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["VendorID"] == null)
+        if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+        {
             Response.Redirect("VendorLogin.aspx");
+            return;
+        }
 
         if (!IsPostBack)
         {
@@ -150,31 +153,35 @@ ORDER BY R.CreatedAt DESC
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
+            int dealerId = Convert.ToInt32(Session["VendorID"]);
 
             if (e.CommandName == "approve")
             {
                 SqlCommand cmd = new SqlCommand(
-                "UPDATE BikeReviews SET IsApproved=1 WHERE ReviewID=@id", con);
+                "UPDATE BikeReviews SET IsApproved=1 WHERE ReviewID=@id AND BikeID IN (SELECT BikeID FROM Bikes WHERE DealerID=@d)", con);
 
                 cmd.Parameters.AddWithValue("@id", reviewId);
+                cmd.Parameters.AddWithValue("@d", dealerId);
                 cmd.ExecuteNonQuery();
             }
 
             if (e.CommandName == "reject")
             {
                 SqlCommand cmd = new SqlCommand(
-                "UPDATE BikeReviews SET IsApproved=0 WHERE ReviewID=@id", con);
+                "UPDATE BikeReviews SET IsApproved=0 WHERE ReviewID=@id AND BikeID IN (SELECT BikeID FROM Bikes WHERE DealerID=@d)", con);
 
                 cmd.Parameters.AddWithValue("@id", reviewId);
+                cmd.Parameters.AddWithValue("@d", dealerId);
                 cmd.ExecuteNonQuery();
             }
 
             if (e.CommandName == "delete")
             {
                 SqlCommand cmd = new SqlCommand(
-                "DELETE FROM BikeReviews WHERE ReviewID=@id", con);
+                "DELETE FROM BikeReviews WHERE ReviewID=@id AND BikeID IN (SELECT BikeID FROM Bikes WHERE DealerID=@d)", con);
 
                 cmd.Parameters.AddWithValue("@id", reviewId);
+                cmd.Parameters.AddWithValue("@d", dealerId);
                 cmd.ExecuteNonQuery();
             }
         }

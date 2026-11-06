@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using System.Configuration;
 
@@ -8,12 +8,21 @@ public partial class Vendor_AddChargingStation : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["VendorID"] == null)
+        if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+        {
             Response.Redirect("VendorLogin.aspx");
+            return;
+        }
     }
 
     protected void btnSave_Click(object sender, EventArgs e)
     {
+        if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+        {
+            Response.Redirect("VendorLogin.aspx");
+            return;
+        }
+
         // VALIDATION
         if (txtName.Text.Trim() == "" || txtCity.Text.Trim() == "")
         {

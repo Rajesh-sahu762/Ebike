@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -9,6 +9,12 @@ public partial class Admin_RentalManagement : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
+        {
+            Response.Redirect("AdminLogin.aspx");
+            return;
+        }
+
         if (!IsPostBack)
         {
             LoadDashboard();
@@ -32,9 +38,11 @@ public partial class Admin_RentalManagement : System.Web.UI.Page
 
     string GetScalar(SqlConnection con, string query)
     {
-        SqlCommand cmd = new SqlCommand(query, con);
-        object obj = cmd.ExecuteScalar();
-        return obj != null ? obj.ToString() : "0";
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            object obj = cmd.ExecuteScalar();
+            return obj != null ? obj.ToString() : "0";
+        }
     }
 
     void LoadRentals()
@@ -57,18 +65,20 @@ public partial class Admin_RentalManagement : System.Web.UI.Page
                 query += " WHERE R.Status = @Status";
             }
 
-            SqlDataAdapter da = new SqlDataAdapter(query, con);
-
-            if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
+            using (SqlCommand cmd = new SqlCommand(query, con))
             {
-                da.SelectCommand.Parameters.AddWithValue("@Status", ddlStatus.SelectedValue);
+                if (!string.IsNullOrEmpty(ddlStatus.SelectedValue))
+                {
+                    cmd.Parameters.AddWithValue("@Status", ddlStatus.SelectedValue);
+                }
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                gvRentals.DataSource = dt;
+                gvRentals.DataBind();
             }
-
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            gvRentals.DataSource = dt;
-            gvRentals.DataBind();
         }
     }
 
@@ -79,8 +89,13 @@ public partial class Admin_RentalManagement : System.Web.UI.Page
 
     protected void gvRentals_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
     {
-        int rentalID = Convert.ToInt32(e.CommandArgument);
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
+        {
+            Response.Redirect("AdminLogin.aspx");
+            return;
+        }
 
+        int rentalID = Convert.ToInt32(e.CommandArgument);
         string status = "";
 
         if (e.CommandName == "SetActive")
@@ -89,15 +104,19 @@ public partial class Admin_RentalManagement : System.Web.UI.Page
             status = "Completed";
         else if (e.CommandName == "CancelRental")
             status = "Cancelled";
+        else
+            return;
 
         using (SqlConnection con = new SqlConnection(conStr))
         {
             string query = "UPDATE RentalBookings SET Status=@Status WHERE RentalID=@ID";
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.Parameters.AddWithValue("@Status", status);
-            cmd.Parameters.AddWithValue("@ID", rentalID);
-            con.Open();
-            cmd.ExecuteNonQuery();
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@Status", status);
+                cmd.Parameters.AddWithValue("@ID", rentalID);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         LoadDashboard();

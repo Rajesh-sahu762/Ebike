@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Web;
 using System.Web.Services;
 
 public partial class Vendor_VendorOrders : System.Web.UI.Page
@@ -10,8 +11,11 @@ public partial class Vendor_VendorOrders : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["VendorID"] == null)
+        if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+        {
             Response.Redirect("VendorLogin.aspx");
+            return;
+        }
 
         if (!IsPostBack)
         {
@@ -65,9 +69,9 @@ WHERE OI.VendorID=@v";
 
             if (dr.Read())
             {
-                litOrders.Text = dr["TotalOrders"].ToString();
-                litPending.Text = dr["Pending"].ToString();
-                litDelivered.Text = dr["Delivered"].ToString();
+                litOrders.Text = dr["TotalOrders"] != DBNull.Value ? dr["TotalOrders"].ToString() : "0";
+                litPending.Text = dr["Pending"] != DBNull.Value ? dr["Pending"].ToString() : "0";
+                litDelivered.Text = dr["Delivered"] != DBNull.Value ? dr["Delivered"].ToString() : "0";
                 litEarn.Text = dr["Earnings"] != DBNull.Value ? Convert.ToDecimal(dr["Earnings"]).ToString("N0") : "0";
             }
         }
@@ -84,23 +88,34 @@ WHERE OI.VendorID=@v";
         }
     }
 
-
-    [System.Web.Services.WebMethod(EnableSession = true)]
+    [WebMethod(EnableSession = true)]
     public static string GetOrderItems(int orderId)
     {
+        if (HttpContext.Current == null ||
+            HttpContext.Current.Session == null ||
+            HttpContext.Current.Session["VendorID"] == null ||
+            HttpContext.Current.Session["Role"] == null ||
+            HttpContext.Current.Session["Role"].ToString() != "Dealer")
+        {
+            return "";
+        }
+
+        int vendorId = Convert.ToInt32(HttpContext.Current.Session["VendorID"]);
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
 
+            // Enforce vendor ownership: only return items belonging to this vendor for this order
             SqlCommand cmd = new SqlCommand(@"
 SELECT P.PartName, OI.Qty, OI.Price
 FROM OrderItems OI
 INNER JOIN Parts P ON OI.PartID = P.PartID
-WHERE OI.OrderID = @id", con);
+WHERE OI.OrderID = @id AND OI.VendorID = @v", con);
 
             cmd.Parameters.AddWithValue("@id", orderId);
+            cmd.Parameters.AddWithValue("@v", vendorId);
 
             SqlDataReader dr = cmd.ExecuteReader();
 
@@ -108,7 +123,8 @@ WHERE OI.OrderID = @id", con);
 
             while (dr.Read())
             {
-                result += dr["PartName"].ToString() + "~" +
+                string partName = HttpUtility.HtmlEncode(dr["PartName"].ToString());
+                result += partName + "~" +
                           dr["Qty"].ToString() + "~" +
                           dr["Price"].ToString() + "|";
             }
@@ -117,23 +133,53 @@ WHERE OI.OrderID = @id", con);
         }
     }
 
-
     [WebMethod(EnableSession = true)]
     public static string UpdateStatus(int orderId, string status)
     {
+        if (HttpContext.Current == null ||
+            HttpContext.Current.Session == null ||
+            HttpContext.Current.Session["VendorID"] == null ||
+            HttpContext.Current.Session["Role"] == null ||
+            HttpContext.Current.Session["Role"].ToString() != "Dealer")
+        {
+            return "unauthorized";
+        }
+
+        int vendorId = Convert.ToInt32(HttpContext.Current.Session["VendorID"]);
+        string s = (status ?? "").Trim();
+
+        if (s != "Pending" && s != "Processing" && s != "Shipped" && s != "Delivered" && s != "Cancelled")
+        {
+            return "invalid_status";
+        }
+
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
 
-            SqlCommand cmd = new SqlCommand(
-            "UPDATE Orders SET OrderStatus=@s WHERE OrderID=@id", con);
+            // Enforce vendor ownership: verify this order contains items belonging to this vendor
+            SqlCommand cmd = new SqlCommand(@"
+IF EXISTS (SELECT 1 FROM OrderItems WHERE OrderID=@id AND VendorID=@v)
+BEGIN
+    UPDATE Orders SET OrderStatus=@s WHERE OrderID=@id;
+    SELECT 1;
+END
+ELSE
+BEGIN
+    SELECT 0;
+END", con);
 
-            cmd.Parameters.AddWithValue("@s", status);
+            cmd.Parameters.AddWithValue("@s", s);
             cmd.Parameters.AddWithValue("@id", orderId);
+            cmd.Parameters.AddWithValue("@v", vendorId);
 
-            cmd.ExecuteNonQuery();
+            object result = cmd.ExecuteScalar();
+            if (Convert.ToInt32(result) == 0)
+            {
+                return "unauthorized";
+            }
         }
 
         return "ok";

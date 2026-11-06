@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using System.Configuration;
 
 public partial class Client_ClientResetPassword : System.Web.UI.Page
 {
     string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+    private const int MaxAttempts = 5;
 
     protected void btnReset_Click(object sender, EventArgs e)
     {
@@ -15,6 +16,20 @@ public partial class Client_ClientResetPassword : System.Web.UI.Page
         }
 
         int userId = Convert.ToInt32(Session["ResetUserID"]);
+        string inputOtp = txtOTP.Text.Trim();
+        string newPass = txtNewPass.Text.Trim();
+
+        if (string.IsNullOrEmpty(inputOtp))
+        {
+            lblMsg.Text = "Please enter the OTP.";
+            return;
+        }
+
+        if (string.IsNullOrEmpty(newPass) || newPass.Length < 6)
+        {
+            lblMsg.Text = "Password must be at least 6 characters long.";
+            return;
+        }
 
         using (SqlConnection con = new SqlConnection(constr))
         {
@@ -25,39 +40,70 @@ public partial class Client_ClientResetPassword : System.Web.UI.Page
 
             cmd.Parameters.AddWithValue("@id", userId);
 
-            SqlDataReader dr = cmd.ExecuteReader();
+            string dbOTP = null;
+            DateTime? expiry = null;
 
-            if (!dr.Read())
+            using (SqlDataReader dr = cmd.ExecuteReader())
             {
-                lblMsg.Text = "Error.";
+                if (dr.Read())
+                {
+                    dbOTP = dr["OTPCode"] != DBNull.Value ? dr["OTPCode"].ToString() : null;
+                    if (dr["OTPExpiry"] != DBNull.Value)
+                        expiry = Convert.ToDateTime(dr["OTPExpiry"]);
+                }
+            }
+
+            if (string.IsNullOrEmpty(dbOTP) || expiry == null)
+            {
+                lblMsg.Text = "No active reset request found. Please request a new OTP.";
                 return;
             }
 
-            string dbOTP = dr["OTPCode"].ToString();
-            DateTime expiry = Convert.ToDateTime(dr["OTPExpiry"]);
-
-            dr.Close();
-
-            if (expiry < DateTime.Now)
+            if (DateTime.Now > expiry.Value)
             {
-                lblMsg.Text = "OTP expired.";
+                lblMsg.Text = "OTP has expired. Please request a new one.";
                 return;
             }
 
-            if (dbOTP != txtOTP.Text.Trim())
+            int attempts = Session["ResetOTP_Attempts"] != null ? (int)Session["ResetOTP_Attempts"] : 0;
+
+            if (inputOtp != dbOTP)
             {
-                lblMsg.Text = "Invalid OTP.";
+                attempts++;
+                Session["ResetOTP_Attempts"] = attempts;
+
+                if (attempts >= MaxAttempts)
+                {
+                    SqlCommand invalidate = new SqlCommand(
+                        "UPDATE Users SET OTPCode=NULL, OTPExpiry=NULL WHERE UserID=@id", con);
+                    invalidate.Parameters.AddWithValue("@id", userId);
+                    invalidate.ExecuteNonQuery();
+
+                    Session.Remove("ResetOTP_Attempts");
+                    lblMsg.Text = "Too many incorrect attempts. This OTP has been invalidated. Please request a new password reset.";
+                }
+                else
+                {
+                    lblMsg.Text = string.Format("Invalid OTP. {0} attempt(s) remaining.", MaxAttempts - attempts);
+                }
                 return;
             }
 
+            // Secure PBKDF2 Password Hashing on Reset
+            string newPasswordHash = SecurityHelper.HashPassword(newPass);
+
+            // One-time validation: update password hash and clear OTP
             SqlCommand update = new SqlCommand(
-                "UPDATE Users SET PasswordHash=@p, OTPCode=NULL, OTPExpiry=NULL WHERE UserID=@id", con);
+                "UPDATE Users SET PasswordHash=@p, OTPCode=NULL, OTPExpiry=NULL, FailedLoginAttempts=0, LockoutEndTime=NULL WHERE UserID=@id", con);
 
-            update.Parameters.AddWithValue("@p", txtNewPass.Text.Trim());
+            update.Parameters.AddWithValue("@p", newPasswordHash);
             update.Parameters.AddWithValue("@id", userId);
             update.ExecuteNonQuery();
 
             Session.Remove("ResetUserID");
+            Session.Remove("ResetOTP_Attempts");
+            Session.Remove("LastResetOTP_Sent");
+
             Response.Redirect("ClientLogin.aspx");
         }
     }

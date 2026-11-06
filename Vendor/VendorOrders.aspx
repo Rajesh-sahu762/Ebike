@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Manage Orders" Language="C#" MasterPageFile="~/Vendor/VendorMaster.master"
+<%@ Page Title="Manage Orders" Language="C#" MasterPageFile="~/Vendor/VendorMaster.master"
 AutoEventWireup="true" CodeFile="VendorOrders.aspx.cs"
 Inherits="Vendor_VendorOrders" %>
 
@@ -113,7 +113,8 @@ View Details
             success: function (res) {
 
                 let data = res.d.split('|'); // simple string split
-                let html = "";
+                let container = document.getElementById("orderItems");
+                container.innerHTML = "";
                 let total = 0;
 
                 for (let i = 0; i < data.length - 1; i++) {
@@ -121,27 +122,36 @@ View Details
                     let row = data[i].split('~');
 
                     let name = row[0];
-                    let qty = parseInt(row[1]);
-                    let price = parseFloat(row[2]);
+                    let qty = parseInt(row[1]) || 0;
+                    let price = parseFloat(row[2]) || 0;
 
                     total += price * qty;
 
-                    html += `
-                    <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl border">
-                    
-                        <div>
-                            <p class="font-bold text-slate-900">${name}</p>
-                            <p class="text-xs text-slate-500">Qty: ${qty}</p>
-                        </div>
+                    let itemDiv = document.createElement("div");
+                    itemDiv.className = "flex justify-between items-center bg-slate-50 p-4 rounded-xl border";
 
-                        <div class="text-right">
-                            <p class="font-bold text-slate-900">₹${price}</p>
-                        </div>
+                    let leftDiv = document.createElement("div");
+                    let pName = document.createElement("p");
+                    pName.className = "font-bold text-slate-900";
+                    pName.textContent = name;
+                    let pQty = document.createElement("p");
+                    pQty.className = "text-xs text-slate-500";
+                    pQty.textContent = "Qty: " + qty;
+                    leftDiv.appendChild(pName);
+                    leftDiv.appendChild(pQty);
 
-                    </div>`;
+                    let rightDiv = document.createElement("div");
+                    rightDiv.className = "text-right";
+                    let pPrice = document.createElement("p");
+                    pPrice.className = "font-bold text-slate-900";
+                    pPrice.textContent = "₹" + price;
+                    rightDiv.appendChild(pPrice);
+
+                    itemDiv.appendChild(leftDiv);
+                    itemDiv.appendChild(rightDiv);
+                    container.appendChild(itemDiv);
                 }
 
-                document.getElementById("orderItems").innerHTML = html;
                 document.getElementById("orderTotal").innerText = "₹" + total;
 
             }

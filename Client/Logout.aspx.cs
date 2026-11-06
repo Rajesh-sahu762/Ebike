@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System;
+using System.Configuration;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 public partial class Client_Default : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        string constr = ConfigurationManager.ConnectionStrings["Electronic"] != null 
+            ? ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString 
+            : null;
 
-        if (Request.Cookies["EBikesUser"] != null)
+        // Revoke server-side auth token and clear cookies securely
+        if (!string.IsNullOrEmpty(constr))
         {
-            HttpCookie cookie = new HttpCookie("EBikesUser");
-            cookie.Expires = DateTime.Now.AddDays(-1);
-            Response.Cookies.Add(cookie);
+            AuthHelper.RevokeRememberMeCookie(Request, Response, constr);
         }
 
         Session.Clear();
         Session.Abandon();
-
-        Response.Cookies.Clear();
 
         Response.Cache.SetCacheability(HttpCacheability.NoCache);
         Response.Cache.SetNoStore();

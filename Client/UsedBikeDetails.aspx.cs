@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Web.Services;
@@ -271,13 +271,21 @@ ORDER BY CreatedAt DESC
     }
 }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string SubmitReview(int rating, string title, string review)
     {
-        if (HttpContext.Current.Session["CustomerID"] == null)
+        if (HttpContext.Current == null ||
+            HttpContext.Current.Session == null ||
+            HttpContext.Current.Session["CustomerID"] == null)
+        {
             return "login";
+        }
 
         int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);
+
+        if (HttpContext.Current.Session["BikeID"] == null)
+            return "invalid";
+
         int bikeId = Convert.ToInt32(HttpContext.Current.Session["BikeID"]);
 
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
@@ -318,11 +326,15 @@ VALUES
         return "ok";
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string CheckWishlist(int bikeId)
     {
-        if (HttpContext.Current.Session["CustomerID"] == null)
+        if (HttpContext.Current == null ||
+            HttpContext.Current.Session == null ||
+            HttpContext.Current.Session["CustomerID"] == null)
+        {
             return "no";
+        }
 
         int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);
 
@@ -347,11 +359,15 @@ VALUES
         }
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string ToggleWishlist(int bikeId)
     {
-        if (HttpContext.Current.Session["CustomerID"] == null)
+        if (HttpContext.Current == null ||
+            HttpContext.Current.Session == null ||
+            HttpContext.Current.Session["CustomerID"] == null)
+        {
             return "login";
+        }
 
         int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Net.Mail;
@@ -9,16 +9,22 @@ public partial class Client_ClientRegister : System.Web.UI.Page
 
     protected void btnRegister_Click(object sender, EventArgs e)
     {
-        if (txtName.Text.Trim() == "" ||
-            txtEmail.Text.Trim() == "" ||
-            txtMobile.Text.Trim() == "" ||
-            txtPassword.Text.Trim() == "")
+        string name = txtName.Text.Trim();
+        string email = txtEmail.Text.Trim();
+        string mobile = txtMobile.Text.Trim();
+        string password = txtPassword.Text.Trim();
+        string confirm = txtConfirm.Text.Trim();
+
+        if (string.IsNullOrEmpty(name) ||
+            string.IsNullOrEmpty(email) ||
+            string.IsNullOrEmpty(mobile) ||
+            string.IsNullOrEmpty(password))
         {
             lblMsg.Text = "All fields are required.";
             return;
         }
 
-        if (txtPassword.Text != txtConfirm.Text)
+        if (password != confirm)
         {
             lblMsg.Text = "Passwords do not match.";
             return;
@@ -32,7 +38,7 @@ public partial class Client_ClientRegister : System.Web.UI.Page
             SqlCommand checkEmail = new SqlCommand(
                 "SELECT COUNT(*) FROM Users WHERE Email=@Email", con);
 
-            checkEmail.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
+            checkEmail.Parameters.AddWithValue("@Email", email);
 
             if (Convert.ToInt32(checkEmail.ExecuteScalar()) > 0)
             {
@@ -44,7 +50,7 @@ public partial class Client_ClientRegister : System.Web.UI.Page
             SqlCommand checkMobile = new SqlCommand(
                 "SELECT COUNT(*) FROM Users WHERE Mobile=@Mobile", con);
 
-            checkMobile.Parameters.AddWithValue("@Mobile", txtMobile.Text.Trim());
+            checkMobile.Parameters.AddWithValue("@Mobile", mobile);
 
             if (Convert.ToInt32(checkMobile.ExecuteScalar()) > 0)
             {
@@ -52,42 +58,47 @@ public partial class Client_ClientRegister : System.Web.UI.Page
                 return;
             }
 
-            // Insert Client (Email Not Verified Yet)
+            // Secure PBKDF2 Password Hashing
+            string passwordHash = SecurityHelper.HashPassword(password);
+
+            // Generate Cryptographically Secure 6-digit OTP
+            string otp = SecurityHelper.GenerateOtp(6);
+
+            // Insert Customer with PBKDF2 hash
             SqlCommand cmd = new SqlCommand(
             @"INSERT INTO Users
             (FullName, Email, Mobile, PasswordHash, Role,
-             IsEmailVerified,
-             IsApproved, IsActive, CreatedAt)
+             IsEmailVerified, IsApproved, IsActive, CreatedAt, OTPCode, OTPExpiry)
             VALUES
             (@FullName, @Email, @Mobile, @Password, 'Customer',
-             0,
-             1, 1, GETDATE())", con);
+             0, 1, 1, GETDATE(), @otp, DATEADD(MINUTE, 10, GETDATE()))", con);
 
-            cmd.Parameters.AddWithValue("@FullName", txtName.Text.Trim());
-            cmd.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
-            cmd.Parameters.AddWithValue("@Mobile", txtMobile.Text.Trim());
-            cmd.Parameters.AddWithValue("@Password", txtPassword.Text.Trim());
+            cmd.Parameters.AddWithValue("@FullName", name);
+            cmd.Parameters.AddWithValue("@Email", email);
+            cmd.Parameters.AddWithValue("@Mobile", mobile);
+            cmd.Parameters.AddWithValue("@Password", passwordHash);
+            cmd.Parameters.AddWithValue("@otp", otp);
 
             cmd.ExecuteNonQuery();
 
-            // Generate OTP
-            string otp = new Random().Next(100000, 999999).ToString();
+            // Try to set optional columns if migrated
+            try
+            {
+                using (SqlCommand optCmd = new SqlCommand("UPDATE Users SET OTPAttempts=0, OTPLastSent=GETDATE() WHERE Email=@Email", con))
+                {
+                    optCmd.Parameters.AddWithValue("@Email", email);
+                    optCmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException) { }
 
-            SqlCommand otpCmd = new SqlCommand(
-                @"UPDATE Users SET
-                  OTPCode=@otp,
-                  OTPExpiry=DATEADD(MINUTE,10,GETDATE())
-                  WHERE Email=@Email", con);
-
-            otpCmd.Parameters.AddWithValue("@otp", otp);
-            otpCmd.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
-            otpCmd.ExecuteNonQuery();
-
-            SendOTPEmail(txtEmail.Text.Trim(), txtName.Text.Trim(), otp);
+            SendOTPEmail(email, name, otp);
         }
 
-        // Redirect to OTP Verification Page
-        Response.Redirect("ClientVerifyOTP.aspx?email=" + txtEmail.Text.Trim());
+        // Store email in session and redirect to OTP Verification Page
+        Session["VerifyEmail"] = email;
+        Session["LastOTPResend"] = DateTime.Now;
+        Response.Redirect("ClientVerifyOTP.aspx?email=" + Server.UrlEncode(email));
     }
 
     void SendOTPEmail(string toEmail, string name, string otp)

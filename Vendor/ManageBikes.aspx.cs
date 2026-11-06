@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -11,8 +11,11 @@ public partial class Vendor_ManageBikes : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["VendorID"] == null)
+        if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+        {
             Response.Redirect("VendorLogin.aspx");
+            return;
+        }
 
         if (!IsPostBack)
         {
@@ -109,6 +112,11 @@ ORDER BY B.CreatedAt DESC";
 
         if (e.CommandName == "FeatureBike")
         {
+            if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+            {
+                Response.Redirect("VendorLogin.aspx");
+                return;
+            }
 
             int dealerId = Convert.ToInt32(Session["VendorID"]);
 
@@ -120,27 +128,22 @@ ORDER BY B.CreatedAt DESC";
 
             using (SqlConnection con = new SqlConnection(constr))
             {
-
                 con.Open();
 
                 SqlCommand cmd = new SqlCommand(@"
-
-INSERT INTO FeaturedBikes
-(BikeID,DealerID,StartDate,EndDate,IsActive)
-
-VALUES
-
-(@bike,@dealer,GETDATE(),DATEADD(DAY,7,GETDATE()),1)
-
-", con);
+IF EXISTS (SELECT 1 FROM Bikes WHERE BikeID=@bike AND DealerID=@dealer)
+BEGIN
+    INSERT INTO FeaturedBikes
+    (BikeID,DealerID,StartDate,EndDate,IsActive)
+    VALUES
+    (@bike,@dealer,GETDATE(),DATEADD(DAY,7,GETDATE()),1)
+END", con);
 
                 cmd.Parameters.AddWithValue("@bike", bikeId);
                 cmd.Parameters.AddWithValue("@dealer", dealerId);
 
                 cmd.ExecuteNonQuery();
-
             }
-
         }
 
 
@@ -240,6 +243,12 @@ AND EndDate>=GETDATE()
     // ================= UPDATE BIKE =================
     protected void btnUpdateBike_Click(object sender, EventArgs e)
     {
+        if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+        {
+            Response.Redirect("VendorLogin.aspx");
+            return;
+        }
+
         int bikeId = Convert.ToInt32(hfBikeID.Value);
         int dealerId = Convert.ToInt32(Session["VendorID"]);
 

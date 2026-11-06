@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -215,28 +215,28 @@ WHERE B.DealerID=@d
 
             con.Open();
 
+            int dealerId = Convert.ToInt32(Session["VendorID"]);
+
             if (e.CommandName == "MarkViewed")
             {
-
                 SqlCommand cmd = new SqlCommand(
-                "UPDATE Leads SET IsViewed=1 WHERE LeadID=@id", con);
+                "UPDATE Leads SET IsViewed=1 WHERE LeadID=@id AND BikeID IN (SELECT BikeID FROM Bikes WHERE DealerID=@d)", con);
 
                 cmd.Parameters.AddWithValue("@id", leadId);
+                cmd.Parameters.AddWithValue("@d", dealerId);
 
                 cmd.ExecuteNonQuery();
-
             }
 
             if (e.CommandName == "DeleteLead")
             {
-
                 SqlCommand cmd = new SqlCommand(
-                "DELETE FROM Leads WHERE LeadID=@id", con);
+                "DELETE FROM Leads WHERE LeadID=@id AND BikeID IN (SELECT BikeID FROM Bikes WHERE DealerID=@d)", con);
 
                 cmd.Parameters.AddWithValue("@id", leadId);
+                cmd.Parameters.AddWithValue("@d", dealerId);
 
                 cmd.ExecuteNonQuery();
-
             }
 
         }

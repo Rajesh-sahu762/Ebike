@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Web;
 using System.Web.Services;
-using System.Data.SqlClient;
-using System.Configuration;
 
 public partial class Admin_AdminDashboard : System.Web.UI.Page
 {
@@ -12,9 +11,10 @@ public partial class Admin_AdminDashboard : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["AdminID"] == null)
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
         {
             Response.Redirect("AdminLogin.aspx");
+            return;
         }
 
         if (!IsPostBack)
@@ -24,7 +24,6 @@ public partial class Admin_AdminDashboard : System.Web.UI.Page
         }
     }
 
-
     public class NotificationModel
     {
         public int PendingDealers { get; set; }
@@ -33,12 +32,21 @@ public partial class Admin_AdminDashboard : System.Web.UI.Page
         public int Total { get; set; }
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static NotificationModel GetNotifications()
     {
-        string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
-
         NotificationModel model = new NotificationModel();
+
+        if (HttpContext.Current == null ||
+            HttpContext.Current.Session == null ||
+            HttpContext.Current.Session["AdminID"] == null ||
+            HttpContext.Current.Session["Role"] == null ||
+            HttpContext.Current.Session["Role"].ToString() != "Admin")
+        {
+            return model;
+        }
+
+        string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
         using (SqlConnection con = new SqlConnection(constr))
         {
@@ -51,58 +59,61 @@ public partial class Admin_AdminDashboard : System.Web.UI.Page
             (SELECT COUNT(*) FROM Leads WHERE IsViewed=0)
         ", con);
 
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            if (dr.Read())
+            using (SqlDataReader dr = cmd.ExecuteReader())
             {
-                model.PendingDealers = Convert.ToInt32(dr[0]);
-                model.PendingBikes = Convert.ToInt32(dr[1]);
-                model.UnreadLeads = Convert.ToInt32(dr[2]);
-                model.Total = model.PendingDealers + model.PendingBikes + model.UnreadLeads;
+                if (dr.Read())
+                {
+                    model.PendingDealers = dr[0] != DBNull.Value ? Convert.ToInt32(dr[0]) : 0;
+                    model.PendingBikes = dr[1] != DBNull.Value ? Convert.ToInt32(dr[1]) : 0;
+                    model.UnreadLeads = dr[2] != DBNull.Value ? Convert.ToInt32(dr[2]) : 0;
+                    model.Total = model.PendingDealers + model.PendingBikes + model.UnreadLeads;
+                }
             }
         }
 
         return model;
     }
 
-
-
     void LoadCounts()
     {
-        SqlConnection con = new SqlConnection(constr);
-        con.Open();
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
 
-        lblDealers.Text = GetCount(con, "SELECT COUNT(*) FROM Users WHERE Role='Dealer'");
-        lblPendingDealers.Text = GetCount(con, "SELECT COUNT(*) FROM Users WHERE Role='Dealer' AND IsApproved=0");
-        lblBikes.Text = GetCount(con, "SELECT COUNT(*) FROM Bikes");
-        lblPendingBikes.Text = GetCount(con, "SELECT COUNT(*) FROM Bikes WHERE IsApproved=0");
-        lblCustomers.Text = GetCount(con, "SELECT COUNT(*) FROM Users WHERE Role='Customer'");
-        lblLeads.Text = GetCount(con, "SELECT COUNT(*) FROM Leads");
-
-        con.Close();
+            lblDealers.Text = GetCount(con, "SELECT COUNT(*) FROM Users WHERE Role='Dealer'");
+            lblPendingDealers.Text = GetCount(con, "SELECT COUNT(*) FROM Users WHERE Role='Dealer' AND IsApproved=0");
+            lblBikes.Text = GetCount(con, "SELECT COUNT(*) FROM Bikes");
+            lblPendingBikes.Text = GetCount(con, "SELECT COUNT(*) FROM Bikes WHERE IsApproved=0");
+            lblCustomers.Text = GetCount(con, "SELECT COUNT(*) FROM Users WHERE Role='Customer'");
+            lblLeads.Text = GetCount(con, "SELECT COUNT(*) FROM Leads");
+        }
     }
 
     string GetCount(SqlConnection con, string query)
     {
-        SqlCommand cmd = new SqlCommand(query, con);
-        return cmd.ExecuteScalar().ToString();
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            object res = cmd.ExecuteScalar();
+            return res != null ? res.ToString() : "0";
+        }
     }
 
     void LoadRecentLeads()
     {
-        SqlConnection con = new SqlConnection(constr);
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            string query = @"SELECT TOP 5 U.FullName, B.ModelName, L.CreatedAt
+                             FROM Leads L
+                             INNER JOIN Users U ON L.CustomerID = U.UserID
+                             INNER JOIN Bikes B ON L.BikeID = B.BikeID
+                             ORDER BY L.CreatedAt DESC";
 
-        string query = @"SELECT TOP 5 U.FullName, B.ModelName, L.CreatedAt
-                         FROM Leads L
-                         INNER JOIN Users U ON L.CustomerID = U.UserID
-                         INNER JOIN Bikes B ON L.BikeID = B.BikeID
-                         ORDER BY L.CreatedAt DESC";
+            SqlDataAdapter da = new SqlDataAdapter(query, con);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
 
-        SqlDataAdapter da = new SqlDataAdapter(query, con);
-        DataTable dt = new DataTable();
-        da.Fill(dt);
-
-        gvLeads.DataSource = dt;
-        gvLeads.DataBind();
+            gvLeads.DataSource = dt;
+            gvLeads.DataBind();
+        }
     }
 }

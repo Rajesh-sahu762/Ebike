@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -9,9 +9,10 @@ public partial class Admin_AdminRentalSettlement : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["Role"] == null || Session["Role"].ToString() != "Admin")
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
         {
-            Response.Redirect("~/Login.aspx");
+            Response.Redirect("AdminLogin.aspx");
+            return;
         }
 
         if (!IsPostBack)

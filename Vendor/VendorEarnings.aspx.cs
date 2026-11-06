@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -11,8 +11,11 @@ public partial class Vendor_VendorEarnings : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["VendorID"] == null)
+        if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+        {
             Response.Redirect("VendorLogin.aspx");
+            return;
+        }
 
         if (!IsPostBack)
         {
@@ -157,9 +160,10 @@ ORDER BY Date DESC
                     if (source == "Lead")
                     {
                         SqlCommand cmd = new SqlCommand(
-                        "UPDATE Leads SET SettlementRequested=1 WHERE LeadID=@id", con);
+                        "UPDATE Leads SET SettlementRequested=1 WHERE LeadID=@id AND BikeID IN (SELECT BikeID FROM Bikes WHERE DealerID=@d)", con);
 
                         cmd.Parameters.AddWithValue("@id", id);
+                        cmd.Parameters.AddWithValue("@d", Session["VendorID"]);
                         cmd.ExecuteNonQuery();
                     }
                 }

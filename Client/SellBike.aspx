@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Sell Your Bike"
+<%@ Page Title="Sell Your Bike"
     Language="C#"
     MasterPageFile="~/Client/ClientMaster.master"
     AutoEventWireup="true"
@@ -223,7 +223,16 @@
     function previewImg(input, boxId) {
         if (input.files && input.files[0]) {
             let name = input.files[0].name;
-            document.getElementById(boxId).innerHTML = "<div style='font-size:11px; color:#ff6b35; margin-top:5px;'>Selected: " + name + "</div>";
+            let box = document.getElementById(boxId);
+            if (box) {
+                box.innerHTML = "";
+                let div = document.createElement("div");
+                div.style.fontSize = "11px";
+                div.style.color = "#ff6b35";
+                div.style.marginTop = "5px";
+                div.textContent = "Selected: " + name;
+                box.appendChild(div);
+            }
         }
     }
 </script>

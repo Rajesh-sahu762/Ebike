@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -87,16 +87,21 @@ ELSE
 
             return "Success";
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return "Error";
         }
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string GetCartCount()
     {
-        if (HttpContext.Current.Session["CustomerID"] == null) return "0";
+        if (HttpContext.Current == null ||
+            HttpContext.Current.Session == null ||
+            HttpContext.Current.Session["CustomerID"] == null)
+        {
+            return "0";
+        }
 
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
         int userId = Convert.ToInt32(HttpContext.Current.Session["CustomerID"]);

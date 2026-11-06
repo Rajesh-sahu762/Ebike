@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
@@ -10,8 +10,11 @@ public partial class Vendor_AddBike : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["VendorID"] == null)
+        if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+        {
             Response.Redirect("VendorLogin.aspx");
+            return;
+        }
 
         if (!IsPostBack)
             LoadBrands();
@@ -286,40 +289,21 @@ AND EndDate >= GETDATE()
 
     string SaveImage(System.Web.UI.WebControls.FileUpload fu)
     {
-        if (fu.HasFile)
+        if (fu != null && fu.HasFile)
         {
-            string ext = Path.GetExtension(fu.FileName).ToLower();
-
-            if (ext != ".jpg" && ext != ".jpeg" && ext != ".png")
-                return null;
-
-            if (fu.PostedFile.ContentLength > 2 * 1024 * 1024)
-                return null;
-
             string folder = Server.MapPath("~/Uploads/Bikes/");
+            string savedName;
+            string err;
 
-            if (!Directory.Exists(folder))
-                Directory.CreateDirectory(folder);
-
-            // ✅ ORIGINAL FILE NAME
-            string fileName = Path.GetFileName(fu.FileName);
-            string fullPath = Path.Combine(folder, fileName);
-
-            // 🔒 Prevent overwrite
-            int count = 1;
-            string nameOnly = Path.GetFileNameWithoutExtension(fileName);
-            string extension = Path.GetExtension(fileName);
-
-            while (File.Exists(fullPath))
+            if (FileUploadHelper.TrySaveImage(fu, folder, out savedName, out err))
             {
-                fileName = nameOnly + "_" + count + extension;
-                fullPath = Path.Combine(folder, fileName);
-                count++;
+                return savedName;
             }
-
-            fu.SaveAs(fullPath);
-
-            return fileName;   // ✅ ONLY FILE NAME
+            else
+            {
+                lblMsg.Text = "Image upload failed: " + err;
+                return null;
+            }
         }
 
         return null;

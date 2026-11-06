@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.IO;
@@ -75,33 +75,34 @@ public partial class Client_SellBike : System.Web.UI.Page
 
 
 
-        // image save with original name
+        // Secure image validation and saving
+        string uploadErr;
 
         if (fu1.HasFile)
         {
-            img1 = Path.GetFileNameWithoutExtension(fu1.FileName)
-            + "_" + DateTime.Now.Ticks +
-            Path.GetExtension(fu1.FileName);
-
-            fu1.SaveAs(folder + img1);
+            if (!FileUploadHelper.TrySaveImage(fu1, folder, out img1, out uploadErr))
+            {
+                lblMsg.Text = "Image 1 upload error: " + uploadErr;
+                return;
+            }
         }
 
         if (fu2.HasFile)
         {
-            img2 = Path.GetFileNameWithoutExtension(fu2.FileName)
-            + "_" + DateTime.Now.Ticks +
-            Path.GetExtension(fu2.FileName);
-
-            fu2.SaveAs(folder + img2);
+            if (!FileUploadHelper.TrySaveImage(fu2, folder, out img2, out uploadErr))
+            {
+                lblMsg.Text = "Image 2 upload error: " + uploadErr;
+                return;
+            }
         }
 
         if (fu3.HasFile)
         {
-            img3 = Path.GetFileNameWithoutExtension(fu3.FileName)
-            + "_" + DateTime.Now.Ticks +
-            Path.GetExtension(fu3.FileName);
-
-            fu3.SaveAs(folder + img3);
+            if (!FileUploadHelper.TrySaveImage(fu3, folder, out img3, out uploadErr))
+            {
+                lblMsg.Text = "Image 3 upload error: " + uploadErr;
+                return;
+            }
         }
 
 

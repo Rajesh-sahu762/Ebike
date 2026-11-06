@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Data.SqlClient;
 
@@ -10,8 +10,11 @@ public partial class Vendor_VendorSubscription : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
 
-        if (Session["VendorID"] == null)
+        if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+        {
             Response.Redirect("VendorLogin.aspx");
+            return;
+        }
 
         if (!IsPostBack)
         {
@@ -86,6 +89,11 @@ ORDER BY EndDate DESC
 
     void CreateRequest(string plan, int bikes, int featured, int price)
     {
+        if (Session["VendorID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Dealer")
+        {
+            Response.Redirect("VendorLogin.aspx");
+            return;
+        }
 
         if (HasPendingRequest())
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Text;
@@ -9,8 +9,11 @@ public partial class Admin_Reports : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["AdminID"] == null)
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
+        {
             Response.Redirect("AdminLogin.aspx");
+            return;
+        }
 
         if (!IsPostBack)
         {
@@ -202,7 +205,7 @@ public partial class Admin_Reports : System.Web.UI.Page
 
             while (dr3.Read())
             {
-                dealers.Append("'" + dr3["ShopName"] + "',");
+                dealers.Append("'" + System.Web.HttpUtility.JavaScriptStringEncode(dr3["ShopName"] == DBNull.Value ? "" : dr3["ShopName"].ToString()) + "',");
 
                 if (dr3["Total"] == DBNull.Value)
                     totals.Append("0,");

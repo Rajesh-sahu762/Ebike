@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -6,6 +6,8 @@ using System.Configuration;
 public partial class Admin_ManageLeads : System.Web.UI.Page
 {
     string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+
+    private static readonly string[] AllowedLeadSortColumns = new string[] { "LeadID", "FullName", "ModelName", "DealerName", "IsViewed", "CreatedAt" };
 
     string SortDirection
     {
@@ -21,8 +23,11 @@ public partial class Admin_ManageLeads : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["AdminID"] == null)
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
+        {
             Response.Redirect("AdminLogin.aspx");
+            return;
+        }
 
         if (!IsPostBack)
         {
@@ -73,7 +78,6 @@ public partial class Admin_ManageLeads : System.Web.UI.Page
         using (SqlConnection con = new SqlConnection(constr))
         {
             string query = @"
-
 SELECT 
 L.LeadID,
 U.FullName,
@@ -81,47 +85,49 @@ B.ModelName,
 D.ShopName AS DealerName,
 L.IsViewed,
 L.CreatedAt
-
 FROM Leads L
-
-INNER JOIN Users U 
-ON L.CustomerID = U.UserID
-
-INNER JOIN Bikes B 
-ON L.BikeID = B.BikeID
-
-INNER JOIN Users D 
-ON B.DealerID = D.UserID
-
-WHERE 1=1
-";
+INNER JOIN Users U ON L.CustomerID = U.UserID
+INNER JOIN Bikes B ON L.BikeID = B.BikeID
+INNER JOIN Users D ON B.DealerID = D.UserID
+WHERE 1=1";
 
             if (ddlDealer.SelectedValue != "")
                 query += " AND D.UserID=@dealer";
 
-            if (txtFrom.Text != "")
+            DateTime fromDate, toDate;
+            bool hasFrom = DateTime.TryParse(txtFrom.Text.Trim(), out fromDate);
+            bool hasTo = DateTime.TryParse(txtTo.Text.Trim(), out toDate);
+
+            if (hasFrom)
                 query += " AND L.CreatedAt >= @from";
 
-            if (txtTo.Text != "")
+            if (hasTo)
                 query += " AND L.CreatedAt <= @to";
 
-            query += " ORDER BY " + SortExpression + " " + SortDirection;
+            // Whitelist sort expression and sort direction against SQL injection
+            string safeColumn = SecurityHelper.SanitizeSortColumn(SortExpression, AllowedLeadSortColumns, "CreatedAt");
+            string safeDirection = SecurityHelper.SanitizeSortDirection(SortDirection);
+            query += " ORDER BY " + safeColumn + " " + safeDirection;
 
             SqlCommand cmd = new SqlCommand(query, con);
 
             if (ddlDealer.SelectedValue != "")
-                cmd.Parameters.AddWithValue("@dealer", ddlDealer.SelectedValue);
+            {
+                int dId;
+                if (int.TryParse(ddlDealer.SelectedValue, out dId))
+                    cmd.Parameters.AddWithValue("@dealer", dId);
+                else
+                    cmd.Parameters.AddWithValue("@dealer", ddlDealer.SelectedValue);
+            }
 
-            if (txtFrom.Text != "")
-                cmd.Parameters.AddWithValue("@from", txtFrom.Text);
+            if (hasFrom)
+                cmd.Parameters.AddWithValue("@from", fromDate);
 
-            if (txtTo.Text != "")
-                cmd.Parameters.AddWithValue("@to", txtTo.Text);
+            if (hasTo)
+                cmd.Parameters.AddWithValue("@to", toDate.Date.AddDays(1).AddTicks(-1));
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
-
             DataTable dt = new DataTable();
-
             da.Fill(dt);
 
             gvLeads.DataSource = dt;
@@ -136,6 +142,12 @@ WHERE 1=1
 
     protected void btnBulkDelete_Click(object sender, EventArgs e)
     {
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
+        {
+            Response.Redirect("AdminLogin.aspx");
+            return;
+        }
+
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
@@ -162,47 +174,43 @@ WHERE 1=1
         LoadSummary();
     }
 
-
     protected void gvLeads_RowCommand(object sender,
       System.Web.UI.WebControls.GridViewCommandEventArgs e)
     {
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
+        {
+            Response.Redirect("AdminLogin.aspx");
+            return;
+        }
+
         int leadId = Convert.ToInt32(e.CommandArgument);
 
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
 
-            // ===== VIEW LEAD MESSAGE =====
-
             if (e.CommandName == "ViewLead")
             {
                 SqlCommand cmd = new SqlCommand(@"
-
-            SELECT Message 
-            FROM Leads 
-            WHERE LeadID=@id
-
-            ", con);
+                SELECT Message 
+                FROM Leads 
+                WHERE LeadID=@id", con);
 
                 cmd.Parameters.AddWithValue("@id", leadId);
 
                 object msg = cmd.ExecuteScalar();
 
                 if (msg != null)
-                    litLeadMessage.Text = msg.ToString();
+                    litLeadMessage.Text = Server.HtmlEncode(msg.ToString());
                 else
                     litLeadMessage.Text = "No message";
 
-              ClientScript.RegisterStartupScript(this.GetType(),
-"openModal",
-@"var myModal = new bootstrap.Modal(document.getElementById('leadModal'));
-myModal.show();",
-true);
+                ClientScript.RegisterStartupScript(this.GetType(),
+                "openModal",
+                @"var myModal = new bootstrap.Modal(document.getElementById('leadModal'));
+                myModal.show();",
+                true);
             }
-
-
-
-            // ===== DELETE LEAD =====
 
             if (e.CommandName == "DeleteLead")
             {
@@ -210,7 +218,6 @@ true);
                 "DELETE FROM Leads WHERE LeadID=@id", con);
 
                 cmd.Parameters.AddWithValue("@id", leadId);
-
                 cmd.ExecuteNonQuery();
             }
         }
@@ -229,7 +236,7 @@ true);
     protected void gvLeads_Sorting(object sender,
         System.Web.UI.WebControls.GridViewSortEventArgs e)
     {
-        SortExpression = e.SortExpression;
+        SortExpression = SecurityHelper.SanitizeSortColumn(e.SortExpression, AllowedLeadSortColumns, "CreatedAt");
         SortDirection = SortDirection == "ASC" ? "DESC" : "ASC";
         LoadLeads();
     }

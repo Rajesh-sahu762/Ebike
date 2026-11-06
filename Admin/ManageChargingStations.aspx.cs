@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -9,8 +9,11 @@ public partial class Admin_ManageChargingStations : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["AdminID"] == null)
+        if (Session["AdminID"] == null || Session["Role"] == null || Session["Role"].ToString() != "Admin")
+        {
             Response.Redirect("AdminLogin.aspx");
+            return;
+        }
 
         if (!IsPostBack)
         {
