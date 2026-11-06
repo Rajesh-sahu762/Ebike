@@ -1,31 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using EBIke.Security;
 
 public partial class Client_Default : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
-        if (Request.Cookies["EBikesUser"] != null)
-        {
-            HttpCookie cookie = new HttpCookie("EBikesUser");
-            cookie.Expires = DateTime.Now.AddDays(-1);
-            Response.Cookies.Add(cookie);
-        }
+        RememberMeSecurity.RevokeCurrent(Context);
 
         Session.Clear();
         Session.Abandon();
-
-        Response.Cookies.Clear();
 
         Response.Cache.SetCacheability(HttpCacheability.NoCache);
         Response.Cache.SetNoStore();
         Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
 
-        Response.Redirect("Home.aspx");
+        Response.Redirect("Home.aspx", false);
+        Context.ApplicationInstance.CompleteRequest();
     }
 }
