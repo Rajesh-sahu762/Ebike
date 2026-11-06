@@ -459,7 +459,7 @@ AND Status IN ('Pending','Approved','Active')
     }
 
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string SubmitReview(int rating, string title, string review)
     {
 
