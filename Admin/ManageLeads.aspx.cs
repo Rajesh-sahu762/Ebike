@@ -7,16 +7,36 @@ public partial class Admin_ManageLeads : System.Web.UI.Page
 {
     string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
+    private static string NormalizeSortExpression(string value)
+    {
+        switch (value)
+        {
+            case "FullName": return "FullName";
+            case "ModelName": return "ModelName";
+            case "DealerName": return "DealerName";
+            case "CreatedAt": return "CreatedAt";
+            default: return "CreatedAt";
+        }
+    }
+
     string SortDirection
     {
-        get { return ViewState["SortDirection"] as string ?? "DESC"; }
-        set { ViewState["SortDirection"] = value; }
+        get
+        {
+            string value = ViewState["SortDirection"] as string;
+            return String.Equals(value, "DESC", StringComparison.OrdinalIgnoreCase) ? "DESC" : "ASC";
+        }
+        set
+        {
+            ViewState["SortDirection"] = String.Equals(value, "DESC", StringComparison.OrdinalIgnoreCase)
+                ? "DESC" : "ASC";
+        }
     }
 
     string SortExpression
     {
-        get { return ViewState["SortExpression"] as string ?? "CreatedAt"; }
-        set { ViewState["SortExpression"] = value; }
+        get { return NormalizeSortExpression(ViewState["SortExpression"] as string); }
+        set { ViewState["SortExpression"] = NormalizeSortExpression(value); }
     }
 
     protected void Page_Load(object sender, EventArgs e)
@@ -189,7 +209,7 @@ WHERE 1=1
                 object msg = cmd.ExecuteScalar();
 
                 if (msg != null)
-                    litLeadMessage.Text = msg.ToString();
+                    litLeadMessage.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(msg));
                 else
                     litLeadMessage.Text = "No message";
 
