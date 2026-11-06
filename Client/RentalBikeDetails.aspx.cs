@@ -70,7 +70,7 @@ AND b.IsForRent=1
                 ViewState["RentPerDay"] = rent;
                 ViewState["BikeID"] = dr["BikeID"].ToString();
 
-                imgMain.ImageUrl = "/Uploads/Bikes/" + dr["Image1"].ToString();
+                imgMain.ImageUrl = "/Uploads/Bikes/" + SafeBikeImageFileName(dr["Image1"]);
 
                 litRange.Text = dr["RangeKM"] != DBNull.Value
 ? dr["RangeKM"].ToString() + " KM"
@@ -129,12 +129,12 @@ AND b.IsForRent=1
 
                     string col = "Image" + i;
 
-                    if (dr[col] != DBNull.Value)
+                    string imageFile = SafeBikeImageFileName(dr[col]);
+                    if (!String.IsNullOrEmpty(imageFile))
                     {
-
-                        thumbs += "<img src='/Uploads/Bikes/" + dr[col] +
-                        "' onclick=\"changeImage(this.src)\"/>";
-
+                        thumbs += "<img src='/Uploads/Bikes/" +
+                            System.Web.HttpUtility.HtmlAttributeEncode(imageFile) +
+                            "' alt='Bike image' loading='lazy' onclick=\"changeImage(this.src)\"/>";
                     }
 
                 }
@@ -240,7 +240,8 @@ ORDER BY NEWID()
                 html += "<div class='similar-card'>";
 
                 html += "<div class='similar-img'>";
-                html += "<img src='/Uploads/Bikes/" + dr["Image1"] + "'>";
+                string similarImage = SafeBikeImageFileName(dr["Image1"]);
+                html += "<img src='/Uploads/Bikes/" + System.Web.HttpUtility.HtmlAttributeEncode(similarImage) + "' alt='Bike image' loading='lazy'>";
                 html += "</div>";
 
                 html += "<div class='similar-body'>";
@@ -251,9 +252,13 @@ ORDER BY NEWID()
                 + Convert.ToDecimal(dr["RentPerDay"]).ToString("N0")
                 + " / Day</div>";
 
-                html += "<a class='similar-btn' href='RentalBikeDetails.aspx?slug="
-                + dr["Slug"]
-                + "'>View Details</a>";
+                string similarSlug = Convert.ToString(dr["Slug"]);
+                if (System.Text.RegularExpressions.Regex.IsMatch(similarSlug, @"^[A-Za-z0-9_-]{1,255}$"))
+                {
+                    html += "<a class='similar-btn' href='RentalBikeDetails.aspx?slug="
+                    + System.Web.HttpUtility.HtmlAttributeEncode(System.Web.HttpUtility.UrlEncode(similarSlug))
+                    + "'>View Details</a>";
+                }
 
                 html += "</div>";
 
@@ -511,4 +516,13 @@ VALUES
 
     }
 
+
+    private static string SafeBikeImageFileName(object value)
+    {
+        string name = System.IO.Path.GetFileName(Convert.ToString(value));
+        return System.Text.RegularExpressions.Regex.IsMatch(
+            name, @"^[A-Za-z0-9_-]{1,180}[.](jpg|jpeg|png|webp)$",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+            ? name : String.Empty;
+    }
 }
