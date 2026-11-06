@@ -99,10 +99,10 @@ ORDER BY R.CreatedAt DESC;", con))
 
     private static void AppendAction(StringBuilder html, int id, string status, string label, string css)
     {
-        // Values are fixed server allow-list literals; never insert DB strings into JavaScript.
+        // ID is a validated integer and status is a server-side allow-listed constant.
         html.Append("<button type='button' class='btn ").Append(css)
-            .Append("' onclick='updateStatus(").Append(id).Append(",\u0027")
-            .Append(status).Append("\u0027)'>").Append(label).Append("</button>");
+            .Append("' onclick=\"updateStatus(").Append(id).Append(",'")
+            .Append(status).Append("')\">").Append(label).Append("</button>");
     }
 
     private static string GetStatusClass(string status)
