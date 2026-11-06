@@ -107,8 +107,10 @@ public partial class Admin_ManageBrands : System.Web.UI.Page
                 {
                     logoFileName = UploadSecurity.SaveImage(fuLogo, Server.MapPath("~/Uploads/Brands/"));
                 }
-                catch (InvalidOperationException ex)
+                catch (InvalidOperationException)
                 {
+                    ClientScript.RegisterStartupScript(GetType(), "invalidBrandLogo",
+                        "alert('Brand logo upload rejected. Upload a valid JPG, PNG or WEBP image up to 5 MB.');", true);
                     return;
                 }
             }
