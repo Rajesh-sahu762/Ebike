@@ -93,24 +93,24 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
 
             if (dr.Read())
             {
-                litBikeName.Text = dr["ModelName"].ToString();
-                litBrand.Text = dr["BrandName"].ToString();
+                litBikeName.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ModelName"]));
+                litBrand.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["BrandName"]));
 
                 decimal price = Convert.ToDecimal(dr["Price"]);
                 litPrice.Text = price.ToString("N0");
 
-                litStickyName.Text = dr["ModelName"].ToString();
+                litStickyName.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ModelName"]));
                 litStickyPrice.Text = price.ToString("N0");
 
                 // Dealer Info
 
                 litDealerName.Text = dr["ShopName"] != DBNull.Value
-                ? dr["ShopName"].ToString()
-                : dr["FullName"].ToString();
+                ? System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ShopName"]))
+                : System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["FullName"]));
 
-                litDealerPhone.Text = dr["Mobile"].ToString();
-                litDealerEmail.Text = dr["Email"].ToString();
-                litDealerCity.Text = dr["City"].ToString();
+                litDealerPhone.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["Mobile"]));
+                litDealerEmail.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["Email"]));
+                litDealerCity.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["City"]));
                 ViewState["DealerID"] = dr["UserID"].ToString();
 
                 imgMain.ImageUrl = "/Uploads/Bikes/" + dr["Image1"].ToString();
@@ -129,11 +129,11 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
                     : "N/A";
 
                 litCharge.Text = dr["ChargingTime"] != DBNull.Value
-                    ? dr["ChargingTime"].ToString()
+                    ? System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ChargingTime"]))
                     : "N/A";
 
                 litMotor.Text = dr["MotorPower"] != DBNull.Value
-                    ? dr["MotorPower"].ToString()
+                    ? System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["MotorPower"]))
                     : "N/A";
 
                 // Thumbnails
@@ -159,7 +159,7 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
 
                 // Overview
                 litOverview.Text = dr["Description"] != DBNull.Value
-                    ? dr["Description"].ToString()
+                    ? System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["Description"]))
                     : "No overview available.";
 
 
@@ -168,9 +168,9 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
 
                 specsHtml += "<tr><td>Range</td><td>" + dr["RangeKM"] + " KM</td></tr>";
                 specsHtml += "<tr><td>Top Speed</td><td>" + dr["TopSpeed"] + " km/h</td></tr>";
-                specsHtml += "<tr><td>Charging Time</td><td>" + dr["ChargingTime"] + "</td></tr>";
-                specsHtml += "<tr><td>Motor Power</td><td>" + dr["MotorPower"] + "</td></tr>";
-                specsHtml += "<tr><td>Battery Type</td><td>" + dr["BatteryType"] + "</td></tr>";
+                specsHtml += "<tr><td>Charging Time</td><td>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ChargingTime"])) + "</td></tr>";
+                specsHtml += "<tr><td>Motor Power</td><td>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["MotorPower"])) + "</td></tr>";
+                specsHtml += "<tr><td>Battery Type</td><td>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["BatteryType"])) + "</td></tr>";
 
                 litSpecsTable.Text = specsHtml;
 
@@ -189,7 +189,7 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
 
                             foreach (string f in features)
                             {
-                                featureHtml += "<div class='feature-item'>✔ " + f.Trim() + "</div>";
+                                featureHtml += "<div class='feature-item'>✔ " + System.Web.HttpUtility.HtmlEncode(f.Trim()) + "</div>";
                             }
 
                             litFeatures.Text = featureHtml;
@@ -316,7 +316,7 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
 
                 html += "<div class='similar-body'>";
 
-                html += "<div class='similar-name'>" + dr["ModelName"] + "</div>";
+                html += "<div class='similar-name'>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ModelName"])) + "</div>";
 
                 html += "<div class='similar-price'>₹ "
                 + Convert.ToDecimal(dr["Price"]).ToString("N0") + "</div>";
