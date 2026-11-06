@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Web;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web.Services;
 
 public partial class Client_Bikes : System.Web.UI.Page
@@ -183,7 +185,13 @@ searchFilter +
 
                     html.Append("<div class='bike-img'>");
 
-                    html.Append("<img src='/Uploads/Bikes/" + dr["Image1"] + "'/>");
+                    string imageFile = Convert.ToString(dr["Image1"]);
+                    if (!Regex.IsMatch(imageFile, @"^[A-Za-z0-9_-]{1,180}\.(jpg|jpeg|png|webp)$", RegexOptions.IgnoreCase))
+                        imageFile = String.Empty;
+
+                    html.Append("<img src='/Uploads/Bikes/")
+                        .Append(HttpUtility.HtmlAttributeEncode(imageFile))
+                        .Append("' alt='Bike image' loading='lazy'/>");
 
                     html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + dr["BikeID"] + ")'>♥</div>");
 
@@ -197,7 +205,9 @@ searchFilter +
 
                     html.Append("<div class='bike-body'>");
 
-                    html.Append("<h6>" + dr["ModelName"] + "</h6>");
+                    html.Append("<h6>")
+                        .Append(HttpUtility.HtmlEncode(Convert.ToString(dr["ModelName"])))
+                        .Append("</h6>");
 
                     html.Append("<div class='price'>₹ " +
                     Convert.ToDecimal(dr["Price"]).ToString("N0") +
@@ -205,9 +215,10 @@ searchFilter +
 
                     html.Append("<div>Range: " + dr["RangeKM"] + " KM</div>");
 
-                    html.Append("<a href='BikeDetails.aspx?slug=" +
-                    dr["Slug"] +
-                    "' class='view-btn'>View</a>");
+                    string slug = Convert.ToString(dr["Slug"]);
+                    html.Append("<a href='BikeDetails.aspx?slug=")
+                        .Append(HttpUtility.HtmlAttributeEncode(HttpUtility.UrlEncode(slug)))
+                        .Append("' class='view-btn'>View</a>");
 
                     html.Append("</div>");
 
@@ -244,7 +255,7 @@ searchFilter +
                 dr["BrandID"] +
                 "'/> ");
 
-                html.Append(dr["BrandName"]);
+                html.Append(HttpUtility.HtmlEncode(Convert.ToString(dr["BrandName"])));
 
                 html.Append("</div>");
             }
