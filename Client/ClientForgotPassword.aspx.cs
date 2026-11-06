@@ -30,7 +30,7 @@ public partial class Client_ClientForgotPassword : System.Web.UI.Page
             {
                 string otp = OtpSecurity.GenerateSixDigitOtp();
                 using (SqlCommand update = new SqlCommand(@"
-UPDATE dbo.Users SET OTPCode=@Otp, OTPExpiry=DATEADD(MINUTE,5,GETDATE())
+UPDATE dbo.Users SET OTPCode=@Otp, OTPExpiry=DATEADD(MINUTE,5,GETDATE()), OTPFailedAttempts=0, OTPResendAt=GETDATE()
 WHERE UserID=@UserID;", con))
                 {
                     update.Parameters.Add("@Otp", SqlDbType.NVarChar, 10).Value = otp;
