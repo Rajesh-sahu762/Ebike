@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Configuration;
 using System.IO;
+using EBIke.Security;
 
 public partial class Client_SellBike : System.Web.UI.Page
 {
@@ -73,35 +74,16 @@ public partial class Client_SellBike : System.Web.UI.Page
 
         string img1 = "", img2 = "", img3 = "";
 
-
-
-        // image save with original name
-
-        if (fu1.HasFile)
+        try
         {
-            img1 = Path.GetFileNameWithoutExtension(fu1.FileName)
-            + "_" + DateTime.Now.Ticks +
-            Path.GetExtension(fu1.FileName);
-
-            fu1.SaveAs(folder + img1);
+            img1 = UploadSecurity.SaveImage(fu1, folder);
+            img2 = UploadSecurity.SaveImage(fu2, folder);
+            img3 = UploadSecurity.SaveImage(fu3, folder);
         }
-
-        if (fu2.HasFile)
+        catch (InvalidOperationException ex)
         {
-            img2 = Path.GetFileNameWithoutExtension(fu2.FileName)
-            + "_" + DateTime.Now.Ticks +
-            Path.GetExtension(fu2.FileName);
-
-            fu2.SaveAs(folder + img2);
-        }
-
-        if (fu3.HasFile)
-        {
-            img3 = Path.GetFileNameWithoutExtension(fu3.FileName)
-            + "_" + DateTime.Now.Ticks +
-            Path.GetExtension(fu3.FileName);
-
-            fu3.SaveAs(folder + img3);
+            lblMsg.Text = Server.HtmlEncode(ex.Message);
+            return;
         }
 
 
