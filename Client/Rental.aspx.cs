@@ -40,7 +40,7 @@ public partial class Client_Rental : System.Web.UI.Page
     }
 
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static object GetBikes(int page, int minPrice, int maxPrice,
      string range, string sort, string[] brands)
     {
