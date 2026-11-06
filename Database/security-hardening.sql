@@ -25,3 +25,18 @@ GO
 IF COL_LENGTH('dbo.Users', 'PasswordHash') IS NULL
     THROW 50001, 'Users.PasswordHash was not found; migration stopped.', 1;
 GO
+
+-- Separate OTP throttling from login lockout counters.
+IF COL_LENGTH('dbo.Users', 'OTPFailedAttempts') IS NULL
+BEGIN
+    ALTER TABLE dbo.Users
+    ADD OTPFailedAttempts INT NOT NULL
+        CONSTRAINT DF_Users_OTPFailedAttempts DEFAULT (0) WITH VALUES;
+END;
+GO
+
+IF COL_LENGTH('dbo.Users', 'OTPResendAt') IS NULL
+BEGIN
+    ALTER TABLE dbo.Users ADD OTPResendAt DATETIME NULL;
+END;
+GO
