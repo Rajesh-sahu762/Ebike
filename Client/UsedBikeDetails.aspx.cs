@@ -51,13 +51,13 @@ AND B.IsUsed=1
 
             if (dr.Read())
             {
-                litBikeName.Text = dr["ModelName"].ToString();
+                litBikeName.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ModelName"]));
 
                 decimal price = Convert.ToDecimal(dr["Price"]);
 
                 litPrice.Text = price.ToString("N0");
 
-                litStickyName.Text = dr["ModelName"].ToString();
+                litStickyName.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ModelName"]));
                 litStickyPrice.Text = price.ToString("N0");
 
                 ViewState["BikeID"] = dr["BikeID"].ToString();
@@ -67,10 +67,10 @@ AND B.IsUsed=1
 
                 // Seller Info
 
-                litDealerName.Text = dr["FullName"].ToString();
-                litDealerPhone.Text = dr["Mobile"].ToString();
-                litDealerEmail.Text = dr["Email"].ToString();
-                litDealerCity.Text = dr["City"].ToString();
+                litDealerName.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["FullName"]));
+                litDealerPhone.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["Mobile"]));
+                litDealerEmail.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["Email"]));
+                litDealerCity.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["City"]));
 
                 ViewState["DealerID"] = dr["UserID"].ToString();
 
@@ -92,7 +92,7 @@ AND B.IsUsed=1
                 // Overview
 
                 litOverview.Text = dr["Description"] != DBNull.Value
-                ? dr["Description"].ToString()
+                ? System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["Description"]))
                 : "No description available.";
 
                 string specs = "";
@@ -100,8 +100,8 @@ AND B.IsUsed=1
                 specs += "<tr><td>KM Driven</td><td>" + dr["KMDriven"] + " KM</td></tr>";
                 specs += "<tr><td>Manufacture Year</td><td>" + dr["ManufactureYear"] + "</td></tr>";
                 specs += "<tr><td>Owner</td><td>" + dr["OwnerNumber"] + "</td></tr>";
-                specs += "<tr><td>Condition</td><td>" + dr["BikeCondition"] + "</td></tr>";
-                specs += "<tr><td>Battery Health</td><td>" + dr["BatteryHealth"] + "</td></tr>";
+                specs += "<tr><td>Condition</td><td>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["BikeCondition"])) + "</td></tr>";
+                specs += "<tr><td>Battery Health</td><td>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["BatteryHealth"])) + "</td></tr>";
 
                 litSpecsTable.Text = specs;
 
@@ -187,11 +187,11 @@ ORDER BY CreatedAt DESC
             {
                 html += "<div class='review-item'>";
 
-                html += "<h4>" + dr["ReviewTitle"] + "</h4>";
+                html += "<h4>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ReviewTitle"])) + "</h4>";
 
                 html += "<div class='stars'>" + BuildStars(Convert.ToInt32(dr["Rating"])) + "</div>";
 
-                html += "<p>" + dr["ReviewText"] + "</p>";
+                html += "<p>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ReviewText"])) + "</p>";
 
                 html += "</div>";
             }
@@ -256,7 +256,7 @@ ORDER BY CreatedAt DESC
 
             html += "<div class='similar-body'>";
 
-            html += "<div class='similar-name'>" + dr["ModelName"] + "</div>";
+            html += "<div class='similar-name'>" + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ModelName"])) + "</div>";
 
             html += "<div class='similar-price'>₹ "
             + Convert.ToDecimal(dr["Price"]).ToString("N0") + "</div>";
