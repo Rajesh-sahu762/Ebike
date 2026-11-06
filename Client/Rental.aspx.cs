@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -47,6 +48,7 @@ public partial class Client_Rental : System.Web.UI.Page
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
         int pageSize = 6;
+        page = Math.Max(1, page);
         int start = (page - 1) * pageSize;
 
         int userId = 0;
@@ -63,9 +65,26 @@ public partial class Client_Rental : System.Web.UI.Page
             if (sort == "priceAsc") order = "B.Price ASC";
             if (sort == "priceDesc") order = "B.Price DESC";
 
-            string brandFilter = "";
-            if (brands != null && brands.Length > 0)
-                brandFilter = " AND B.BrandID IN (" + string.Join(",", brands) + ")";
+            // Never concatenate client-supplied brand IDs into SQL.
+            List<int> validBrandIds = new List<int>();
+            if (brands != null)
+            {
+                foreach (string brandValue in brands)
+                {
+                    int brandId;
+                    if (Int32.TryParse(brandValue, out brandId) && brandId > 0 &&
+                        !validBrandIds.Contains(brandId))
+                        validBrandIds.Add(brandId);
+                }
+            }
+
+            List<string> brandParameterNames = new List<string>();
+            for (int i = 0; i < validBrandIds.Count; i++)
+                brandParameterNames.Add("@brand" + i);
+
+            string brandFilter = validBrandIds.Count == 0
+                ? ""
+                : " AND B.BrandID IN (" + String.Join(",", brandParameterNames.ToArray()) + ")";
 
 
             string query =
@@ -92,7 +111,7 @@ order + ") AS RowNum," +
 " AND ISNULL(B.IsForRent,0)=1 " +     // ⭐ rental bikes only
 " AND B.Price BETWEEN @min AND @max" +
 brandFilter +
-(range != "" ? " AND B.RangeKM<=@range" : "") +
+(!String.IsNullOrWhiteSpace(range) ? " AND B.RangeKM<=@range" : "") +
 
 ") X WHERE RowNum BETWEEN @start AND @end";
 
@@ -105,8 +124,19 @@ brandFilter +
             cmd.Parameters.AddWithValue("@end", start + pageSize);
             cmd.Parameters.AddWithValue("@user", userId);
 
-            if (range != "")
-                cmd.Parameters.AddWithValue("@range", range);
+            if (!String.IsNullOrWhiteSpace(range))
+            {
+                int rangeValue;
+                if (!Int32.TryParse(range, out rangeValue) || rangeValue < 0)
+                    return new { html = "", count = 0 };
+                cmd.Parameters.Add("@range", SqlDbType.Int).Value = rangeValue;
+            }
+
+            foreach (int brandId in validBrandIds)
+            {
+                int index = validBrandIds.IndexOf(brandId);
+                cmd.Parameters.Add(brandParameterNames[index], SqlDbType.Int).Value = brandId;
+            }
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
