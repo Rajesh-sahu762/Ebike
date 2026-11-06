@@ -1,61 +1,70 @@
-﻿using System;
+using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Net.Mail;
+using EBIke.Security;
 
 public partial class Client_ClientForgotPassword : System.Web.UI.Page
 {
-    string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+    private readonly string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
     protected void btnSendOTP_Click(object sender, EventArgs e)
     {
         string email = txtEmail.Text.Trim();
+        int userId = 0;
 
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
-
-            SqlCommand check = new SqlCommand(
-                "SELECT UserID FROM Users WHERE Email=@e AND Role='Customer'", con);
-
-            check.Parameters.AddWithValue("@e", email);
-
-            object userObj = check.ExecuteScalar();
-
-            if (userObj == null)
+            using (SqlCommand check = new SqlCommand(
+                "SELECT UserID FROM dbo.Users WHERE Email=@Email AND Role='Customer' AND IsActive=1;", con))
             {
-                lblMsg.Text = "Email not found.";
-                return;
+                check.Parameters.Add("@Email", SqlDbType.NVarChar, 256).Value = email;
+                object result = check.ExecuteScalar();
+                if (result != null && result != DBNull.Value)
+                    userId = Convert.ToInt32(result);
             }
 
-            int userId = Convert.ToInt32(userObj);
+            if (userId != 0)
+            {
+                string otp = OtpSecurity.GenerateSixDigitOtp();
+                using (SqlCommand update = new SqlCommand(@"
+UPDATE dbo.Users SET OTPCode=@Otp, OTPExpiry=DATEADD(MINUTE,5,GETDATE())
+WHERE UserID=@UserID;", con))
+                {
+                    update.Parameters.Add("@Otp", SqlDbType.NVarChar, 10).Value = otp;
+                    update.Parameters.Add("@UserID", SqlDbType.Int).Value = userId;
+                    update.ExecuteNonQuery();
+                }
 
-            string otp = new Random().Next(100000, 999999).ToString();
-            DateTime expiry = DateTime.Now.AddMinutes(5);
-
-            SqlCommand update = new SqlCommand(
-                "UPDATE Users SET OTPCode=@o, OTPExpiry=@ex WHERE UserID=@id", con);
-
-            update.Parameters.AddWithValue("@o", otp);
-            update.Parameters.AddWithValue("@ex", expiry);
-            update.Parameters.AddWithValue("@id", userId);
-            update.ExecuteNonQuery();
-
-            SendOTP(email, otp);
-
-            Session["ResetUserID"] = userId;
-            Response.Redirect("ClientResetPassword.aspx");
+                try
+                {
+                    using (MailMessage mail = new MailMessage())
+                    {
+                        mail.To.Add(email);
+                        mail.Subject = "Password Reset OTP - EBikes Duniya";
+                        mail.Body = "Your OTP is: " + otp + "\nValid for 5 minutes.";
+                        mail.IsBodyHtml = false;
+                        using (SmtpClient smtp = new SmtpClient())
+                            smtp.Send(mail);
+                    }
+                    Session["ResetUserID"] = userId;
+                }
+                catch (SmtpException)
+                {
+                    lblMsg.Text = "Unable to send the reset email. Please try again later.";
+                    return;
+                }
+            }
         }
-    }
 
-    void SendOTP(string toEmail, string otp)
-    {
-        MailMessage mail = new MailMessage();
-        mail.To.Add(toEmail);
-        mail.Subject = "Password Reset OTP";
-        mail.Body = "Your OTP is: " + otp + "\nValid for 5 minutes.";
-
-        SmtpClient smtp = new SmtpClient();
-        smtp.Send(mail);
+        // Do not disclose whether an email exists.
+        lblMsg.Text = "If the account exists, a password reset OTP has been sent.";
+        if (userId != 0 && Session["ResetUserID"] != null)
+        {
+            Response.Redirect("ClientResetPassword.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
+        }
     }
 }
