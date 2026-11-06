@@ -1,33 +1,30 @@
-﻿using System;
+using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
-using System.Collections.Generic;
-using System.Web.Services;
-using System.Web;
+using EBIke.Security;
 
 public partial class Client_ClientMaster : System.Web.UI.MasterPage
 {
-    string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+    private readonly string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["CustomerID"] == null && Request.Cookies["EBikesUser"] != null)
-        {
-            Session["CustomerID"] = Request.Cookies["EBikesUser"]["UserID"];
-            Session["CustomerName"] = Request.Cookies["EBikesUser"]["Name"];
-        }
+        if (Session["CustomerID"] == null)
+            RememberMeSecurity.TryRestore(Context);
 
         if (!IsPostBack)
         {
             LoadSiteSettings();
-            UpdateMasterCartCount(); // Ab ye yahan refresh hoga
+            UpdateMasterCartCount();
         }
 
         if (Session["CustomerID"] != null)
         {
             pnlLogin.Visible = false;
             pnlUser.Visible = true;
-            lblUserName.Text = Session["CustomerName"] != null ? Session["CustomerName"].ToString() : "My Account";
+            lblUserName.Text = Session["CustomerName"] != null
+                ? Convert.ToString(Session["CustomerName"]) : "My Account";
             LoadWishlistCount();
         }
         else
@@ -41,97 +38,66 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
 
     public void UpdateMasterCartCount()
     {
-        // Agar login nahi hai toh 0, warna session wala ID
-        int userId = Session["CustomerID"] != null ? Convert.ToInt32(Session["CustomerID"]) : 0;
-
-        if (userId == 0) { cartCount.InnerText = "0"; return; }
-
-        using (SqlConnection con = new SqlConnection(constr))
+        int userId = Session["CustomerID"] == null ? 0 : Convert.ToInt32(Session["CustomerID"]);
+        if (userId <= 0)
         {
-            SqlCommand cmd = new SqlCommand("SELECT ISNULL(SUM(Qty), 0) FROM Cart WHERE UserID = @UID", con);
-            cmd.Parameters.AddWithValue("@UID", userId);
-            con.Open();
-            cartCount.InnerText = cmd.ExecuteScalar().ToString();
-        }
-    }
-
-    void LoadSiteSettings()
-    {
-        using (SqlConnection con = new SqlConnection(constr))
-        {
-            con.Open();
-
-            SqlCommand cmd = new SqlCommand(
-            "SELECT * FROM SiteSettings WHERE SettingID=1", con);
-
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            if (dr.Read())
-            {
-                if (dr["SiteTitle"] != DBNull.Value)
-                {
-                    Page.Title = dr["SiteTitle"].ToString();
-                    lblSiteTitle.Text = dr["SiteTitle"].ToString();
-                }
-
-                if (dr["LogoPath"] != DBNull.Value)
-                {
-                    imgLogo.ImageUrl = dr["LogoPath"].ToString();
-                }
-
-                if (dr["AdminEmail"] != DBNull.Value)
-                {
-                    lblFooterEmail.Text = dr["AdminEmail"].ToString();
-                }
-
-                if (dr["SupportPhone"] != DBNull.Value)
-                {
-                    lblFooterPhone.Text = dr["SupportPhone"].ToString();
-                }
-
-                if (dr["MaintenanceMode"] != DBNull.Value)
-                {
-                    bool maintenance = Convert.ToBoolean(dr["MaintenanceMode"]);
-
-                    if (maintenance)
-                    {
-                        Response.Redirect("~/Client/Maintenance.aspx");
-                    }
-                }
-            }
-
-            dr.Close();
-        }
-    }
-
-   
-
-    void LoadWishlistCount()
-    {
-        if (Session["CustomerID"] == null)
-        {
-            wishCount.InnerText = "0";
+            cartCount.InnerText = "0";
             return;
         }
 
         using (SqlConnection con = new SqlConnection(constr))
+        using (SqlCommand cmd = new SqlCommand(
+            "SELECT ISNULL(SUM(Qty), 0) FROM dbo.Cart WHERE UserID=@UID;", con))
         {
+            cmd.Parameters.Add("@UID", SqlDbType.Int).Value = userId;
             con.Open();
-
-            SqlCommand cmd = new SqlCommand(
-                "SELECT COUNT(*) FROM Wishlist WHERE CustomerID = @CustomerID",
-                con);
-
-            cmd.Parameters.AddWithValue("@CustomerID",
-                Convert.ToInt32(Session["CustomerID"]));
-
-            object result = cmd.ExecuteScalar();
-
-            if (result != null)
-                wishCount.InnerText = result.ToString();
-            else
-                wishCount.InnerText = "0";
+            cartCount.InnerText = Convert.ToString(cmd.ExecuteScalar());
         }
     }
 
+    private void LoadSiteSettings()
+    {
+        using (SqlConnection con = new SqlConnection(constr))
+        using (SqlCommand cmd = new SqlCommand(@"
+SELECT SiteTitle, LogoPath, AdminEmail, SupportPhone, MaintenanceMode
+FROM dbo.SiteSettings WHERE SettingID=1;", con))
+        {
+            con.Open();
+            using (SqlDataReader dr = cmd.ExecuteReader())
+            {
+                if (!dr.Read()) return;
+
+                if (dr["SiteTitle"] != DBNull.Value)
+                {
+                    Page.Title = Convert.ToString(dr["SiteTitle"]);
+                    lblSiteTitle.Text = Convert.ToString(dr["SiteTitle"]);
+                }
+                if (dr["LogoPath"] != DBNull.Value)
+                    imgLogo.ImageUrl = Convert.ToString(dr["LogoPath"]);
+                if (dr["AdminEmail"] != DBNull.Value)
+                    lblFooterEmail.Text = Convert.ToString(dr["AdminEmail"]);
+                if (dr["SupportPhone"] != DBNull.Value)
+                    lblFooterPhone.Text = Convert.ToString(dr["SupportPhone"]);
+
+                bool maintenance = dr["MaintenanceMode"] != DBNull.Value &&
+                    Convert.ToBoolean(dr["MaintenanceMode"]);
+                if (maintenance && !Request.AppRelativeCurrentExecutionFilePath.EndsWith(
+                    "Maintenance.aspx", StringComparison.OrdinalIgnoreCase))
+                    Response.Redirect("~/Client/Maintenance.aspx", false);
+            }
+        }
+    }
+
+    private void LoadWishlistCount()
+    {
+        int userId = Convert.ToInt32(Session["CustomerID"]);
+        using (SqlConnection con = new SqlConnection(constr))
+        using (SqlCommand cmd = new SqlCommand(
+            "SELECT COUNT(*) FROM dbo.Wishlist WHERE CustomerID=@CustomerID;", con))
+        {
+            cmd.Parameters.Add("@CustomerID", SqlDbType.Int).Value = userId;
+            con.Open();
+            wishCount.InnerText = Convert.ToString(cmd.ExecuteScalar());
+        }
+    }
 }
