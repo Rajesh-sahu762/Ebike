@@ -74,9 +74,10 @@ public partial class Admin_Settings : System.Web.UI.Page
                     logoPath = "~/Uploads/" + fileName;
                     imgLogo.ImageUrl = logoPath;
                 }
-                catch (InvalidOperationException ex)
+                catch (InvalidOperationException)
                 {
-                    lblMsg.Text = Server.HtmlEncode(ex.Message);
+                    ClientScript.RegisterStartupScript(GetType(), "invalidLogo",
+                        "alert('Logo upload rejected. Upload a valid JPG, PNG or WEBP image up to 5 MB.');", true);
                     return;
                 }
             }
