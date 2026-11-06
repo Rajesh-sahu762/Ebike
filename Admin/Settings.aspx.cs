@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Configuration;
 using System.IO;
+using EBIke.Security;
 
 public partial class Admin_Settings : System.Web.UI.Page
 {
@@ -67,16 +68,17 @@ public partial class Admin_Settings : System.Web.UI.Page
 
             if (fuLogo.HasFile)
             {
-                string folder = "~/Uploads/";
-                string fileName = "logo_" + DateTime.Now.Ticks + Path.GetExtension(fuLogo.FileName);
-
-                string serverPath = Server.MapPath(folder + fileName);
-
-                fuLogo.SaveAs(serverPath);
-
-                logoPath = folder + fileName;
-
-                imgLogo.ImageUrl = logoPath;
+                try
+                {
+                    string fileName = UploadSecurity.SaveImage(fuLogo, Server.MapPath("~/Uploads/"));
+                    logoPath = "~/Uploads/" + fileName;
+                    imgLogo.ImageUrl = logoPath;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    lblMsg.Text = Server.HtmlEncode(ex.Message);
+                    return;
+                }
             }
 
             // ===== COMMISSION SAFE =====
