@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Net.Mail;
+using EBIke.Security;
 
 public partial class Client_ClientVerifyOTP : System.Web.UI.Page
 {
@@ -62,7 +63,7 @@ public partial class Client_ClientVerifyOTP : System.Web.UI.Page
     protected void btnResend_Click(object sender, EventArgs e)
     {
         string email = Session["VerifyEmail"].ToString();
-        string newOTP = new Random().Next(100000, 999999).ToString();
+        string newOTP = OtpSecurity.GenerateSixDigitOtp();
 
         using (SqlConnection con = new SqlConnection(constr))
         {
