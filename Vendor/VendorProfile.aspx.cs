@@ -1,155 +1,140 @@
-﻿using System;
-using System.Configuration;
+using System;
+using System.Data;
 using System.Data.SqlClient;
+using System.Configuration;
 using System.IO;
+using EBIke.Security;
 
 public partial class Vendor_VendorProfile : System.Web.UI.Page
 {
-    string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+    private readonly string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["VendorID"] == null)
-            Response.Redirect("VendorLogin.aspx");
-
-        if (!IsPostBack)
-            LoadProfile();
+        {
+            Response.Redirect("VendorLogin.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
+            return;
+        }
+        if (!IsPostBack) LoadProfile();
     }
 
-    void LoadProfile()
+    private void LoadProfile()
     {
         using (SqlConnection con = new SqlConnection(constr))
+        using (SqlCommand cmd = new SqlCommand(
+            "SELECT FullName, Email, Mobile, ShopName, GSTNo, City, Address, ProfileImage, IsApproved, IsActive FROM dbo.Users WHERE UserID=@id AND Role='Dealer';", con))
         {
+            cmd.Parameters.Add("@id", SqlDbType.Int).Value = Convert.ToInt32(Session["VendorID"]);
             con.Open();
-
-            SqlCommand cmd = new SqlCommand(
-                "SELECT * FROM Users WHERE UserID=@id", con);
-
-            cmd.Parameters.AddWithValue("@id", Session["VendorID"]);
-
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            if (dr.Read())
+            using (SqlDataReader dr = cmd.ExecuteReader())
             {
-                txtName.Text = dr["FullName"].ToString();
-                txtEmail.Text = dr["Email"].ToString();
-                txtMobile.Text = dr["Mobile"].ToString();
-                txtShop.Text = dr["ShopName"].ToString();
-                txtGST.Text = dr["GSTNo"].ToString();
-                txtCity.Text = dr["City"].ToString();
-                txtAddress.Text = dr["Address"].ToString();
-
-                imgProfile.ImageUrl =
-                    string.IsNullOrEmpty(dr["ProfileImage"].ToString())
-                    ? "~/images/default.png"
-                    : dr["ProfileImage"].ToString();
-
-                lblApproval.Text = Convert.ToBoolean(dr["IsApproved"])
-                    ? "<span class='badge bg-success'>Approved</span>"
-                    : "<span class='badge bg-warning'>Pending Approval</span>";
-
-                lblActive.Text = Convert.ToBoolean(dr["IsActive"])
-                    ? "<span class='badge bg-success'>Active</span>"
-                    : "<span class='badge bg-danger'>Inactive</span>";
+                if (!dr.Read()) return;
+                txtName.Text = Convert.ToString(dr["FullName"]);
+                txtEmail.Text = Convert.ToString(dr["Email"]);
+                txtMobile.Text = Convert.ToString(dr["Mobile"]);
+                txtShop.Text = Convert.ToString(dr["ShopName"]);
+                txtGST.Text = Convert.ToString(dr["GSTNo"]);
+                txtCity.Text = Convert.ToString(dr["City"]);
+                txtAddress.Text = Convert.ToString(dr["Address"]);
+                imgProfile.ImageUrl = String.IsNullOrEmpty(Convert.ToString(dr["ProfileImage"]))
+                    ? "~/images/default.png" : Convert.ToString(dr["ProfileImage"]);
+                lblApproval.Text = Convert.ToBoolean(dr["IsApproved"]) ? "Approved" : "Pending Approval";
+                lblActive.Text = Convert.ToBoolean(dr["IsActive"]) ? "Active" : "Inactive";
             }
-
-            dr.Close();
         }
     }
 
     protected void btnUpdateProfile_Click(object sender, EventArgs e)
     {
         using (SqlConnection con = new SqlConnection(constr))
+        using (SqlCommand cmd = new SqlCommand(@"
+UPDATE dbo.Users SET FullName=@n, Mobile=@m, ShopName=@s, GSTNo=@g, City=@c, Address=@a
+WHERE UserID=@id AND Role='Dealer';", con))
         {
+            cmd.Parameters.Add("@n", SqlDbType.NVarChar, 150).Value = txtName.Text.Trim();
+            cmd.Parameters.Add("@m", SqlDbType.NVarChar, 30).Value = txtMobile.Text.Trim();
+            cmd.Parameters.Add("@s", SqlDbType.NVarChar, 150).Value = txtShop.Text.Trim();
+            cmd.Parameters.Add("@g", SqlDbType.NVarChar, 50).Value = txtGST.Text.Trim();
+            cmd.Parameters.Add("@c", SqlDbType.NVarChar, 100).Value = txtCity.Text.Trim();
+            cmd.Parameters.Add("@a", SqlDbType.NVarChar, 500).Value = txtAddress.Text.Trim();
+            cmd.Parameters.Add("@id", SqlDbType.Int).Value = Convert.ToInt32(Session["VendorID"]);
             con.Open();
-
-            SqlCommand cmd = new SqlCommand(
-            @"UPDATE Users SET 
-              FullName=@n,
-              Mobile=@m,
-              ShopName=@s,
-              GSTNo=@g,
-              City=@c,
-              Address=@a
-              WHERE UserID=@id", con);
-
-            cmd.Parameters.AddWithValue("@n", txtName.Text);
-            cmd.Parameters.AddWithValue("@m", txtMobile.Text);
-            cmd.Parameters.AddWithValue("@s", txtShop.Text);
-            cmd.Parameters.AddWithValue("@g", txtGST.Text);
-            cmd.Parameters.AddWithValue("@c", txtCity.Text);
-            cmd.Parameters.AddWithValue("@a", txtAddress.Text);
-            cmd.Parameters.AddWithValue("@id", Session["VendorID"]);
-
             cmd.ExecuteNonQuery();
         }
-
         lblMsg.Text = "Profile updated successfully.";
     }
 
     protected void btnUploadImage_Click(object sender, EventArgs e)
     {
-        if (!fuProfile.HasFile)
-            return;
-
-        string ext = Path.GetExtension(fuProfile.FileName);
-        string fileName = Guid.NewGuid().ToString() + ext;
-
+        if (!fuProfile.HasFile) return;
         string folder = Server.MapPath("~/Uploads/Vendors/");
+        string fileName;
+        try { fileName = UploadSecurity.SaveImage(fuProfile, folder); }
+        catch (InvalidOperationException ex) { lblMsg.Text = Server.HtmlEncode(ex.Message); return; }
 
-        if (!Directory.Exists(folder))
-            Directory.CreateDirectory(folder);
-
-        string path = "~/Uploads/Vendors/" + fileName;
-        fuProfile.SaveAs(Path.Combine(folder, fileName));
-
+        string relativePath = "~/Uploads/Vendors/" + fileName;
         using (SqlConnection con = new SqlConnection(constr))
+        using (SqlCommand cmd = new SqlCommand(
+            "UPDATE dbo.Users SET ProfileImage=@path WHERE UserID=@id AND Role='Dealer';", con))
         {
+            cmd.Parameters.Add("@path", SqlDbType.NVarChar, 300).Value = relativePath;
+            cmd.Parameters.Add("@id", SqlDbType.Int).Value = Convert.ToInt32(Session["VendorID"]);
             con.Open();
-
-            SqlCommand cmd = new SqlCommand(
-                "UPDATE Users SET ProfileImage=@p WHERE UserID=@id", con);
-
-            cmd.Parameters.AddWithValue("@p", path);
-            cmd.Parameters.AddWithValue("@id", Session["VendorID"]);
             cmd.ExecuteNonQuery();
         }
-
         LoadProfile();
     }
 
     protected void btnChangePassword_Click(object sender, EventArgs e)
     {
+        if (txtNewPass.Text.Length < 10)
+        {
+            lblMsg.Text = "Use a password with at least 10 characters.";
+            return;
+        }
         if (txtNewPass.Text != txtConfirmPass.Text)
         {
-            lblMsg.Text = "Password mismatch.";
+            lblMsg.Text = "Passwords do not match.";
             return;
         }
 
+        int vendorId = Convert.ToInt32(Session["VendorID"]);
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
+            string stored;
+            using (SqlCommand check = new SqlCommand(
+                "SELECT PasswordHash FROM dbo.Users WHERE UserID=@id AND Role='Dealer' AND IsActive=1;", con))
+            {
+                check.Parameters.Add("@id", SqlDbType.Int).Value = vendorId;
+                object value = check.ExecuteScalar();
+                if (value == null || value == DBNull.Value)
+                {
+                    lblMsg.Text = "Unable to verify account.";
+                    return;
+                }
+                stored = Convert.ToString(value);
+            }
 
-            SqlCommand check = new SqlCommand(
-                "SELECT COUNT(*) FROM Users WHERE UserID=@id AND PasswordHash=@p", con);
-
-            check.Parameters.AddWithValue("@id", Session["VendorID"]);
-            check.Parameters.AddWithValue("@p", txtOldPass.Text);
-
-            if (Convert.ToInt32(check.ExecuteScalar()) == 0)
+            bool valid = PasswordSecurity.IsHashed(stored)
+                ? PasswordSecurity.VerifyPassword(txtOldPass.Text, stored)
+                : String.Equals(stored, txtOldPass.Text, StringComparison.Ordinal);
+            if (!valid)
             {
                 lblMsg.Text = "Old password incorrect.";
                 return;
             }
 
-            SqlCommand update = new SqlCommand(
-                "UPDATE Users SET PasswordHash=@p WHERE UserID=@id", con);
-
-            update.Parameters.AddWithValue("@p", txtNewPass.Text);
-            update.Parameters.AddWithValue("@id", Session["VendorID"]);
-            update.ExecuteNonQuery();
+            using (SqlCommand update = new SqlCommand(
+                "UPDATE dbo.Users SET PasswordHash=@Hash WHERE UserID=@id AND Role='Dealer';", con))
+            {
+                update.Parameters.Add("@Hash", SqlDbType.NVarChar, 500).Value = PasswordSecurity.HashPassword(txtNewPass.Text);
+                update.Parameters.Add("@id", SqlDbType.Int).Value = vendorId;
+                update.ExecuteNonQuery();
+            }
         }
-
         lblMsg.Text = "Password changed successfully.";
     }
 }
