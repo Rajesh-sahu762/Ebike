@@ -9,16 +9,35 @@ public partial class Admin_ManageBrands : System.Web.UI.Page
 {
     string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
+    private static string NormalizeSortExpression(string value)
+    {
+        switch (value)
+        {
+            case "BrandName": return "BrandName";
+            case "BikeCount": return "BikeCount";
+            case "IsActive": return "IsActive";
+            default: return "BrandName";
+        }
+    }
+
     string SortDirection
     {
-        get { return ViewState["SortDirection"] as string ?? "ASC"; }
-        set { ViewState["SortDirection"] = value; }
+        get
+        {
+            string value = ViewState["SortDirection"] as string;
+            return String.Equals(value, "DESC", StringComparison.OrdinalIgnoreCase) ? "DESC" : "ASC";
+        }
+        set
+        {
+            ViewState["SortDirection"] = String.Equals(value, "DESC", StringComparison.OrdinalIgnoreCase)
+                ? "DESC" : "ASC";
+        }
     }
 
     string SortExpression
     {
-        get { return ViewState["SortExpression"] as string ?? "BrandName"; }
-        set { ViewState["SortExpression"] = value; }
+        get { return NormalizeSortExpression(ViewState["SortExpression"] as string); }
+        set { ViewState["SortExpression"] = NormalizeSortExpression(value); }
     }
 
 
