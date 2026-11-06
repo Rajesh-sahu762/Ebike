@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using EBIke.Security;
 
 public partial class Vendor_ManageParts : System.Web.UI.Page
 {
@@ -80,14 +81,15 @@ public partial class Vendor_ManageParts : System.Web.UI.Page
 
         if (fuImage.HasFile)
         {
-            fileName = fuImage.FileName;
-
-            if (fileName.Contains("\\"))
-                fileName = fileName.Substring(fileName.LastIndexOf("\\") + 1);
-
-            string path = Server.MapPath("~/Uploads/Parts/" + fileName);
-
-            fuImage.SaveAs(path);
+            try
+            {
+                fileName = UploadSecurity.SaveImage(fuImage, Server.MapPath("~/Uploads/Parts/"));
+            }
+            catch (InvalidOperationException ex)
+            {
+                lblMsg.Text = Server.HtmlEncode(ex.Message);
+                return;
+            }
         }
 
         using (SqlConnection con = new SqlConnection(constr))
