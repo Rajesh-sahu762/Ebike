@@ -24,7 +24,7 @@ public partial class Admin_ManageLeads : System.Web.UI.Page
         get
         {
             string value = ViewState["SortDirection"] as string;
-            return String.Equals(value, "DESC", StringComparison.OrdinalIgnoreCase) ? "DESC" : "ASC";
+            return String.IsNullOrEmpty(value) || String.Equals(value, "DESC", StringComparison.OrdinalIgnoreCase) ? "DESC" : "ASC";
         }
         set
         {
