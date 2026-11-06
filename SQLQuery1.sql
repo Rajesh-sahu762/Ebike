@@ -255,8 +255,9 @@ VALUES
  SELECT COUNT(*) FROM Bikes WHERE IsApproved = 1
 
 
-INSERT INTO Users (Role, FullName, Email, Mobile, PasswordHash, IsApproved)
-VALUES ('Admin', 'Super Admin', 'admin@ebikes.com', '9999999999', 'admin123', 1);
+-- Disabled placeholder only. Create the first administrator through a secure provisioning process.
+INSERT INTO Users (Role, FullName, Email, Mobile, PasswordHash, IsApproved, IsActive)
+VALUES ('Admin', 'Demo Administrator', 'admin@example.invalid', '9000000000', 'RESET_REQUIRED', 1, 0);
 
 UPDATE Bikes SET IsForRent = 0 WHERE IsForRent IS NULL;
 
