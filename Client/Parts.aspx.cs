@@ -93,7 +93,7 @@ ELSE
         }
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string GetCartCount()
     {
         if (HttpContext.Current.Session["CustomerID"] == null) return "0";
