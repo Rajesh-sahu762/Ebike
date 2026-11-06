@@ -164,6 +164,8 @@ body{
 
         <h3>Create Account</h3>
 
+        <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mb-3" EnableViewState="false"></asp:Label>
+
         <asp:TextBox ID="txtFullName" runat="server"
             CssClass="form-control"
             placeholder="Full Name"></asp:TextBox>
