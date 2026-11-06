@@ -1,145 +1,105 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+using System;
+using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
+using System.Configuration;
 using System.Net.Mail;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
+using EBIke.Security;
 
 public partial class Vendor_VendorForgotPassword : System.Web.UI.Page
 {
-    string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+    private readonly string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
     protected void btnSendOTP_Click(object sender, EventArgs e)
     {
         string email = txtEmail.Text.Trim();
+        string otp = OtpSecurity.GenerateSixDigitOtp();
 
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
-
-            SqlCommand check = new SqlCommand(
-                "SELECT COUNT(*) FROM Users WHERE Email=@Email AND Role='Dealer'", con);
-
-            check.Parameters.AddWithValue("@Email", email);
-
-            if (Convert.ToInt32(check.ExecuteScalar()) == 0)
+            using (SqlCommand update = new SqlCommand(@"
+UPDATE dbo.Users
+SET OTPCode=@Otp, OTPExpiry=DATEADD(MINUTE,10,GETDATE())
+WHERE Email=@Email AND Role='Dealer' AND IsActive=1;", con))
             {
-                lblMessage.Text = "Email not found.";
-                return;
+                update.Parameters.Add("@Otp", SqlDbType.NVarChar, 10).Value = otp;
+                update.Parameters.Add("@Email", SqlDbType.NVarChar, 256).Value = email;
+                int rows = update.ExecuteNonQuery();
+
+                if (rows > 0)
+                {
+                    try { SendOTPEmail(email, otp); }
+                    catch (SmtpException)
+                    {
+                        lblMessage.Text = "Unable to send OTP. Please try again later.";
+                        return;
+                    }
+                    pnlEmail.Visible = false;
+                    pnlReset.Visible = true;
+                }
             }
-
-            string otp = new Random().Next(100000, 999999).ToString();
-
-            SqlCommand cmd = new SqlCommand(
-            @"UPDATE Users SET
-              OTPCode=@otp,
-              OTPExpiry=DATEADD(MINUTE,10,GETDATE())
-              WHERE Email=@Email", con);
-
-            cmd.Parameters.AddWithValue("@otp", otp);
-            cmd.Parameters.AddWithValue("@Email", email);
-            cmd.ExecuteNonQuery();
-
-            SendOTPEmail(email, otp);
-
-            pnlEmail.Visible = false;
-            pnlReset.Visible = true;
-
-            lblMessage.Text = "OTP sent to your email.";
-            lblMessage.ForeColor = System.Drawing.Color.Green;
         }
+
+        lblMessage.Text = "If the vendor account exists, an OTP has been sent.";
     }
 
     protected void btnReset_Click(object sender, EventArgs e)
     {
+        if (txtNewPassword.Text.Length < 10)
+        {
+            lblMessage.Text = "Use a password with at least 10 characters.";
+            return;
+        }
         if (txtNewPassword.Text != txtConfirmPassword.Text)
         {
             lblMessage.Text = "Passwords do not match.";
             return;
         }
 
+        string hash = PasswordSecurity.HashPassword(txtNewPassword.Text);
         using (SqlConnection con = new SqlConnection(constr))
         {
             con.Open();
-
-            SqlCommand cmd = new SqlCommand(
-            @"UPDATE Users SET
-              PasswordHash=@pass,
-              OTPCode=NULL,
-              OTPExpiry=NULL
-              WHERE Email=@Email
-              AND OTPCode=@otp
-              AND OTPExpiry > GETDATE()", con);
-
-            cmd.Parameters.AddWithValue("@pass", txtNewPassword.Text.Trim());
-            cmd.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
-            cmd.Parameters.AddWithValue("@otp", txtOTP.Text.Trim());
-
-            int rows = cmd.ExecuteNonQuery();
-
-            if (rows > 0)
+            using (SqlCommand cmd = new SqlCommand(@"
+UPDATE dbo.Users
+SET PasswordHash=@Hash, OTPCode=NULL, OTPExpiry=NULL,
+    FailedLoginAttempts=0, LockoutEndTime=NULL
+WHERE Email=@Email AND Role='Dealer'
+  AND OTPCode=@Otp AND OTPExpiry > GETDATE();", con))
             {
-                lblMessage.ForeColor = System.Drawing.Color.Green;
-                lblMessage.Text = "Password reset successful. Redirecting to login...";
-                Response.AddHeader("REFRESH", "3;URL=VendorLogin.aspx");
-            }
-            else
-            {
-                lblMessage.Text = "Invalid or expired OTP.";
+                cmd.Parameters.Add("@Hash", SqlDbType.NVarChar, 500).Value = hash;
+                cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 256).Value = txtEmail.Text.Trim();
+                cmd.Parameters.Add("@Otp", SqlDbType.NVarChar, 10).Value = txtOTP.Text.Trim();
+                int rows = cmd.ExecuteNonQuery();
+                if (rows > 0)
+                {
+                    lblMessage.ForeColor = System.Drawing.Color.Green;
+                    lblMessage.Text = "Password reset successful. Please login again.";
+                    pnlEmail.Visible = false;
+                    pnlReset.Visible = false;
+                }
+                else
+                    lblMessage.Text = "Invalid or expired OTP.";
             }
         }
     }
 
     protected void btnResendOTP_Click(object sender, EventArgs e)
     {
-        string email = txtEmail.Text.Trim();
-
-        using (SqlConnection con = new SqlConnection(constr))
-        {
-            con.Open();
-
-            string otp = new Random().Next(100000, 999999).ToString();
-
-            SqlCommand cmd = new SqlCommand(
-            @"UPDATE Users SET
-          OTPCode=@otp,
-          OTPExpiry=DATEADD(MINUTE,10,GETDATE())
-          WHERE Email=@Email", con);
-
-            cmd.Parameters.AddWithValue("@otp", otp);
-            cmd.Parameters.AddWithValue("@Email", email);
-            cmd.ExecuteNonQuery();
-
-            SendOTPEmail(email, otp);
-        }
-
-        lblMessage.ForeColor = System.Drawing.Color.Green;
-        lblMessage.Text = "New OTP sent successfully.";
-
-        // Reset timer
-        ScriptManager.RegisterStartupScript(this, this.GetType(),
-            "resetTimer",
-            "seconds=60; resendBtn.disabled=true; document.getElementById('timerText').innerHTML='Resend available in <span id=\"countdown\">60</span> sec';",
-            true);
+        btnSendOTP_Click(sender, e);
     }
 
-
-    void SendOTPEmail(string toEmail, string otp)
+    private void SendOTPEmail(string toEmail, string otp)
     {
-        try
+        using (MailMessage mail = new MailMessage())
         {
-            MailMessage mail = new MailMessage();
             mail.To.Add(toEmail);
             mail.Subject = "Password Reset OTP - EBikes Duniya";
-            mail.Body = "Your OTP for password reset is: " + otp + "\nValid for 10 minutes.";
+            mail.Body = "Your password reset OTP is: " + otp + "\nValid for 10 minutes.";
             mail.IsBodyHtml = false;
-
-            SmtpClient smtp = new SmtpClient();
-            smtp.Send(mail);
+            using (SmtpClient smtp = new SmtpClient())
+                smtp.Send(mail);
         }
-        catch { }
     }
 }
