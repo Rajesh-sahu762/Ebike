@@ -50,7 +50,7 @@ public partial class Client_Rental : System.Web.UI.Page
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
         int pageSize = 6;
-        page = Math.Max(1, page);
+        page = Math.Max(1, Math.Min(page, 1000000));
         int start = (page - 1) * pageSize;
 
         int userId = 0;
