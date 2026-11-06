@@ -1,166 +1,177 @@
-﻿using System;
+using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Text;
 using System.Web;
 using System.Web.Services;
+using System.IO;
 
 public partial class Dealer_DealerRentalRequests : System.Web.UI.Page
 {
-    protected void Page_Load(object sender, EventArgs e)
+    private static string ConnectionString
     {
-
+        get { return ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString; }
     }
 
-
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Session["VendorID"] == null)
+        {
+            Response.Redirect("VendorLogin.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
+        }
+    }
 
     [WebMethod(EnableSession = true)]
     public static string GetRentals(string status)
     {
-
-        if (HttpContext.Current.Session["VendorID"] == null)
+        HttpContext context = HttpContext.Current;
+        if (context == null || context.Session == null || context.Session["VendorID"] == null)
             return "Login required";
 
-        int dealerId = Convert.ToInt32(HttpContext.Current.Session["VendorID"]);
+        int dealerId;
+        if (!Int32.TryParse(Convert.ToString(context.Session["VendorID"]), out dealerId) || dealerId <= 0)
+            return "Login required";
 
-        string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+        string filter = status ?? String.Empty;
+        string[] allowedFilters = { "", "Pending", "Approved", "Active", "Completed", "Rejected" };
+        if (Array.IndexOf(allowedFilters, filter) < 0)
+            return "Invalid status filter.";
 
         StringBuilder html = new StringBuilder();
-
-        using (SqlConnection con = new SqlConnection(constr))
+        using (SqlConnection con = new SqlConnection(ConnectionString))
+        using (SqlCommand cmd = new SqlCommand(@"
+SELECT R.RentalID, R.StartDate, R.EndDate, R.TotalDays, R.RentAmount, R.Status,
+       B.ModelName, B.Image1, U.FullName, U.Mobile
+FROM dbo.RentalBookings R
+INNER JOIN dbo.Bikes B ON R.BikeID=B.BikeID
+INNER JOIN dbo.Users U ON R.CustomerID=U.UserID
+WHERE R.DealerID=@DealerID
+  AND (@Status=N'' OR R.Status=@Status)
+ORDER BY R.CreatedAt DESC;", con))
         {
-
+            cmd.Parameters.Add("@DealerID", SqlDbType.Int).Value = dealerId;
+            cmd.Parameters.Add("@Status", SqlDbType.NVarChar, 30).Value = filter;
             con.Open();
-
-            string q = @"
-
-SELECT
-R.RentalID,
-R.StartDate,
-R.EndDate,
-R.TotalDays,
-R.RentAmount,
-R.Status,
-B.ModelName,
-B.Image1,
-U.FullName,
-U.Mobile
-
-FROM RentalBookings R
-
-INNER JOIN Bikes B ON R.BikeID=B.BikeID
-INNER JOIN Users U ON R.CustomerID=U.UserID
-
-WHERE R.DealerID=@dealer";
-
-            if (status != "")
-                q += " AND R.Status=@status";
-
-            q += " ORDER BY R.CreatedAt DESC";
-
-            SqlCommand cmd = new SqlCommand(q, con);
-
-            cmd.Parameters.AddWithValue("@dealer", dealerId);
-
-            if (status != "")
-                cmd.Parameters.AddWithValue("@status", status);
-
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            while (dr.Read())
+            using (SqlDataReader dr = cmd.ExecuteReader())
             {
-
-                string s = dr["Status"].ToString().ToLower();
-
-                html.Append("<div class='rental-card'>");
-
-                html.Append("<div class='rental-img'>");
-                html.Append("<img src='/Uploads/Bikes/" + dr["Image1"] + "'>");
-                html.Append("</div>");
-
-                html.Append("<div class='rental-body'>");
-
-                html.Append("<div class='rental-title'>" + dr["ModelName"] + "</div>");
-
-                html.Append("<div class='rental-customer'>Customer: " + dr["FullName"] + "</div>");
-
-                html.Append("<div class='rental-customer'>Phone: " + dr["Mobile"] + "</div>");
-
-                html.Append("<div class='rental-dates'>Dates: " +
-                Convert.ToDateTime(dr["StartDate"]).ToString("dd MMM") +
-                " - " +
-                Convert.ToDateTime(dr["EndDate"]).ToString("dd MMM") +
-                "</div>");
-
-                html.Append("<div class='rental-price'>Total: ₹ " +
-                Convert.ToDecimal(dr["RentAmount"]).ToString("N0") +
-                "</div>");
-
-                html.Append("<div class='status status-" + s + "'>" + dr["Status"] + "</div>");
-
-                html.Append("<div class='actions'>");
-
-                if (dr["Status"].ToString() == "Pending")
+                while (dr.Read())
                 {
+                    int rentalId = Convert.ToInt32(dr["RentalID"]);
+                    string rawStatus = Convert.ToString(dr["Status"]);
+                    string statusClass = GetStatusClass(rawStatus);
+                    string imageName = SafeImageName(Convert.ToString(dr["Image1"]));
+                    string imageUrl = String.IsNullOrEmpty(imageName)
+                        ? "/Uploads/images/bike.png"
+                        : "/Uploads/Bikes/" + imageName;
 
-                    html.Append("<button class='btn btn-approve' onclick='updateStatus(" + dr["RentalID"] + ",\"Approved\")'>Approve</button>");
+                    html.Append("<div class='rental-card'><div class='rental-img'><img src='")
+                        .Append(HttpUtility.HtmlAttributeEncode(imageUrl))
+                        .Append("' alt='Bike image' /></div><div class='rental-body'>")
+                        .Append("<div class='rental-title'>").Append(HttpUtility.HtmlEncode(Convert.ToString(dr["ModelName"]))).Append("</div>")
+                        .Append("<div class='rental-customer'>Customer: ").Append(HttpUtility.HtmlEncode(Convert.ToString(dr["FullName"]))).Append("</div>")
+                        .Append("<div class='rental-customer'>Phone: ").Append(HttpUtility.HtmlEncode(Convert.ToString(dr["Mobile"]))).Append("</div>")
+                        .Append("<div class='rental-dates'>Dates: ")
+                        .Append(Convert.ToDateTime(dr["StartDate"]).ToString("dd MMM yyyy"))
+                        .Append(" - ").Append(Convert.ToDateTime(dr["EndDate"]).ToString("dd MMM yyyy")).Append("</div>")
+                        .Append("<div class='rental-price'>Total: ₹ ")
+                        .Append(Convert.ToDecimal(dr["RentAmount"]).ToString("N0"))
+                        .Append("</div><div class='status ").Append(statusClass).Append("'>")
+                        .Append(HttpUtility.HtmlEncode(rawStatus)).Append("</div><div class='actions'>");
 
-                    html.Append("<button class='btn btn-reject' onclick='updateStatus(" + dr["RentalID"] + ",\"Rejected\")'>Reject</button>");
+                    if (rawStatus == "Pending")
+                    {
+                        AppendAction(html, rentalId, "Approved", "Approve", "btn-approve");
+                        AppendAction(html, rentalId, "Rejected", "Reject", "btn-reject");
+                    }
+                    else if (rawStatus == "Approved")
+                        AppendAction(html, rentalId, "Active", "Start", "btn-start");
+                    else if (rawStatus == "Active")
+                        AppendAction(html, rentalId, "Completed", "Complete", "btn-complete");
 
+                    html.Append("</div></div></div>");
                 }
-
-                if (dr["Status"].ToString() == "Approved")
-                {
-
-                    html.Append("<button class='btn btn-start' onclick='updateStatus(" + dr["RentalID"] + ",\"Active\")'>Start</button>");
-
-                }
-
-                if (dr["Status"].ToString() == "Active")
-                {
-
-                    html.Append("<button class='btn btn-complete' onclick='updateStatus(" + dr["RentalID"] + ",\"Completed\")'>Complete</button>");
-
-                }
-                html.Append("</div>");
-                html.Append("</div>");
-                html.Append("</div>");
-
             }
-
         }
-
         return html.ToString();
-
     }
 
+    private static void AppendAction(StringBuilder html, int id, string status, string label, string css)
+    {
+        // Values are fixed server allow-list literals; never insert DB strings into JavaScript.
+        html.Append("<button type='button' class='btn ").Append(css)
+            .Append("' onclick='updateStatus(").Append(id).Append(",\u0027")
+            .Append(status).Append("\u0027)'>").Append(label).Append("</button>");
+    }
+
+    private static string GetStatusClass(string status)
+    {
+        switch (status)
+        {
+            case "Pending": return "status-pending";
+            case "Approved": return "status-approved";
+            case "Active": return "status-active";
+            case "Completed": return "status-completed";
+            case "Rejected": return "status-rejected";
+            default: return "status-rejected";
+        }
+    }
+
+    private static string SafeImageName(string name)
+    {
+        if (String.IsNullOrWhiteSpace(name)) return String.Empty;
+        string only = Path.GetFileName(name);
+        string ext = Path.GetExtension(only).ToLowerInvariant();
+        if (only != name || (ext != ".jpg" && ext != ".jpeg" && ext != ".png" && ext != ".webp"))
+            return String.Empty;
+        return only;
+    }
 
     [WebMethod(EnableSession = true)]
     public static string UpdateStatus(int rentalId, string status)
     {
+        HttpContext context = HttpContext.Current;
+        if (context == null || context.Session == null || context.Session["VendorID"] == null)
+            return "Login required.";
 
-        string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+        int dealerId;
+        if (!Int32.TryParse(Convert.ToString(context.Session["VendorID"]), out dealerId) || dealerId <= 0)
+            return "Login required.";
+        if (rentalId <= 0) return "Invalid rental.";
 
-        using (SqlConnection con = new SqlConnection(constr))
+        string expectedStatus;
+        switch (status)
         {
-
-            con.Open();
-
-            SqlCommand cmd = new SqlCommand(
-
-            "UPDATE RentalBookings SET Status=@s WHERE RentalID=@id",
-
-            con);
-
-            cmd.Parameters.AddWithValue("@s", status);
-            cmd.Parameters.AddWithValue("@id", rentalId);
-
-            cmd.ExecuteNonQuery();
-
+            case "Approved":
+            case "Rejected":
+                expectedStatus = "Pending";
+                break;
+            case "Active":
+                expectedStatus = "Approved";
+                break;
+            case "Completed":
+                expectedStatus = "Active";
+                break;
+            default:
+                return "Invalid status transition.";
         }
 
-        return "Rental status updated";
-
+        using (SqlConnection con = new SqlConnection(ConnectionString))
+        using (SqlCommand cmd = new SqlCommand(@"
+UPDATE dbo.RentalBookings
+SET Status=@NewStatus
+WHERE RentalID=@RentalID
+  AND DealerID=@DealerID
+  AND Status=@ExpectedStatus;", con))
+        {
+            cmd.Parameters.Add("@NewStatus", SqlDbType.NVarChar, 30).Value = status;
+            cmd.Parameters.Add("@RentalID", SqlDbType.Int).Value = rentalId;
+            cmd.Parameters.Add("@DealerID", SqlDbType.Int).Value = dealerId;
+            cmd.Parameters.Add("@ExpectedStatus", SqlDbType.NVarChar, 30).Value = expectedStatus;
+            con.Open();
+            int affected = cmd.ExecuteNonQuery();
+            return affected == 1 ? "Rental status updated." : "Rental not found or transition is not allowed.";
+        }
     }
-
 }
