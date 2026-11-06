@@ -21,7 +21,7 @@ public partial class Client_BikeDetails : System.Web.UI.Page
         }
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string SubmitReview(int rating, string title, string review)
     {
         if (HttpContext.Current.Session["CustomerID"] == null)
@@ -207,7 +207,7 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
         }
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string ToggleWishlist(int bikeId)
     {
         if (HttpContext.Current.Session["CustomerID"] == null)
@@ -256,7 +256,7 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
     }
 
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string CheckWishlist(int bikeId)
     {
         if (HttpContext.Current.Session["CustomerID"] == null)
