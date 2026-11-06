@@ -113,7 +113,7 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
                 litDealerCity.Text = System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["City"]));
                 ViewState["DealerID"] = dr["UserID"].ToString();
 
-                imgMain.ImageUrl = "/Uploads/Bikes/" + dr["Image1"].ToString();
+                imgMain.ImageUrl = "/Uploads/Bikes/" + SafeBikeImageFileName(dr["Image1"]);
 
                 ViewState["BikeID"] = dr["BikeID"].ToString();
                 ViewState["Price"] = price;
@@ -143,11 +143,12 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
                 {
                     string col = "Image" + i;
 
-                    if (dr[col] != DBNull.Value && dr[col].ToString() != "")
+                    string imageFile = SafeBikeImageFileName(dr[col]);
+                    if (!String.IsNullOrEmpty(imageFile))
                     {
                         thumbs += "<img src='/Uploads/Bikes/" +
-                                  dr[col] +
-                                  "' onclick=\"changeImage(this.src)\" />";
+                                  System.Web.HttpUtility.HtmlAttributeEncode(imageFile) +
+                                  "' alt='Bike image' loading='lazy' onclick=\"changeImage(this.src)\" />";
                     }
                 }
 
@@ -311,7 +312,8 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
                 html += "<div class='similar-card'>";
 
                 html += "<div class='similar-img'>";
-                html += "<img src='/Uploads/Bikes/" + dr["Image1"] + "'>";
+                string similarImage = SafeBikeImageFileName(dr["Image1"]);
+                html += "<img src='/Uploads/Bikes/" + System.Web.HttpUtility.HtmlAttributeEncode(similarImage) + "' alt='Bike image' loading='lazy'>";
                 html += "</div>";
 
                 html += "<div class='similar-body'>";
@@ -321,8 +323,13 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
                 html += "<div class='similar-price'>₹ "
                 + Convert.ToDecimal(dr["Price"]).ToString("N0") + "</div>";
 
-                html += "<a class='similar-btn' href='BikeDetails.aspx?slug="
-                + dr["Slug"] + "'>View Details</a>";
+                string similarSlug = Convert.ToString(dr["Slug"]);
+                if (System.Text.RegularExpressions.Regex.IsMatch(similarSlug, @"^[A-Za-z0-9_-]{1,255}$"))
+                {
+                    html += "<a class='similar-btn' href='BikeDetails.aspx?slug="
+                    + System.Web.HttpUtility.HtmlAttributeEncode(System.Web.HttpUtility.UrlEncode(similarSlug))
+                    + "'>View Details</a>";
+                }
 
                 html += "</div></div>";
             }
@@ -424,8 +431,10 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
 
                 html += "<div class='review-user'>";
 
+                string reviewTitle = Convert.ToString(dr["ReviewTitle"]);
+                string avatar = String.IsNullOrEmpty(reviewTitle) ? "?" : reviewTitle.Substring(0, 1);
                 html += "<div class='user-avatar'>"
-                + dr["ReviewTitle"].ToString().Substring(0, 1)
+                + System.Web.HttpUtility.HtmlEncode(avatar)
                 + "</div>";
 
                 html += "<div>";
@@ -435,16 +444,16 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
                 + "</div>";
 
                 html += "<div class='review-title'>"
-                + dr["ReviewTitle"] +
-                "</div>";
+                + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ReviewTitle"]))
+                + "</div>";
 
                 html += "</div>";
 
                 html += "</div>";
 
                 html += "<div class='review-text'>"
-                + dr["ReviewText"] +
-                "</div>";
+                + System.Web.HttpUtility.HtmlEncode(Convert.ToString(dr["ReviewText"]))
+                + "</div>";
 
                 html += "</div>";
             }
@@ -466,5 +475,14 @@ WHERE b.Slug=@slug AND b.IsApproved=1", con);
         }
 
         return stars;
+    }
+
+    private static string SafeBikeImageFileName(object value)
+    {
+        string name = System.IO.Path.GetFileName(Convert.ToString(value));
+        return System.Text.RegularExpressions.Regex.IsMatch(
+            name, @"^[A-Za-z0-9_-]{1,180}[.](jpg|jpeg|png|webp)$",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+            ? name : String.Empty;
     }
 }
