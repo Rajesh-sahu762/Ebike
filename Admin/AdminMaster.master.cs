@@ -19,9 +19,26 @@ public partial class Admin_AdminMaster : System.Web.UI.MasterPage
         }
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static object GetNotifications()
     {
+        HttpContext context = HttpContext.Current;
+        int adminId;
+        if (context == null || context.Session == null ||
+            !Int32.TryParse(Convert.ToString(context.Session["AdminID"]), out adminId) || adminId <= 0)
+            throw new HttpException(401, "Authentication required.");
+
+        string connectionString = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
+        using (SqlConnection authConnection = new SqlConnection(connectionString))
+        using (SqlCommand authCommand = new SqlCommand(
+            "SELECT COUNT(*) FROM dbo.Users WHERE UserID=@UserID AND Role='Admin' AND IsActive=1;", authConnection))
+        {
+            authCommand.Parameters.Add("@UserID", SqlDbType.Int).Value = adminId;
+            authConnection.Open();
+            if (Convert.ToInt32(authCommand.ExecuteScalar()) != 1)
+                throw new HttpException(403, "Administrator access required.");
+        }
+
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
         using (SqlConnection con = new SqlConnection(constr))
