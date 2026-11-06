@@ -7,16 +7,37 @@ public partial class Admin_ManageUsers : System.Web.UI.Page
 {
     string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
+    private static string NormalizeSortExpression(string value)
+    {
+        switch (value)
+        {
+            case "UserID": return "UserID";
+            case "FullName": return "FullName";
+            case "Email": return "Email";
+            case "Role": return "Role";
+            case "IsActive": return "IsActive";
+            default: return "UserID";
+        }
+    }
+
     string SortDirection
     {
-        get { return ViewState["SortDirection"] as string ?? "ASC"; }
-        set { ViewState["SortDirection"] = value; }
+        get
+        {
+            string value = ViewState["SortDirection"] as string;
+            return String.Equals(value, "DESC", StringComparison.OrdinalIgnoreCase) ? "DESC" : "ASC";
+        }
+        set
+        {
+            ViewState["SortDirection"] = String.Equals(value, "DESC", StringComparison.OrdinalIgnoreCase)
+                ? "DESC" : "ASC";
+        }
     }
 
     string SortExpression
     {
-        get { return ViewState["SortExpression"] as string ?? "UserID"; }
-        set { ViewState["SortExpression"] = value; }
+        get { return NormalizeSortExpression(ViewState["SortExpression"] as string); }
+        set { ViewState["SortExpression"] = NormalizeSortExpression(value); }
     }
 
 
