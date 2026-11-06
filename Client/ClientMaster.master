@@ -1146,73 +1146,86 @@ body {
     }
 
     function renderSuggestions(items, q) {
+        dropdown.replaceChildren();
 
         if (!items || items.length === 0) {
-            dropdown.innerHTML =
-                '<div class="sd-no-result">No results found</div>';
+            var empty = document.createElement("div");
+            empty.className = "sd-no-result";
+            empty.textContent = "No results found";
+            dropdown.appendChild(empty);
             dropdown.classList.add("show");
             return;
         }
 
-        var html = "";
-
         items.forEach(function (item) {
-
             var url = "#";
+            var slug = String(item.Slug || "");
 
-            // 🔥 SLUG BASED ROUTING
             if (item.Type === "Bike") {
+                if (!/^[A-Za-z0-9_-]{1,255}$/.test(slug)) return;
 
                 if (item.IsForRent === true)
-                    url = "RentalBikeDetails.aspx?slug=" + item.Slug;
-
+                    url = "RentalBikeDetails.aspx?slug=" + encodeURIComponent(slug);
                 else if (item.IsUsed === true)
-                    url = "UsedBikeDetails.aspx?slug=" + item.Slug;
-
+                    url = "UsedBikeDetails.aspx?slug=" + encodeURIComponent(slug);
                 else
-                    url = "BikeDetails.aspx?slug=" + item.Slug;
-            }
-
-            else if (item.Type === "Part") {
+                    url = "BikeDetails.aspx?slug=" + encodeURIComponent(slug);
+            } else if (item.Type === "Part") {
                 url = "Parts.aspx";
-            }
-
-            else if (item.Type === "Station") {
+            } else if (item.Type === "Station") {
                 url = "ChargingStations.aspx";
-            }
-
-            else if (item.Type === "Service") {
+            } else if (item.Type === "Service") {
                 url = "ServiceCenters.aspx";
+            } else {
+                return;
             }
 
-            // 🔥 IMAGE PATH FIX (AS PER YOUR FOLDER)
-            var imgHtml = "";
+            var link = document.createElement("a");
+            link.className = "sd-item";
+            link.href = url;
 
-            if (item.Type === "Bike" && item.ImagePath)
-                imgHtml = '<img src="/Uploads/Bikes/' + item.ImagePath + '" />';
+            var imageContainer = document.createElement("div");
+            imageContainer.className = "sd-img";
 
-            else if (item.Type === "Part" && item.ImagePath)
-                imgHtml = '<img src="/Uploads/Parts/' + item.ImagePath + '" />';
+            var fileName = String(item.ImagePath || "").split(/[\\/]/).pop();
+            var imageAllowed = /^[A-Za-z0-9_-]{1,180}\\.(jpg|jpeg|png|webp)$/i.test(fileName);
 
-            else
-                imgHtml = '<span>⚡</span>';
+            if (imageAllowed && (item.Type === "Bike" || item.Type === "Part")) {
+                var image = document.createElement("img");
+                image.src = (item.Type === "Bike" ? "/Uploads/Bikes/" : "/Uploads/Parts/") + fileName;
+                image.alt = "";
+                image.loading = "lazy";
+                imageContainer.appendChild(image);
+            } else {
+                var icon = document.createElement("span");
+                icon.textContent = "⚡";
+                imageContainer.appendChild(icon);
+            }
 
-            html += '<a class="sd-item" href="' + url + '">' +
-                '<div class="sd-img">' + imgHtml + '</div>' +
-                '<div class="sd-info">' +
-                    '<div class="sd-name">' + item.Name + '</div>' +
-                    '<div class="sd-brand">' + item.Type + '</div>' +
-                '</div>' +
-            '</a>';
+            var info = document.createElement("div");
+            info.className = "sd-info";
+
+            var name = document.createElement("div");
+            name.className = "sd-name";
+            name.textContent = String(item.Name || "");
+
+            var type = document.createElement("div");
+            type.className = "sd-brand";
+            type.textContent = String(item.Type || "");
+
+            info.appendChild(name);
+            info.appendChild(type);
+            link.appendChild(imageContainer);
+            link.appendChild(info);
+            dropdown.appendChild(link);
         });
 
-        dropdown.innerHTML = html;
         dropdown.classList.add("show");
     }
 
     function hideDropdown() {
         dropdown.classList.remove("show");
-        dropdown.innerHTML = "";
+        dropdown.replaceChildren();
     }
 
     function escHtml(str) {
