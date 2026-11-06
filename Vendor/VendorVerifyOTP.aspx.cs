@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Mail;
+using EBIke.Security;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -82,7 +83,7 @@ public partial class Vendor_VendorVerifyOTP : System.Web.UI.Page
     protected void btnResend_Click(object sender, EventArgs e)
     {
         string email = Request.QueryString["email"];
-        string otp = new Random().Next(100000, 999999).ToString();
+        string otp = OtpSecurity.GenerateSixDigitOtp();
 
         using (SqlConnection con = new SqlConnection(constr))
         {
