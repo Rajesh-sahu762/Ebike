@@ -271,7 +271,7 @@ ORDER BY CreatedAt DESC
     }
 }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string SubmitReview(int rating, string title, string review)
     {
         if (HttpContext.Current.Session["CustomerID"] == null)
@@ -318,7 +318,7 @@ VALUES
         return "ok";
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string CheckWishlist(int bikeId)
     {
         if (HttpContext.Current.Session["CustomerID"] == null)
@@ -347,7 +347,7 @@ VALUES
         }
     }
 
-    [WebMethod]
+    [WebMethod(EnableSession = true)]
     public static string ToggleWishlist(int bikeId)
     {
         if (HttpContext.Current.Session["CustomerID"] == null)
