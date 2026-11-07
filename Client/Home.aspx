@@ -1532,6 +1532,46 @@
 }
 @media(prefers-reduced-motion:reduce){.home-category-card{transition:none}}
 
+
+/* Latest electric bike cards — image-led premium cards */
+.featured-ev-v7{background:linear-gradient(180deg,#F4F8FC 0%,#EEF6FA 100%)!important;padding:52px 0 66px!important}
+.featured-heading-v8{display:flex;align-items:flex-end;justify-content:space-between;gap:22px;margin:0 0 22px;padding:0 2px}
+.featured-heading-v8 .section-title-v7{font-size:28px;line-height:1.1;letter-spacing:.015em;font-weight:400}
+.featured-heading-v8 .section-title-v7 span{color:#078DAA}
+.featured-section-subtitle{margin:5px 0 0;color:#60758A;font:400 10px/1.5 var(--ep-font-body)}
+.featured-heading-actions{display:flex;align-items:center;gap:22px}
+.featured-view-all{display:inline-flex;align-items:center;gap:8px;color:#0796B5!important;font:600 10px/1.2 var(--ep-font-body);text-decoration:none!important;white-space:nowrap}
+.featured-view-all:hover{color:#05677E!important;gap:11px}
+.featured-heading-v8 .slider-nav-wrapper{display:flex;gap:9px}
+.featured-heading-v8 .nav-btn-v7{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.8);border:1px solid #DCE7EF;color:#19334B}
+.featured-heading-v8 .nav-btn-v7:hover{background:#071A2F;border-color:#071A2F;color:#fff}
+.bikeSliderV7 .swiper-slide{height:auto}
+.compact-card-v7{height:100%;margin:5px 2px 10px;background:#fff;border:1px solid #E1EAF1;border-radius:17px;overflow:hidden;box-shadow:0 5px 16px rgba(15,45,65,.055);transition:transform .24s ease,border-color .24s ease,box-shadow .24s ease}
+.compact-card-v7:hover{transform:translateY(-4px);border-color:#B7E5EC;box-shadow:0 13px 28px rgba(15,45,65,.11)}
+.featured-bike-image-link{display:block;text-decoration:none!important}
+.img-holder-v7{position:relative;height:142px;padding:0;overflow:hidden;background:linear-gradient(135deg,#E9F1F7,#DCEAF1)}
+.img-holder-v7:after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(180deg,transparent,rgba(6,20,34,.15));pointer-events:none}
+.img-holder-v7 img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;object-position:center;transition:transform .45s ease}
+.compact-card-v7:hover .img-holder-v7 img{transform:scale(1.045)}
+.featured-bike-badge{position:absolute;z-index:1;top:10px;left:10px;padding:5px 10px;border-radius:999px;background:#16A34A;color:#fff;font:600 9px/1 var(--ep-font-body);box-shadow:0 3px 9px rgba(0,0,0,.12)}
+.info-holder-v7{padding:12px 13px 11px}
+.title-v7{margin:0 0 3px;font:600 12px/1.35 var(--ep-font-body);letter-spacing:0;color:#10243A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.title-v7 a{color:inherit;text-decoration:none}.title-v7 a:hover{color:#078DAA}
+.price-v7{margin:0 0 8px;color:#07834D;font:700 14px/1.2 var(--ep-font-body);letter-spacing:-.025em}
+.price-v7 .price-note{font-size:10px;color:#07834D;vertical-align:top;margin-left:1px}
+.stats-row-v7{display:flex;align-items:center;gap:7px;margin:0 0 9px;flex-wrap:wrap}
+.stats-row-v7 span{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:7px;background:#F5F8FB;border:1px solid #E5ECF2;color:#344B62;font:500 9px/1 var(--ep-font-body);white-space:nowrap}
+.stats-row-v7 span i{color:#078DAA;font-size:10px}
+.footer-row-v7{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid #EDF1F5}
+.featured-bike-meta{font:400 8px/1.3 var(--ep-font-body);color:#8293A3}
+.go-btn-v7{width:29px;height:29px;border-radius:9px;background:#071A2F;color:#fff;font-size:11px}
+.go-btn-v7:hover{background:#079DB9;color:#fff}
+.v7-pagination{position:relative!important;margin-top:8px!important}
+.v7-pagination .swiper-pagination-bullet{width:6px;height:6px;background:#B7C4CE;opacity:1}
+.v7-pagination .swiper-pagination-bullet-active{width:19px!important;background:#078DAA!important;border-radius:5px!important}
+@media(max-width:767px){.featured-ev-v7{padding:35px 0 45px!important}.featured-heading-v8{align-items:flex-end;margin-bottom:15px;gap:10px}.featured-heading-v8 .section-title-v7{font-size:23px}.featured-section-subtitle{font-size:9px;max-width:230px}.featured-heading-actions{gap:0}.featured-heading-actions .slider-nav-wrapper{display:none}.featured-view-all{font-size:9px}.img-holder-v7{height:126px}.info-holder-v7{padding:10px}.title-v7{font-size:11px}.price-v7{font-size:13px}.stats-row-v7{gap:5px}.stats-row-v7 span{font-size:8px;padding:5px 6px}}
+@media(prefers-reduced-motion:reduce){.compact-card-v7,.img-holder-v7 img{transition:none}}
+
 </style>
 
 <section class="hero-v4">
@@ -1600,18 +1640,19 @@
 
 <section class="featured-ev-v7 py-5" style="background-color: #fcfdfe;">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-5 px-2">
+        <div class="featured-heading-v8">
             <div>
-                <h2 class="section-title-v7">Featured Rides</h2>
+                <h2 class="section-title-v7">Latest <span>Electric Bikes</span></h2>
+                <p class="featured-section-subtitle">Discover newly launched and trending electric bikes.</p>
                 <div class="heading-line-v7"></div>
             </div>
-            
-            <div class="slider-nav-wrapper d-none d-md-flex">
-                <div class="nav-btn-v7 prev-v7"><i class="fa-solid fa-chevron-left"></i></div>
-                <div class="nav-btn-v7 next-v7"><i class="fa-solid fa-chevron-right"></i></div>
+            <div class="featured-heading-actions">
+                <a href="Bikes.aspx" class="featured-view-all">View All Bikes <i class="fa-solid fa-arrow-right-long"></i></a>
+                <div class="slider-nav-wrapper">
+                    <button type="button" class="nav-btn-v7 prev-v7" aria-label="Previous bikes"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button type="button" class="nav-btn-v7 next-v7" aria-label="Next bikes"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
             </div>
-            
-            <a href="Bikes.aspx" class="view-all-v7 d-md-none">View All</a>
         </div>
 
         <div class="swiper bikeSliderV7">
@@ -1619,24 +1660,28 @@
                 <asp:Repeater ID="rptFeatured" runat="server">
                     <ItemTemplate>
                         <div class="swiper-slide">
-                            <div class="compact-card-v7">
-                                <div class="img-holder-v7">
-                                    <img src='<%# GetHomeAssetUrl(Eval("Image1"), "Bikes") %>' alt='<%# Eval("ModelName") %>' />
-                                </div>
+                            <article class="compact-card-v7">
+                                <a class="featured-bike-image-link" href='BikeDetails.aspx?slug=<%# Eval("Slug") %>' aria-label='View <%# Eval("ModelName") %> details'>
+                                    <div class="img-holder-v7">
+                                        <img src='<%# GetHomeAssetUrl(Eval("Image1"), "Bikes") %>' alt='<%# Eval("ModelName") %>' loading="lazy" decoding="async" />
+                                        <span class="featured-bike-badge">Latest Arrival</span>
+                                    </div>
+                                </a>
                                 <div class="info-holder-v7">
-                                    <h3 class="title-v7"><%# Eval("ModelName") %></h3>
+                                    <h3 class="title-v7"><a href='BikeDetails.aspx?slug=<%# Eval("Slug") %>'><%# Eval("ModelName") %></a></h3>
+                                    <div class="price-v7">₹<%# Eval("Price", "{0:N0}") %><span class="price-note">*</span></div>
                                     <div class="stats-row-v7">
-                                        <span><i class="fa-solid fa-bolt mr-1"></i><%# Eval("RangeKM") %> km</span>
-                                        <span><i class="fa-solid fa-gauge-high mr-1"></i>80 km/h</span>
+                                        <span><i class="fa-solid fa-bolt"></i><%# Eval("RangeKM") %> km</span>
+                                        <span><i class="fa-solid fa-gauge-high"></i>80 km/h</span>
                                     </div>
                                     <div class="footer-row-v7">
-                                        <div class="price-v7">₹<%# Eval("Price", "{0:N0}") %> /-</div>
-                                        <a href='BikeDetails.aspx?slug=<%# Eval("Slug") %>' class="go-btn-v7">
+                                        <span class="featured-bike-meta">Electric • Verified listing</span>
+                                        <a href='BikeDetails.aspx?slug=<%# Eval("Slug") %>' class="go-btn-v7" aria-label='Explore <%# Eval("ModelName") %>'>
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </a>
                                     </div>
                                 </div>
-                            </div>
+                            </article>
                         </div>
                     </ItemTemplate>
                 </asp:Repeater>
