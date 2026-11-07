@@ -1542,7 +1542,7 @@
                             <div class="part-cat-tag"><%# Eval("Category") %></div>
                             
                             <div class="part-img-v9">
-                                <img src='/Uploads/Parts/<%# Eval("Image1") %>' alt='<%# Eval("PartName") %>' />
+                                <img src='<%# GetHomeAssetUrl(Eval("Image1"), "Parts") %>' alt='<%# Eval("PartName") %>' />
                                 <div class="part-overlay-v9">
                                     <a href="Parts.aspx" class="quick-add-btn">
                                         <i class="fa-solid fa-plus"></i>
@@ -1573,7 +1573,7 @@
             <div class="col-lg-5 mb-5 mb-lg-0">
                 <div class="battery-image-wrapper">
                     <div class="blob-bg"></div>
-                    <img src="../Uploads/Banner/maintain.png" class="img-fluid main-battery-img" alt="Battery Maintenance" loading="lazy" />
+                    <img src="<%= ResolveUrl("~/Uploads/Banner/maintain.png") %>" class="img-fluid main-battery-img" alt="Battery Maintenance" loading="lazy" />
                     <div class="floating-info-card">
                         <i class="fa-solid fa-heart-pulse text-danger"></i>
                         <span>Longer Battery Life</span>
@@ -1792,7 +1792,7 @@
                             <div class="review-card-v14">
                                 <div class="review-user-row">
                                     <div class="user-profile-v14">
-                                        <img src='<%# Eval("ProfileImage") == DBNull.Value ? "../Uploads/user.jpg" : "/Uploads/Profile/" + Eval("ProfileImage") %>' alt='<%# Eval("FullName") %>' />
+                                        <img src='<%# GetHomeAssetUrl(Eval("ProfileImage") == DBNull.Value ? "user.jpg" : Eval("ProfileImage"), Eval("ProfileImage") == DBNull.Value ? "images" : "Profile") %>' alt='<%# Eval("FullName") %>' />
                                         <%# (bool)Eval("IsVerified") ? "<div class='verified-check'><i class='fa-solid fa-check'></i></div>" : "" %>
                                     </div>
                                     <div class="user-details-v14">
