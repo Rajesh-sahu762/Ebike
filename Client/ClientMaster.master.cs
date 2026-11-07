@@ -118,8 +118,8 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
 
         if (!string.IsNullOrEmpty(settings.SiteTitle))
         {
+            // Keep the dynamic browser title; the visible duplicate logo text was removed from the master markup.
             Page.Title = settings.SiteTitle;
-            lblSiteTitle.Text = settings.SiteTitle;
         }
 
         // Use the committed EBikes Duniya SVG mark as the dependable client logo.
