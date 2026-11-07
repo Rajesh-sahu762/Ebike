@@ -124,3 +124,91 @@ a, button, input, select { -webkit-tap-highlight-color: transparent; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+/* Shared legacy page layouts: bring remaining Client routes into the same system */
+.main-content .policy-wrapper,
+.main-content .policy-card,
+.main-content .terms-card,
+.main-content .delete-card,
+.main-content .enquiry-card,
+.main-content .rental-wrapper,
+.main-content .account-sidebar,
+.main-content .account-content,
+.main-content .profile-card,
+.main-content .order-card,
+.main-content .checkout-card,
+.main-content .service-card,
+.main-content .station-card {
+  border-radius: 18px;
+}
+.main-content .policy-wrapper,
+.main-content .delete-card,
+.main-content .enquiry-card,
+.main-content .rental-wrapper,
+.main-content .account-sidebar,
+.main-content .account-content,
+.main-content .order-card,
+.main-content .checkout-card {
+  border: 1px solid var(--ep-border);
+  box-shadow: 0 10px 28px rgba(7,26,47,.055);
+}
+.main-content .policy-wrapper,
+.main-content .policy-card,
+.main-content .terms-card {
+  background: #fff;
+  color: var(--ep-body);
+}
+.main-content .policy-wrapper h1,
+.main-content .policy-wrapper h2,
+.main-content .policy-card h1,
+.main-content .policy-card h2,
+.main-content .terms-card h1,
+.main-content .terms-card h2,
+.main-content .delete-card h2,
+.main-content .rental-title {
+  color: var(--ep-heading);
+  font-family: var(--ep-font-heading);
+  letter-spacing: -.03em;
+}
+.main-content .enquiry-wrapper { max-width: 1240px; margin: 54px auto; padding: 0 20px; }
+.main-content .enquiry-card { background: #fff; padding: 22px; }
+.main-content .delete-wrapper { max-width: 680px; margin: 64px auto; padding: 0 20px; }
+.main-content .delete-card { background:#fff;padding:clamp(24px,4vw,40px); }
+.main-content .account-section,
+.main-content .account-wrapper { max-width: 1280px; margin: 42px auto 76px; padding: 0 22px; }
+.main-content .account-grid { display:grid;grid-template-columns:280px minmax(0,1fr);gap:26px;align-items:start; }
+.main-content .account-sidebar { background:#fff;overflow:hidden; }
+.main-content .profile-header { background:linear-gradient(140deg,#071A2F,#0B3552);color:#fff; }
+.main-content .profile-header h2,
+.main-content .profile-header h3,
+.main-content .profile-header p { color:#fff; }
+.main-content .account-content { min-width:0;background:#fff;padding:clamp(20px,3vw,34px); }
+.main-content .rental-wrapper { background:transparent;border:0;box-shadow:none; }
+.main-content .rental-header { flex-wrap:wrap;gap:15px; }
+.main-content .main-content-title,
+.main-content .page-title { font:800 clamp(25px,3vw,34px)/1.2 var(--ep-font-heading);color:var(--ep-heading);letter-spacing:-.035em; }
+.main-content .btn,
+.main-content input[type="submit"],
+.main-content input[type="button"] { border-radius:11px;font-family:var(--ep-font-heading);font-weight:700;transition:transform .2s ease,box-shadow .2s ease; }
+.main-content .btn:not(:disabled):hover,
+.main-content input[type="submit"]:not(:disabled):hover,
+.main-content input[type="button"]:not(:disabled):hover { transform:translateY(-1px); }
+.main-content .form-label,
+.main-content label { color:#41566C;font-weight:600; }
+.main-content .alert { border:0;border-radius:12px; }
+.main-content .pagination .page-link { color:var(--ep-primary-navy);border-color:var(--ep-border); }
+.main-content .pagination .active .page-link,
+.main-content .pagination .page-item.active .page-link { background:var(--ep-primary-navy);border-color:var(--ep-primary-navy);color:#fff; }
+@media(max-width:992px){
+ .main-content .account-grid { grid-template-columns:1fr; }
+ .main-content .account-sidebar { position:static; }
+ .main-content .enquiry-card { grid-template-columns:1fr!important; }
+}
+@media(max-width:640px){
+ .main-content .account-section,.main-content .account-wrapper { margin:24px auto 48px;padding:0 13px; }
+ .main-content .account-grid { gap:16px; }
+ .main-content .account-content { padding:18px 14px; }
+ .main-content .policy-wrapper,.main-content .delete-wrapper,.main-content .enquiry-wrapper { margin:28px auto;padding-left:13px;padding-right:13px; }
+ .main-content .policy-wrapper { padding:18px!important; }
+ .main-content .table-responsive { border:1px solid var(--ep-border);border-radius:12px; }
+ .main-content .table { min-width:560px; }
+}
