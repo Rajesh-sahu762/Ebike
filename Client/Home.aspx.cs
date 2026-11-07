@@ -174,7 +174,22 @@ public partial class Client_Home : System.Web.UI.Page
         if (raw.StartsWith(folderName + "/", StringComparison.OrdinalIgnoreCase))
             raw = raw.Substring(folderName.Length + 1);
 
-        return ResolveUrl("~/Uploads/" + folderName + "/" + raw);
+        string relativePath = "~/Uploads/" + folderName + "/" + raw;
+        string resolvedPath = ResolveUrl(relativePath);
+        string physicalPath = Server.MapPath(resolvedPath);
+
+        if (!System.IO.File.Exists(physicalPath))
+        {
+            if (folderName.Equals("Brands", StringComparison.OrdinalIgnoreCase))
+                return ResolveUrl("~/Uploads/favicon/favicon-ebd.svg");
+            if (folderName.Equals("Parts", StringComparison.OrdinalIgnoreCase))
+                return ResolveUrl("~/Uploads/images/parts.png");
+            if (folderName.Equals("Profile", StringComparison.OrdinalIgnoreCase))
+                return ResolveUrl("~/Uploads/user.jpg");
+            return ResolveUrl("~/Uploads/images/bike.png");
+        }
+
+        return resolvedPath;
     }
 
     public string GenerateStars(int rating)
