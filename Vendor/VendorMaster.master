@@ -1,196 +1,474 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="VendorMaster.master.cs" Inherits="Vendor_VendorMaster" %>
-
 <!DOCTYPE html>
 <html>
 <head id="Head1" runat="server">
-    <title>Vendor Panel</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta charset="utf-8" />
+    <title>EBikes Duniya | Vendor Panel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<style>
-body{
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    background:#f1f5f9;
-}
+    <meta name="theme-color" content="#e8edf5" />
 
-.sidebar{
-    width:240px;
-    height:100vh;
-    position:fixed;
-    background:linear-gradient(180deg,#0f172a,#1e3a8a);
-    color:white;
-    padding-top:20px;
-}
+    <!-- Shared EBikes Duniya favicon assets -->
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= ResolveUrl("~/Uploads/favicon/favicon-32x32.png") %>" />
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= ResolveUrl("~/Uploads/favicon/favicon-16x16.png") %>" />
+    <link rel="icon" type="image/png" sizes="192x192" href="<%= ResolveUrl("~/Uploads/favicon/android-chrome-192x192.png") %>" />
+    <link rel="icon" type="image/png" sizes="512x512" href="<%= ResolveUrl("~/Uploads/favicon/android-chrome-512x512.png") %>" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= ResolveUrl("~/Uploads/favicon/apple-touch-icon.png") %>" />
 
-.sidebar h4{
-    text-align:center;
-    font-weight:700;
-    margin-bottom:30px;
-}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-.sidebar a{
-    display:block;
-    padding:12px 25px;
-    color:white;
-    text-decoration:none;
-    font-size:15px;
-    transition:0.3s;
-}
+    <style>
+        :root {
+            --vendor-bg: #e8edf5;
+            --vendor-surface: #e8edf5;
+            --vendor-text: #263449;
+            --vendor-muted: #7b8798;
+            --vendor-primary: #1677d2;
+            --vendor-primary-dark: #0d5eae;
+            --vendor-sidebar: #17243a;
+            --vendor-sidebar-muted: #aab8ca;
+            --vendor-shadow-out: 7px 7px 16px rgba(163, 177, 198, .48), -7px -7px 16px rgba(255, 255, 255, .88);
+            --vendor-shadow-in: inset 4px 4px 8px rgba(163, 177, 198, .38), inset -4px -4px 8px rgba(255, 255, 255, .85);
+            --vendor-radius: 18px;
+        }
 
-.sidebar a:hover{
-    background:rgba(255,255,255,0.1);
-}
+        *, *::before, *::after { box-sizing: border-box; }
 
-.sidebar a.active{
-    background:rgba(255,255,255,0.2);
-}
+        html, body { min-height: 100%; }
 
-.content{
-    margin-left:240px;
-    padding:20px;
-}
+        body {
+            margin: 0;
+            background: var(--vendor-bg);
+            color: var(--vendor-text);
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+        }
 
-.topbar{
-    background:white;
-    padding:15px 25px;
-    border-radius:12px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.08);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-}
+        #form1 { min-height: 100vh; }
 
-.logout-btn{
-    background:#ef4444;
-    border:none;
-    padding:8px 18px;
-    border-radius:20px;
-    color:white;
-}
+        .vendor-sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 1040;
+            display: flex;
+            flex-direction: column;
+            width: 258px;
+            padding: 22px 16px 18px;
+            overflow-y: auto;
+            background: linear-gradient(160deg, #17243a 0%, #1d3150 100%);
+            color: #fff;
+            box-shadow: 8px 0 24px rgba(28, 43, 65, .12);
+            transition: transform .28s ease;
+        }
 
-.logout-btn:hover{
-    background:#dc2626;
-}
+        .vendor-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 58px;
+            padding: 0 10px 20px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,.09);
+        }
 
-@media(max-width:992px){
-    .sidebar{
-        width:200px;
-    }
-    .content{
-        margin-left:200px;
-    }
-}
-</style>
+        .vendor-brand-mark {
+            display: grid;
+            place-items: center;
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            border-radius: 13px;
+            color: #fff;
+            background: linear-gradient(145deg, #20b9e8, #1474ce);
+            box-shadow: 4px 4px 9px rgba(4, 13, 27, .35), -2px -2px 7px rgba(255,255,255,.08);
+            font-size: 17px;
+        }
 
+        .vendor-brand-copy { min-width: 0; }
+        .vendor-brand-title { margin: 0; color: #f7fbff; font-size: 16px; line-height: 1.2; font-weight: 800; letter-spacing: -.35px; }
+        .vendor-brand-subtitle { display: block; margin-top: 4px; color: #91a6c0; font-size: 10px; font-weight: 600; letter-spacing: 1.45px; text-transform: uppercase; }
+
+        .vendor-nav { display: flex; flex-direction: column; gap: 5px; }
+        .vendor-nav a {
+            display: flex;
+            align-items: center;
+            min-height: 44px;
+            gap: 13px;
+            padding: 10px 13px;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            color: var(--vendor-sidebar-muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.35;
+            transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+        }
+
+        .vendor-nav a i {
+            display: inline-grid;
+            place-items: center;
+            width: 19px;
+            flex: 0 0 19px;
+            color: #8fa9c8;
+            font-size: 15px;
+            transition: color .2s ease;
+        }
+
+        .vendor-nav a:hover {
+            color: #fff;
+            background: rgba(255,255,255,.075);
+            border-color: rgba(255,255,255,.06);
+            transform: translateX(2px);
+        }
+
+        .vendor-nav a:hover i { color: #54c8f2; }
+
+        .vendor-nav a.active {
+            color: #fff;
+            background: linear-gradient(100deg, rgba(31, 151, 218, .25), rgba(34, 190, 224, .10));
+            border-color: rgba(77, 190, 238, .2);
+            box-shadow: inset 3px 0 0 #31b8e8, 3px 4px 12px rgba(5, 15, 30, .14);
+        }
+
+        .vendor-nav a.active i { color: #52cdf4; }
+
+        .vendor-main {
+            min-height: 100vh;
+            margin-left: 258px;
+            padding: 22px 26px 32px;
+            transition: margin-left .28s ease;
+        }
+
+        .vendor-topbar {
+            position: relative;
+            z-index: 1020;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            min-height: 76px;
+            padding: 14px 20px 14px 24px;
+            margin-bottom: 26px;
+            border: 1px solid rgba(255,255,255,.75);
+            border-radius: var(--vendor-radius);
+            background: var(--vendor-surface);
+            box-shadow: var(--vendor-shadow-out);
+        }
+
+        .vendor-topbar-left, .vendor-topbar-actions { display: flex; align-items: center; }
+        .vendor-topbar-left { min-width: 0; gap: 14px; }
+        .vendor-topbar-actions { gap: 13px; }
+
+        .vendor-mobile-toggle {
+            display: none;
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            border-radius: 12px;
+            background: var(--vendor-surface);
+            color: var(--vendor-primary);
+            box-shadow: var(--vendor-shadow-out);
+            font-size: 16px;
+        }
+
+        .vendor-welcome-label { display: block; color: var(--vendor-muted); font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; }
+        .vendor-welcome-name { display: block; overflow: hidden; margin-top: 3px; color: var(--vendor-text); font-size: 16px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+
+        .vendor-notification-wrap { position: relative; }
+        .vendor-notification-trigger {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(255,255,255,.7);
+            border-radius: 13px;
+            background: var(--vendor-surface);
+            color: #53647b;
+            box-shadow: var(--vendor-shadow-out);
+            cursor: pointer;
+            transition: color .2s ease, box-shadow .2s ease, transform .2s ease;
+        }
+
+        .vendor-notification-trigger:hover { color: var(--vendor-primary); transform: translateY(-1px); }
+        .vendor-notification-trigger:active { box-shadow: var(--vendor-shadow-in); transform: translateY(0); }
+        .vendor-notification-trigger i { font-size: 16px; }
+
+        .vendor-notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            display: grid;
+            place-items: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border: 2px solid var(--vendor-bg);
+            border-radius: 20px;
+            background: #ef5350;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .vendor-notification-panel {
+            position: absolute;
+            top: calc(100% + 14px);
+            right: 0;
+            z-index: 1100;
+            display: none;
+            width: min(340px, calc(100vw - 34px));
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,.8);
+            border-radius: 16px;
+            background: var(--vendor-surface);
+            box-shadow: 12px 12px 28px rgba(143, 157, 178, .38), -8px -8px 22px rgba(255,255,255,.9);
+        }
+
+        .vendor-notification-panel.is-open { display: block; }
+        .vendor-notification-heading { margin: 0 0 10px; color: var(--vendor-text); font-size: 14px; font-weight: 800; }
+        .vendor-notification-list > div { padding: 10px 2px; border-bottom: 1px solid rgba(123, 139, 160, .16); }
+        .vendor-notification-list a { color: #53647b; font-size: 12px; font-weight: 600; line-height: 1.5; text-decoration: none; }
+        .vendor-notification-list a:hover { color: var(--vendor-primary); }
+
+        .vendor-clear-button {
+            min-height: 37px;
+            border: 0 !important;
+            border-radius: 10px !important;
+            background: #e8edf5 !important;
+            color: #d34d55 !important;
+            box-shadow: 4px 4px 8px rgba(163,177,198,.35), -4px -4px 8px rgba(255,255,255,.8);
+            font-size: 12px !important;
+            font-weight: 700 !important;
+        }
+
+        .vendor-clear-button:active { box-shadow: var(--vendor-shadow-in) !important; }
+
+        .vendor-logout {
+            min-width: 104px;
+            min-height: 42px;
+            padding: 0 17px;
+            border: 0;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #258de0, #176fc3);
+            color: #fff;
+            box-shadow: 5px 5px 10px rgba(163,177,198,.42), -4px -4px 9px rgba(255,255,255,.82);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .2px;
+            transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+        }
+
+        .vendor-logout:hover { color: #fff; filter: brightness(1.06); transform: translateY(-1px); }
+        .vendor-logout:active { box-shadow: var(--vendor-shadow-in); transform: translateY(0); }
+
+        .vendor-content { min-width: 0; }
+        .vendor-sidebar-overlay { display: none; }
+
+        @media (max-width: 1100px) {
+            .vendor-sidebar { width: 238px; }
+            .vendor-main { margin-left: 238px; padding-right: 20px; padding-left: 20px; }
+        }
+
+        @media (max-width: 820px) {
+            .vendor-sidebar { width: 270px; max-width: calc(100vw - 54px); transform: translateX(-105%); }
+            .vendor-sidebar.is-open { transform: translateX(0); }
+            .vendor-main { margin-left: 0; padding: 16px 16px 28px; }
+            .vendor-mobile-toggle { display: inline-flex; }
+            .vendor-sidebar-overlay.is-visible {
+                position: fixed;
+                inset: 0;
+                z-index: 1030;
+                display: block;
+                background: rgba(13, 25, 43, .42);
+                backdrop-filter: blur(2px);
+            }
+            .vendor-topbar { min-height: 68px; padding: 11px 14px; margin-bottom: 20px; }
+        }
+
+        @media (max-width: 520px) {
+            .vendor-main { padding: 12px 11px 22px; }
+            .vendor-topbar { gap: 8px; padding: 10px; border-radius: 15px; }
+            .vendor-topbar-left { gap: 10px; }
+            .vendor-topbar-actions { gap: 9px; }
+            .vendor-welcome-label { font-size: 9px; letter-spacing: .5px; }
+            .vendor-welcome-name { max-width: 150px; font-size: 13px; }
+            .vendor-mobile-toggle, .vendor-notification-trigger { width: 38px; height: 38px; flex-basis: 38px; }
+            .vendor-logout { min-width: 76px; min-height: 38px; padding: 0 11px; font-size: 11px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+        }
+    </style>
 </head>
-
 <body>
-
 <form id="form1" runat="server">
 
-<div class="sidebar">
-    <h4>Vendor Panel</h4>
-
-    <a href="VendorDashboard.aspx"><i class="fa fa-home"></i> Dashboard</a>
-    <a href="AddBike.aspx"><i class="fa fa-plus"></i> Add Bike</a>
-    <a href="ManageParts.aspx"><i class="fas fa-tools"></i> Add Parts</a>
-    <a href="AddChargingStation.aspx"><i class="fa fa-charging-station"></i> AddChargingStation</a>
-    <a href="AddServiceCenter.aspx"><i class="fa fa-wrench"></i> AddServiceCenter</a>
-    <a href="ManageBikes.aspx"><i class="fa fa-motorcycle"></i> Manage Bikes</a>
-    <a href="VendorOrders.aspx"><i class="fa - fa-shopping-basket
-"></i> Manage Orders</a>
-    <a href="ManageChargingStations.aspx"><i class="fa fa-cogs"></i> Stations Management</a>
-    <a href="VendorManageLeads.aspx"><i class="fa fa-envelope"></i> Leads</a>
-    <a href="DealerRatings.aspx"><i class="fa fa-star"></i> Ratings</a>   
-    <a href="DealerRentalRequests.aspx"><i class="fa fa-key"></i> RentalRequest</a>   
-    <a href="VendorEarnings.aspx"><i class="fa fa-dollar-sign"></i> Earnings</a>
-    <a href="VendorAnalytics.aspx"><i class="fa fa-chart-line"></i> Analytics</a>
-    <a href="VendorSubscription.aspx"><i class="fa fa-clipboard-list"></i> Plans</a>
-    <a href="VendorProfile.aspx"><i class="fa fa-user"></i> Profile</a>
-</div>
-
-<div class="content">
-
-    <div class="topbar">
-        <div>
-            Welcome, <asp:Label ID="lblVendorName" runat="server"></asp:Label>
+    <aside class="vendor-sidebar" id="vendorSidebar" aria-label="Vendor navigation">
+        <div class="vendor-brand">
+            <span class="vendor-brand-mark"><i class="fa-solid fa-bolt"></i></span>
+            <div class="vendor-brand-copy">
+                <h1 class="vendor-brand-title">EBikes Duniya</h1>
+                <span class="vendor-brand-subtitle">Vendor workspace</span>
+            </div>
         </div>
 
-        <div style=" display:flex; align-items:center;">
+        <nav class="vendor-nav">
+            <a href="VendorDashboard.aspx"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+            <a href="AddBike.aspx"><i class="fa-solid fa-plus"></i><span>Add Bike</span></a>
+            <a href="ManageParts.aspx"><i class="fa-solid fa-screwdriver-wrench"></i><span>Add Parts</span></a>
+            <a href="AddChargingStation.aspx"><i class="fa-solid fa-charging-station"></i><span>Add Charging Station</span></a>
+            <a href="AddServiceCenter.aspx"><i class="fa-solid fa-screwdriver"></i><span>Add Service Center</span></a>
+            <a href="ManageBikes.aspx"><i class="fa-solid fa-motorcycle"></i><span>Manage Bikes</span></a>
+            <a href="VendorOrders.aspx"><i class="fa-solid fa-basket-shopping"></i><span>Manage Orders</span></a>
+            <a href="ManageChargingStations.aspx"><i class="fa-solid fa-plug-circle-bolt"></i><span>Stations Management</span></a>
+            <a href="VendorManageLeads.aspx"><i class="fa-regular fa-envelope"></i><span>Leads</span></a>
+            <a href="DealerRatings.aspx"><i class="fa-solid fa-star"></i><span>Ratings</span></a>
+            <a href="DealerRentalRequests.aspx"><i class="fa-solid fa-key"></i><span>Rental Requests</span></a>
+            <a href="VendorEarnings.aspx"><i class="fa-solid fa-wallet"></i><span>Earnings</span></a>
+            <a href="VendorAnalytics.aspx"><i class="fa-solid fa-chart-line"></i><span>Analytics</span></a>
+            <a href="VendorSubscription.aspx"><i class="fa-solid fa-clipboard-list"></i><span>Plans</span></a>
+            <a href="VendorProfile.aspx"><i class="fa-regular fa-user"></i><span>Profile</span></a>
+        </nav>
+    </aside>
 
-        <div style="position:relative; margin-right:20px; ">
+    <div class="vendor-sidebar-overlay" id="vendorSidebarOverlay" onclick="closeVendorSidebar()"></div>
 
-    <i class="fa fa-bell fa-lg" style="cursor:pointer;"
-        onclick="toggleNotif()"></i>
-
-    <span id="notifBadge" class="badge bg-danger"
-        style="position:absolute; top:-12px; right:-10px;">
-        <asp:Label ID="lblNotifCount" runat="server"></asp:Label>
-    </span>
-
-    <div id="notifPanel"
-        style="display:none; position:absolute; right:0; top:30px;
-        width:320px; background:white; border-radius:10px;
-        box-shadow:0 5px 15px rgba(0,0,0,0.2); padding:10px; z-index:999;">
-
-        <h6>New Leads</h6>
-
-        <asp:Repeater ID="rptNotifications" runat="server">
-            <ItemTemplate>
-                <div style="padding:8px; border-bottom:1px solid #eee;">
-                    <a href="VendorManageLeads.aspx?lead=<%# Eval("LeadID") %>"
-                       style="text-decoration:none;">
-                        <%# Eval("FullName") %> interested in
-                        <%# Eval("ModelName") %>
-                    </a>
+    <main class="vendor-main">
+        <header class="vendor-topbar">
+            <div class="vendor-topbar-left">
+                <button type="button" class="vendor-mobile-toggle" id="vendorMobileToggle" aria-label="Open navigation" aria-expanded="false" onclick="toggleVendorSidebar()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="vendor-welcome">
+                    <span class="vendor-welcome-label">Vendor workspace</span>
+                    <span class="vendor-welcome-name">Welcome, <asp:Label ID="lblVendorName" runat="server"></asp:Label></span>
                 </div>
-            </ItemTemplate>
-        </asp:Repeater>
+            </div>
 
-        <asp:Button ID="btnClearNotif" runat="server"
-            Text="Clear All"
-            CssClass="btn btn-sm btn-outline-danger w-100 mt-2"
-            OnClick="btnClearNotif_Click" />
+            <div class="vendor-topbar-actions">
+                <div class="vendor-notification-wrap">
+                    <button type="button" class="vendor-notification-trigger" aria-label="Toggle notifications" aria-expanded="false" onclick="toggleNotif()">
+                        <i class="fa-regular fa-bell"></i>
+                        <span id="notifBadge" class="vendor-notification-badge"><asp:Label ID="lblNotifCount" runat="server"></asp:Label></span>
+                    </button>
 
-    </div>
+                    <div id="notifPanel" class="vendor-notification-panel">
+                        <h2 class="vendor-notification-heading">New Leads</h2>
+                        <div class="vendor-notification-list">
+                            <asp:Repeater ID="rptNotifications" runat="server">
+                                <ItemTemplate>
+                                    <div>
+                                        <a href='VendorManageLeads.aspx?lead=<%# Eval("LeadID") %>'>
+                                            <%# Eval("FullName") %> interested in <%# Eval("ModelName") %>
+                                        </a>
+                                    </div>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </div>
+                        <asp:Button ID="btnClearNotif" runat="server" Text="Clear All" CssClass="btn btn-sm w-100 mt-2 vendor-clear-button" OnClick="btnClearNotif_Click" />
+                    </div>
+                </div>
 
-</div>
+                <asp:Button ID="btnLogout" runat="server" Text="Logout" CssClass="vendor-logout" OnClick="btnLogout_Click" />
+            </div>
+        </header>
 
-
-        <asp:Button ID="btnLogout" runat="server"
-            Text="Logout"
-            CssClass="logout-btn"
-            OnClick="btnLogout_Click" />
-    </div>
-        </div>
-
-    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
-
-</div>
+        <section class="vendor-content">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+        </section>
+    </main>
 
 </form>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        function toggleNotif() {
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function toggleNotif() {
+        var panel = document.getElementById("notifPanel");
+        var trigger = document.querySelector(".vendor-notification-trigger");
+        if (!panel) return;
+        var isOpen = panel.classList.toggle("is-open");
+        if (trigger) trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+
+    function toggleVendorSidebar() {
+        var sidebar = document.getElementById("vendorSidebar");
+        var overlay = document.getElementById("vendorSidebarOverlay");
+        var toggle = document.getElementById("vendorMobileToggle");
+        if (!sidebar || !overlay) return;
+        var isOpen = sidebar.classList.toggle("is-open");
+        overlay.classList.toggle("is-visible", isOpen);
+        if (toggle) {
+            toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            toggle.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+        }
+        document.body.style.overflow = isOpen ? "hidden" : "";
+    }
+
+    function closeVendorSidebar() {
+        var sidebar = document.getElementById("vendorSidebar");
+        var overlay = document.getElementById("vendorSidebarOverlay");
+        var toggle = document.getElementById("vendorMobileToggle");
+        if (sidebar) sidebar.classList.remove("is-open");
+        if (overlay) overlay.classList.remove("is-visible");
+        if (toggle) {
+            toggle.setAttribute("aria-expanded", "false");
+            toggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+        }
+        document.body.style.overflow = "";
+    }
+
+    (function () {
+        var currentPage = window.location.pathname.split("/").pop().toLowerCase();
+        document.querySelectorAll(".vendor-nav a").forEach(function (link) {
+            var targetPage = link.getAttribute("href").split("/").pop().toLowerCase();
+            if (targetPage === currentPage) {
+                link.classList.add("active");
+                link.setAttribute("aria-current", "page");
+            }
+            link.addEventListener("click", function () {
+                if (window.innerWidth <= 820) closeVendorSidebar();
+            });
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeVendorSidebar();
+                var panel = document.getElementById("notifPanel");
+                var trigger = document.querySelector(".vendor-notification-trigger");
+                if (panel) panel.classList.remove("is-open");
+                if (trigger) trigger.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        document.addEventListener("click", function (event) {
+            var wrap = document.querySelector(".vendor-notification-wrap");
             var panel = document.getElementById("notifPanel");
-            panel.style.display =
-                panel.style.display === "none" ? "block" : "none";
-        }
+            var trigger = document.querySelector(".vendor-notification-trigger");
+            if (wrap && panel && !wrap.contains(event.target)) {
+                panel.classList.remove("is-open");
+                if (trigger) trigger.setAttribute("aria-expanded", "false");
+            }
+        });
+    })();
 
-        if (window.location.pathname.toLowerCase().includes("vendordashboard")) {
-            setInterval(function () {
-                location.reload();
-            }, 20000);
-        }
-
+    if (window.location.pathname.toLowerCase().includes("vendordashboard")) {
+        setInterval(function () {
+            location.reload();
+        }, 20000);
+    }
 </script>
-
-
 </body>
 </html>
