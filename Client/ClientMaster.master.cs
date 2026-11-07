@@ -124,7 +124,7 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
 
         // Use the committed EBikes Duniya SVG mark as the dependable client logo.
         // SiteSettings.LogoPath can contain legacy relative paths from older uploads.
-        imgLogo.ImageUrl = ResolveUrl("~/Uploads/favicon/favicon-ebd.svg");
+        imgLogo.ImageUrl = ResolveUrl("~/Uploads/EBikes-Duniya-Logo.png");
 
         if (!string.IsNullOrEmpty(settings.AdminEmail))
         {
