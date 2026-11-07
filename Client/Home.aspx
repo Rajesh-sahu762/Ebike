@@ -1260,27 +1260,6 @@
     
 
 
-/* ===== Hero heading legibility fix ===== */
-.hero-main-title{
-    font-family:"Bebas Neue",sans-serif!important;
-    font-size:clamp(52px,5.2vw,76px)!important;
-    font-weight:400!important;
-    line-height:1.08!important;
-    letter-spacing:.035em!important;
-    text-transform:uppercase;
-    word-spacing:.06em;
-    overflow:visible;
-}
-.hero-main-title .text-gradient{
-    letter-spacing:.015em!important;
-}
-@media(max-width:600px){
-    .hero-main-title{
-        font-size:clamp(42px,10.5vw,54px)!important;
-        line-height:1.08!important;
-        letter-spacing:.025em!important;
-    }
-}
 
 /* ===== EBikes Duniya | Reference-led responsive hero ===== */
 .hero-v4{
@@ -1634,6 +1613,37 @@
 @media(max-width:767px){.browse-section{padding:44px 0 50px!important}.browse-section .browse-title{font-size:24px;margin-bottom:18px!important}.browse-section .browse-tabs{gap:7px;margin-bottom:20px!important}.browse-section .browse-tabs .tab{min-height:36px;padding:8px 14px!important;font-size:11px!important}.browse-section .browse-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.browse-section .brand-card{min-height:116px;padding:13px 10px!important;border-radius:13px!important}.browse-section .brand-logo{height:49px}.browse-section .brand-logo img{max-width:100px;max-height:40px}.browse-section .brand-name{font-size:11px!important}.browse-section .browse-filter-card{min-height:78px;padding:12px 10px;gap:9px;border-radius:12px}.browse-section .browse-filter-icon{width:35px;height:35px;flex-basis:35px;font-size:14px;border-radius:10px}.browse-section .browse-filter-copy strong{font-size:11px!important}.browse-section .browse-filter-copy small{font-size:9px!important}.browse-section .body-card{min-height:108px;padding:14px 9px!important;font-size:11px!important;border-radius:13px!important}.browse-section .body-icon{width:40px;height:40px;font-size:19px;border-radius:11px}}
 @media(max-width:380px){.browse-section .browse-grid{gap:8px}.browse-section .browse-filter-card{gap:7px;padding:10px 8px}.browse-section .browse-filter-copy strong{font-size:10px!important}}
 @media(prefers-reduced-motion:reduce){.browse-section *{animation:none!important;transition:none!important}}
+
+
+/* ===== Final hero headline spacing override ===== */
+.hero-v4 .hero-main-title{
+    font-family:"Bebas Neue",sans-serif!important;
+    font-size:clamp(48px,4.8vw,68px)!important;
+    font-weight:400!important;
+    line-height:1.16!important;
+    letter-spacing:.085em!important;
+    word-spacing:.20em!important;
+    text-transform:uppercase;
+    white-space:normal;
+    overflow:visible;
+}
+.hero-v4 .hero-main-title .text-gradient{
+    display:inline-block;
+    letter-spacing:.045em!important;
+    word-spacing:normal!important;
+    padding-right:.08em;
+}
+@media(max-width:600px){
+    .hero-v4 .hero-main-title{
+        font-size:clamp(40px,9.6vw,50px)!important;
+        line-height:1.16!important;
+        letter-spacing:.055em!important;
+        word-spacing:.12em!important;
+    }
+    .hero-v4 .hero-main-title .text-gradient{
+        letter-spacing:.035em!important;
+    }
+}
 
 </style>
 
