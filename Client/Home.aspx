@@ -1292,7 +1292,7 @@
             <div class="hero-media">
                 <div class="hero-media-orbit"></div>
                 <div class="hero-image-frame">
-                    <img src="/Uploads/Bikes/Ather450X.jpg" alt="Featured electric scooter" fetchpriority="high" />
+                    <img src="<%= ResolveUrl("~/Uploads/Bikes/Ather450X.jpg") %>" alt="Featured electric scooter" fetchpriority="high" />
                 </div>
                 <div class="hero-float-card">
                     <strong><i class="fa-solid fa-leaf"></i> 100% Electric</strong>
@@ -1451,7 +1451,7 @@
                         <div class="swiper-slide">
                             <div class="compact-card-v7">
                                 <div class="img-holder-v7">
-                                    <img src='/Uploads/Bikes/<%# Eval("Image1") %>' alt='<%# Eval("ModelName") %>' />
+                                    <img src='<%# ResolveUrl("~/Uploads/Bikes/") + Eval("Image1") %>' alt='<%# Eval("ModelName") %>' />
                                 </div>
                                 <div class="info-holder-v7">
                                     <h3 class="title-v7"><%# Eval("ModelName") %></h3>
@@ -1500,7 +1500,7 @@
             <div class="brand-card">
              <a href='Bikes.aspx?brand=<%# Eval("BrandID") %>' class="brand-card">
     <div class="brand-logo">
-        <img src='/Uploads/Brands/<%# Eval("LogoPath") %>' loading="lazy"
+        <img src='<%# ResolveUrl("~/Uploads/Brands/") + Eval("LogoPath") %>' loading="lazy"
  />
     </div>
     <div class="brand-name">
@@ -1645,7 +1645,7 @@
                             <div class="part-cat-tag"><%# Eval("Category") %></div>
                             
                             <div class="part-img-v9">
-                                <img src='/Uploads/Parts/<%# Eval("Image1") %>' alt='<%# Eval("PartName") %>' />
+                                <img src='<%# ResolveUrl("~/Uploads/Parts/") + Eval("Image1") %>' alt='<%# Eval("PartName") %>' />
                                 <div class="part-overlay-v9">
                                     <a href="Parts.aspx" class="quick-add-btn">
                                         <i class="fa-solid fa-plus"></i>
@@ -1676,7 +1676,7 @@
             <div class="col-lg-5 mb-5 mb-lg-0">
                 <div class="battery-image-wrapper">
                     <div class="blob-bg"></div>
-                    <img src="../Uploads/Banner/maintain.png" class="img-fluid main-battery-img" alt="Battery Maintenance" loading="lazy" />
+                    <img src="<%= ResolveUrl("~/Uploads/Banner/maintain.png") %>" class="img-fluid main-battery-img" alt="Battery Maintenance" loading="lazy" />
                     <div class="floating-info-card">
                         <i class="fa-solid fa-heart-pulse text-danger"></i>
                         <span>Longer Battery Life</span>
@@ -1895,7 +1895,7 @@
                             <div class="review-card-v14">
                                 <div class="review-user-row">
                                     <div class="user-profile-v14">
-                                        <img src='<%# Eval("ProfileImage") == DBNull.Value ? "../Uploads/user.jpg" : "/Uploads/Profile/" + Eval("ProfileImage") %>' alt='<%# Eval("FullName") %>' />
+                                        <img src='<%# Eval("ProfileImage") == DBNull.Value ? ResolveUrl("~/Uploads/user.jpg") : ResolveUrl("~/Uploads/Profile/") + Eval("ProfileImage") %>' alt='<%# Eval("FullName") %>' />
                                         <%# (bool)Eval("IsVerified") ? "<div class='verified-check'><i class='fa-solid fa-check'></i></div>" : "" %>
                                     </div>
                                     <div class="user-details-v14">
