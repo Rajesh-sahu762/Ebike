@@ -3,7 +3,7 @@
  * Centralized styles, design tokens, typography, component primitives, and responsive rules.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+/* Fonts are loaded once from ClientMaster.master for every client page. */
 
 /* ══════════════════════════════════════════════════════════
    1. DESIGN TOKENS (CSS VARIABLES)
@@ -46,8 +46,9 @@
   --ep-danger-subtle: #FEF2F2;
 
   /* Fonts */
-  --ep-font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --ep-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ep-font-heading: 'Bebas Neue', sans-serif;
+  --ep-font-body: 'Geist Mono', monospace;
+  --ep-font-accent: 'Uchen', Georgia, serif;
 
   /* Border Radii */
   --ep-radius-xs: 6px;
@@ -97,11 +98,11 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--ep-font-heading);
-  font-weight: 700;
+  font-weight: 400;
   color: var(--ep-heading);
-  line-height: 1.25;
+  line-height: 1.15;
   margin-top: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.015em;
 }
 
 p {
@@ -123,6 +124,21 @@ img {
   max-width: 100%;
   height: auto;
   display: block;
+}
+
+
+/* EBikes Duniya global type roles */
+body, button, input, select, textarea {
+  font-family: var(--ep-font-body);
+}
+h1, h2, h3, h4, h5, h6,
+.logo-title, .section-title-v7, .bike-header-title {
+  font-family: var(--ep-font-heading);
+  font-weight: 400;
+  letter-spacing: .015em;
+}
+.font-uchen, .ep-font-accent, blockquote, .editorial-accent {
+  font-family: var(--ep-font-accent);
 }
 
 /* ══════════════════════════════════════════════════════════
