@@ -1,592 +1,82 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Vendor/VendorMaster.master" AutoEventWireup="true" CodeFile="VendorSubscription.aspx.cs" Inherits="Vendor_VendorSubscription" %>
+﻿<%@ Page Title="Subscription Plan" Language="C#" MasterPageFile="~/Vendor/VendorMaster.master" AutoEventWireup="true" CodeFile="VendorSubscription.aspx.cs" Inherits="Vendor_VendorSubscription" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-
 <style>
-/* ═══════════════════════════════════════════════
-   VendorSubscription — matches existing panel
-   Uses Bootstrap base + small targeted overrides
-   No dark theme — stays in panel's light scheme
-═══════════════════════════════════════════════ */
-
-/* page wrapper */
-.sub-page {
-    padding: 24px 0 48px;
-}
-
-/* ── PAGE HEADER ── */
-.sub-header {
-    margin-bottom: 24px;
-}
-.sub-header h3 {
-    font-size: 22px;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 4px;
-}
-.sub-header p {
-    font-size: 14px;
-    color: #64748b;
-    margin: 0;
-}
-
-/* ── MESSAGE ALERT ── */
-.sub-alert {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-}
-.sub-alert.show { display: flex; }
-.sub-alert.success {
-    background: #f0fdf4;
-    border-color: #bbf7d0;
-    color: #166534;
-}
-.sub-alert.warning {
-    background: #fffbeb;
-    border-color: #fde68a;
-    color: #92400e;
-}
-.sub-alert.info {
-    background: #eff6ff;
-    border-color: #bfdbfe;
-    color: #1e40af;
-}
-.sub-alert i { font-size: 15px; flex-shrink: 0; }
-
-/* ── CURRENT PLAN CARD ── */
-.current-plan-card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 20px 22px;
-    margin-bottom: 28px;
-    position: relative;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-}
-/* left accent bar */
-.current-plan-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 4px;
-    background: linear-gradient(to bottom, #2563eb, #06b6d4);
-    border-radius: 10px 0 0 10px;
-}
-.cp-title {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #94a3b8;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.cp-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-}
-.cp-item {
-    padding: 0 16px;
-    border-right: 1px solid #f1f5f9;
-}
-.cp-item:first-child { padding-left: 0; }
-.cp-item:last-child { border-right: none; }
-.cp-label {
-    font-size: 11.5px;
-    font-weight: 600;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-.cp-label i { font-size: 10px; }
-.cp-value {
-    font-size: 17px;
-    font-weight: 700;
-    color: #1e293b;
-}
-.plan-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 20px;
-}
-.plan-status.active {
-    background: #dbeafe;
-    color: #1d4ed8;
-}
-.plan-status.inactive {
-    background: #f1f5f9;
-    color: #64748b;
-}
-.plan-status .status-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-}
-
-@media (max-width: 700px) {
-    .cp-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
-    .cp-item { padding: 0; border-right: none; }
-}
-
-/* ── SECTION HEADING ── */
-.plans-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-.plans-heading h4 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1e293b;
-    margin: 0;
-}
-.plans-heading small {
-    font-size: 13px;
-    color: #94a3b8;
-}
-
-/* ── PLAN CARDS ROW ── */
-.plans-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 24px;
-}
-@media (max-width: 900px) { .plans-row { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 480px) { .plans-row { grid-template-columns: 1fr; } }
-
-/* ── PLAN CARD ── */
-.plan-card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 22px 18px 18px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-    position: relative;
-    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-}
-.plan-card:hover {
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
-    border-color: #cbd5e1;
-}
-
-/* top color bar */
-.plan-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 10px 10px 0 0;
-}
-.pc-basic::before    { background: #7c3aed; }
-.pc-pro::before      { background: linear-gradient(90deg, #2563eb, #06b6d4); }
-.pc-featured::before { background: #d97706; }
-.pc-combo::before    { background: linear-gradient(90deg, #dc2626, #db2777); }
-
-/* combo special */
-.pc-combo {
-    border-color: #fecaca;
-}
-.pc-combo:hover {
-    border-color: #f87171;
-    box-shadow: 0 8px 24px rgba(220,38,38,0.1);
-}
-
-/* best offer ribbon */
-.ribbon {
-    position: absolute;
-    top: 12px; right: -2px;
-    background: #dc2626;
-    color: white;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 10px 3px 8px;
-    border-radius: 4px 0 0 4px;
-    letter-spacing: 0.3px;
-}
-.ribbon::after {
-    content: '';
-    position: absolute;
-    right: -6px; top: 0;
-    width: 0; height: 0;
-    border-top: 12px solid transparent;
-    border-bottom: 12px solid transparent;
-    border-left: 6px solid #dc2626;
-}
-
-/* icon badge */
-.pc-icon {
-    width: 40px; height: 40px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px;
-    margin-bottom: 12px;
-}
-.pc-basic    .pc-icon { background: #ede9fe; color: #7c3aed; }
-.pc-pro      .pc-icon { background: #dbeafe; color: #2563eb; }
-.pc-featured .pc-icon { background: #fef3c7; color: #d97706; }
-.pc-combo    .pc-icon { background: #fee2e2; color: #dc2626; }
-
-/* card name */
-.pc-name {
-    font-size: 15px;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 2px;
-}
-
-/* price */
-.pc-price {
-    font-size: 28px;
-    font-weight: 800;
-    color: #1e293b;
-    line-height: 1;
-    margin: 8px 0 2px;
-}
-.pc-period {
-    font-size: 12px;
-    color: #94a3b8;
-    margin-bottom: 14px;
-}
-
-/* divider */
-.pc-div {
-    width: 100%;
-    height: 1px;
-    background: #f1f5f9;
-    margin-bottom: 12px;
-}
-
-/* features */
-.pc-feats {
-    list-style: none;
-    padding: 0; margin: 0 0 16px;
-    width: 100%;
-    display: flex; flex-direction: column; gap: 7px;
-}
-.pc-feats li {
-    display: flex; align-items: center; gap: 7px;
-    font-size: 13px; color: #475569;
-}
-.pc-feats li.off { color: #cbd5e1; }
-.fi-check {
-    width: 16px; height: 16px; border-radius: 50%;
-    background: #dcfce7; color: #16a34a;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 8px; flex-shrink: 0;
-}
-.fi-cross {
-    width: 16px; height: 16px; border-radius: 50%;
-    background: #f1f5f9; color: #cbd5e1;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 8px; flex-shrink: 0;
-}
-
-/* ── PLAN BUTTONS — override bootstrap styles ── */
-.plan-card .pc-btn {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 6px !important;
-    width: 100% !important;
-    padding: 9px 14px !important;
-    border-radius: 7px !important;
-    font-size: 13.5px !important;
-    font-weight: 700 !important;
-    cursor: pointer !important;
-    transition: all 0.18s !important;
-    border: none !important;
-    margin-top: auto;
-    line-height: 1.4 !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-.plan-card .pc-btn:active {
-    transform: scale(0.98) !important;
-}
-
-/* Basic — purple outline */
-.btn-basic {
-    background: #ede9fe !important;
-    color: #7c3aed !important;
-    border: 1px solid #ddd6fe !important;
-}
-.btn-basic:hover {
-    background: #ddd6fe !important;
-    color: #6d28d9 !important;
-}
-
-/* Pro — blue solid */
-.btn-pro {
-    background: #2563eb !important;
-    color: #fff !important;
-}
-.btn-pro:hover {
-    background: #1d4ed8 !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 12px rgba(37,99,235,0.3) !important;
-}
-
-/* Featured — amber outline */
-.btn-featured {
-    background: #fef3c7 !important;
-    color: #92400e !important;
-    border: 1px solid #fde68a !important;
-}
-.btn-featured:hover {
-    background: #fde68a !important;
-    color: #78350f !important;
-}
-
-/* Combo — red solid */
-.btn-combo {
-    background: #dc2626 !important;
-    color: #fff !important;
-}
-.btn-combo:hover {
-    background: #b91c1c !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 12px rgba(220,38,38,0.3) !important;
-}
-
-/* ── PAYMENT NOTICE ── */
-.pay-note {
-    background: #fffbeb;
-    border: 1px solid #fde68a;
-    border-radius: 8px;
-    padding: 13px 16px;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 13.5px;
-    color: #78350f;
-    line-height: 1.6;
-}
-.pay-note i {
-    font-size: 15px;
-    color: #d97706;
-    flex-shrink: 0;
-    margin-top: 1px;
-}
+.vs-page{color:#263650}.vs-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex-wrap:wrap;margin-bottom:24px}.vs-eyebrow{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#8190a7;font-weight:800;margin-bottom:6px}.vs-title{font:800 25px 'Manrope',sans-serif;color:#24334e;margin:0}.vs-subtitle{font-size:13px;color:#8290a6;margin:7px 0 0}.vs-note-pill{padding:10px 14px;border-radius:13px;background:#e8edf5;box-shadow:5px 5px 11px #cbd2dd,-5px -5px 11px #fff;color:#586985;font-size:12px;font-weight:700}.vs-alert{display:none;align-items:center;gap:10px;padding:13px 16px;border-radius:14px;margin-bottom:20px;font-size:13px;font-weight:700}.vs-alert.show{display:flex}.vs-alert.success{background:#e0f5eb;color:#18734f}.vs-alert.warning{background:#fff0d8;color:#98621d}.vs-alert.info{background:#e2edff;color:#285aa5}.vs-current{padding:22px;border-radius:20px;background:#e8edf5;box-shadow:7px 7px 16px #cbd2dd,-7px -7px 16px #fff;margin-bottom:28px}.vs-current-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:17px}.vs-section-label{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:#8794a9;font-weight:800}.vs-current-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.vs-current-item{padding:13px 15px;border-radius:13px;background:#e8edf5;box-shadow:inset 4px 4px 8px #cbd2dd,inset -4px -4px 8px #fff}.vs-current-label{font-size:10px;color:#8794a9;text-transform:uppercase;font-weight:800;letter-spacing:.7px;margin-bottom:7px}.vs-current-value{font:800 17px 'Manrope',sans-serif;color:#293954}.vs-status{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:20px;background:#dcefe7;color:#197650;font-size:11px;font-weight:800}.vs-status.inactive{background:#e1e6ee;color:#6f7d91}.vs-dot{width:7px;height:7px;border-radius:50%;background:currentColor}.vs-section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:16px}.vs-section-title{font:800 17px 'Manrope',sans-serif;color:#2a3954;margin:0}.vs-section-caption{font-size:11px;color:#8996aa;margin:5px 0 0}.vs-plans{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:22px}.vs-plan{position:relative;display:flex;flex-direction:column;padding:21px 18px 18px;border-radius:19px;background:#e8edf5;box-shadow:7px 7px 15px #cbd2dd,-7px -7px 15px #fff;min-width:0;transition:transform .2s,box-shadow .2s}.vs-plan:hover{transform:translateY(-3px);box-shadow:9px 9px 18px #c6ceda,-9px -9px 18px #fff}.vs-plan-top{display:flex;align-items:center;gap:11px;margin-bottom:15px}.vs-plan-icon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:14px;color:#fff;background:linear-gradient(135deg,#8c75e9,#6954c4);box-shadow:0 6px 12px #bfc7d5;font-size:16px}.vs-plan.pro .vs-plan-icon{background:linear-gradient(135deg,#4d8bec,#285bb9)}.vs-plan.featured .vs-plan-icon{background:linear-gradient(135deg,#f5b85d,#df8b2d)}.vs-plan.combo .vs-plan-icon{background:linear-gradient(135deg,#ed7884,#cb435d)}.vs-plan-name{font:800 15px 'Manrope',sans-serif;color:#293954}.vs-plan-caption{font-size:10px;color:#8996aa;margin-top:3px}.vs-price{font:800 27px 'Manrope',sans-serif;color:#263650;margin:0 0 2px}.vs-period{font-size:11px;color:#8b97aa;margin-bottom:15px}.vs-divider{height:1px;background:#d5dce6;margin-bottom:14px}.vs-features{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:10px;flex:1}.vs-features li{font-size:11px;color:#5c6b83;display:flex;gap:8px;align-items:center}.vs-features i{color:#23966b;font-size:11px}.vs-plan-btn{width:100%;border:0!important;border-radius:11px!important;padding:11px 12px!important;font-size:12px!important;font-weight:800!important;background:#dce5f3!important;color:#315b9e!important;box-shadow:4px 4px 8px #cbd2dd,-4px -4px 8px #fff!important;transition:all .2s}.vs-plan-btn:hover{background:#d4e1f4!important;transform:translateY(-1px)}.vs-plan.pro .vs-plan-btn{background:linear-gradient(135deg,#477fe5,#2859b7)!important;color:#fff!important;box-shadow:0 6px 13px rgba(44,96,185,.23)!important}.vs-plan.featured .vs-plan-btn{color:#98621d!important;background:#f5e8d0!important}.vs-plan.combo{outline:1px solid #e5b3bd}.vs-plan.combo .vs-plan-btn{background:linear-gradient(135deg,#e66f7c,#c94b61)!important;color:#fff!important;box-shadow:0 6px 13px rgba(201,75,97,.2)!important}.vs-ribbon{position:absolute;right:13px;top:13px;padding:5px 8px;border-radius:8px;background:#f7dfe3;color:#b13c52;font-size:9px;font-weight:900}.vs-payment{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border-radius:16px;background:#e8edf5;box-shadow:inset 4px 4px 8px #cbd2dd,inset -4px -4px 8px #fff;color:#697891;font-size:12px;line-height:1.7}.vs-payment i{color:#d18b36;font-size:17px;margin-top:2px}@media(max-width:1050px){.vs-plans{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.vs-title{font-size:22px}.vs-current-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vs-current{padding:16px}.vs-plans{gap:12px}}@media(max-width:480px){.vs-plans{grid-template-columns:1fr}.vs-plan{padding:19px}.vs-current-grid{gap:9px}.vs-current-item{padding:11px}}
 </style>
 
-<div class="container-fluid sub-page">
-
-    <%-- PAGE HEADER --%>
-    <div class="sub-header">
-        <h3><i class="fa fa-credit-card me-2 text-primary"></i>Dealer Subscription</h3>
-        <p>Manage your plan and request an upgrade to list more bikes.</p>
+<div class="vs-page">
+    <div class="vs-head">
+        <div><div class="vs-eyebrow">Vendor workspace / Membership</div><h3 class="vs-title">Subscription Plans</h3><p class="vs-subtitle">Manage your current plan and choose the right package to grow your dealership.</p></div>
+        <div class="vs-note-pill"><i class="fas fa-shield-alt"></i> Secure plan requests</div>
     </div>
 
-    <%-- MESSAGE ALERT — JS reads lblMsg and shows this --%>
-    <div class="sub-alert" id="subAlert">
-        <i id="alertIcon" class="fa fa-circle-info"></i>
-        <asp:Label ID="lblMsg" runat="server"></asp:Label>
-    </div>
+    <div class="vs-alert" id="subAlert"><i id="alertIcon" class="fas fa-circle-info"></i><asp:Label ID="lblMsg" runat="server"></asp:Label></div>
 
-    <%-- CURRENT PLAN ─────────────────────────────── --%>
-    <div class="current-plan-card mb-4">
-        <div class="cp-title">
-            <i class="fa fa-bolt text-primary"></i> Current Active Plan
+    <section class="vs-current">
+        <div class="vs-current-head"><span class="vs-section-label"><i class="fas fa-bolt"></i> Your current subscription</span><span class="vs-status" id="planStatusBadge"><span class="vs-dot"></span><asp:Label ID="lblPlan" runat="server">No Active Plan</asp:Label></span></div>
+        <div class="vs-current-grid">
+            <div class="vs-current-item"><div class="vs-current-label"><i class="fas fa-calendar-alt"></i> Expiry date</div><div class="vs-current-value"><asp:Label ID="lblExpiry" runat="server">—</asp:Label></div></div>
+            <div class="vs-current-item"><div class="vs-current-label"><i class="fas fa-motorcycle"></i> Bike limit</div><div class="vs-current-value"><asp:Label ID="lblBikeLimit" runat="server">0</asp:Label> bikes</div></div>
+            <div class="vs-current-item"><div class="vs-current-label"><i class="fas fa-star"></i> Featured slots</div><div class="vs-current-value"><asp:Label ID="lblFeaturedLimit" runat="server">0</asp:Label></div></div>
+            <div class="vs-current-item"><div class="vs-current-label"><i class="fas fa-layer-group"></i> Plan type</div><div class="vs-current-value"><asp:Label ID="lblPlan" runat="server">No Active Plan</asp:Label></div></div>
         </div>
-        <div class="cp-grid">
-            <div class="cp-item">
-                <div class="cp-label"><i class="fa fa-tag"></i> Plan</div>
-                <div>
-                    <span class="plan-status active" id="planStatusBadge">
-                        <span class="status-dot"></span>
-                        <asp:Label ID="lblPlan" runat="server">No Active Plan</asp:Label>
-                    </span>
-                </div>
-            </div>
-            <div class="cp-item">
-                <div class="cp-label"><i class="fa fa-calendar"></i> Expiry</div>
-                <div class="cp-value">
-                    <asp:Label ID="lblExpiry" runat="server">—</asp:Label>
-                </div>
-            </div>
-            <div class="cp-item">
-                <div class="cp-label"><i class="fa fa-motorcycle"></i> Bike Limit</div>
-                <div class="cp-value">
-                    <asp:Label ID="lblBikeLimit" runat="server">0</asp:Label>
-                    <small class="text-muted ms-1">bikes</small>
-                </div>
-            </div>
-            <div class="cp-item">
-                <div class="cp-label"><i class="fa fa-star"></i> Featured</div>
-                <div class="cp-value">
-                    <asp:Label ID="lblFeaturedLimit" runat="server">0</asp:Label>
-                    <small class="text-muted ms-1">slots</small>
-                </div>
-            </div>
+    </section>
+
+    <div class="vs-section-head"><div><h4 class="vs-section-title">Choose a plan</h4><p class="vs-section-caption">Compare packages and submit a subscription request.</p></div><span class="vs-section-caption"><i class="fas fa-info-circle"></i> One pending request at a time</span></div>
+
+    <div class="vs-plans">
+        <div class="vs-plan basic">
+            <div class="vs-plan-top"><div class="vs-plan-icon"><i class="fas fa-bolt"></i></div><div><div class="vs-plan-name">Basic</div><div class="vs-plan-caption">For getting started</div></div></div>
+            <div class="vs-price">₹999</div><div class="vs-period">per month</div><div class="vs-divider"></div>
+            <ul class="vs-features"><li><i class="fas fa-check-circle"></i> 10 bike listings</li><li><i class="fas fa-check-circle"></i> Dealer profile</li><li><i class="fas fa-check-circle"></i> Enquiry management</li><li><i class="fas fa-check-circle"></i> Standard listing visibility</li></ul>
+            <asp:Button ID="Button1" runat="server" Text="Request Basic" CssClass="vs-plan-btn" OnClick="btnBasic_Click" />
+        </div>
+        <div class="vs-plan pro">
+            <div class="vs-plan-top"><div class="vs-plan-icon"><i class="fas fa-layer-group"></i></div><div><div class="vs-plan-name">Pro</div><div class="vs-plan-caption">For growing dealerships</div></div></div>
+            <div class="vs-price">₹1,999</div><div class="vs-period">per month</div><div class="vs-divider"></div>
+            <ul class="vs-features"><li><i class="fas fa-check-circle"></i> 50 bike listings</li><li><i class="fas fa-check-circle"></i> Verified badge</li><li><i class="fas fa-check-circle"></i> Enquiry management</li><li><i class="fas fa-check-circle"></i> Analytics access</li></ul>
+            <asp:Button ID="Button2" runat="server" Text="Request Pro" CssClass="vs-plan-btn" OnClick="btnPro_Click" />
+        </div>
+        <div class="vs-plan featured">
+            <div class="vs-plan-top"><div class="vs-plan-icon"><i class="fas fa-star"></i></div><div><div class="vs-plan-name">Featured</div><div class="vs-plan-caption">Boost listing visibility</div></div></div>
+            <div class="vs-price">₹499</div><div class="vs-period">per featured slot</div><div class="vs-divider"></div>
+            <ul class="vs-features"><li><i class="fas fa-check-circle"></i> 1 featured slot</li><li><i class="fas fa-check-circle"></i> Homepage placement</li><li><i class="fas fa-check-circle"></i> Search priority</li><li><i class="fas fa-check-circle"></i> More listing exposure</li></ul>
+            <asp:Button ID="Button3" runat="server" Text="Request Featured" CssClass="vs-plan-btn" OnClick="btnFeatured_Click" />
+        </div>
+        <div class="vs-plan combo">
+            <span class="vs-ribbon"><i class="fas fa-crown"></i> BEST VALUE</span>
+            <div class="vs-plan-top"><div class="vs-plan-icon"><i class="fas fa-crown"></i></div><div><div class="vs-plan-name">Combo</div><div class="vs-plan-caption">Complete growth package</div></div></div>
+            <div class="vs-price">₹2,499</div><div class="vs-period">per month</div><div class="vs-divider"></div>
+            <ul class="vs-features"><li><i class="fas fa-check-circle"></i> 50 bike listings</li><li><i class="fas fa-check-circle"></i> 3 featured slots</li><li><i class="fas fa-check-circle"></i> Verified badge</li><li><i class="fas fa-check-circle"></i> Analytics access</li><li><i class="fas fa-check-circle"></i> Priority support</li></ul>
+            <asp:Button ID="Button4" runat="server" Text="Request Combo" CssClass="vs-plan-btn" OnClick="btnCombo_Click" />
         </div>
     </div>
 
-    <%-- AVAILABLE PLANS ──────────────────────────── --%>
-    <div class="plans-heading">
-        <h4>Available Plans</h4>
-        <small><i class="fa fa-info-circle me-1"></i>Pay cash to admin after requesting</small>
-    </div>
-
-    <div class="plans-row">
-
-        <%-- BASIC ─────────────────────────────────── --%>
-        <div class="plan-card pc-basic">
-            <div class="pc-icon"><i class="fa fa-bolt"></i></div>
-            <div class="pc-name">Basic</div>
-            <div class="pc-price">₹999</div>
-            <div class="pc-period">per month</div>
-            <div class="pc-div"></div>
-            <ul class="pc-feats">
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>10 bike listings</li>
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>Dealer profile</li>
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>Enquiry management</li>
-                <li class="off"><span class="fi-cross"><i class="fa fa-xmark"></i></span>Featured slots</li>
-                <li class="off"><span class="fi-cross"><i class="fa fa-xmark"></i></span>Analytics</li>
-            </ul>
-            <asp:Button ID="Button1" runat="server"
-                Text="Request Basic"
-                CssClass="pc-btn btn-basic"
-                OnClick="btnBasic_Click" />
-        </div>
-
-        <%-- PRO ────────────────────────────────────── --%>
-        <div class="plan-card pc-pro">
-            <div class="pc-icon"><i class="fa fa-layer-group"></i></div>
-            <div class="pc-name">Pro</div>
-            <div class="pc-price">₹1,999</div>
-            <div class="pc-period">per month</div>
-            <div class="pc-div"></div>
-            <ul class="pc-feats">
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>50 bike listings</li>
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>Verified badge</li>
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>Enquiry management</li>
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>Analytics</li>
-                <li class="off"><span class="fi-cross"><i class="fa fa-xmark"></i></span>Featured slots</li>
-            </ul>
-            <asp:Button ID="Button2" runat="server"
-                Text="Request Pro"
-                CssClass="pc-btn btn-pro"
-                OnClick="btnPro_Click" />
-        </div>
-
-        <%-- FEATURED ────────────────────────────────── --%>
-        <div class="plan-card pc-featured">
-            <div class="pc-icon"><i class="fa fa-star"></i></div>
-            <div class="pc-name">Featured</div>
-            <div class="pc-price">₹499</div>
-            <div class="pc-period">per featured slot</div>
-            <div class="pc-div"></div>
-            <ul class="pc-feats">
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>1 featured slot</li>
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>Homepage placement</li>
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>Search priority</li>
-                <li class="off"><span class="fi-cross"><i class="fa fa-xmark"></i></span>Extra listings</li>
-                <li class="off"><span class="fi-cross"><i class="fa fa-xmark"></i></span>Analytics</li>
-            </ul>
-            <asp:Button ID="Button3" runat="server"
-                Text="Request Featured"
-                CssClass="pc-btn btn-featured"
-                OnClick="btnFeatured_Click" />
-        </div>
-
-        <%-- COMBO ──────────────────────────────────── --%>
-        <div class="plan-card pc-combo">
-            <span class="ribbon">⚡ Best Offer</span>
-            <div class="pc-icon"><i class="fa fa-crown"></i></div>
-            <div class="pc-name">Combo</div>
-            <div class="pc-price">₹2,499</div>
-            <div class="pc-period">per month</div>
-            <div class="pc-div"></div>
-            <ul class="pc-feats">
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>50 bike listings</li>
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>3 featured slots</li>
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>Verified badge</li>
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>Analytics</li>
-                <li><span class="fi-check"><i class="fa fa-check"></i></span>Priority support</li>
-            </ul>
-            <asp:Button ID="Button4" runat="server"
-                Text="Request Combo"
-                CssClass="pc-btn btn-combo"
-                OnClick="btnCombo_Click" />
-        </div>
-
-    </div><%-- /plans-row --%>
-
-    <%-- PAYMENT NOTICE --%>
-    <div class="pay-note">
-        <i class="fa fa-circle-info"></i>
-        <span>
-            <strong>How it works:</strong> Click Request to submit your plan.
-            Pay <strong>cash to admin</strong> to activate.
-            Your plan will be live within <strong>24 hours</strong> of payment.
-            &nbsp; Contact: <strong>+91-9001234567</strong>
-        </span>
-    </div>
-
-</div><%-- /sub-page --%>
+    <div class="vs-payment"><i class="fas fa-circle-info"></i><div><strong>How activation works:</strong> Submit your plan request using the button above, then pay cash to the admin. As described by the existing process, activation is expected within 24 hours after payment. For assistance, contact <strong>+91-9001234567</strong>.</div></div>
+</div>
 
 <script>
-    (function () {
-        var alert = document.getElementById('subAlert');
-        var icon = document.getElementById('alertIcon');
-        var lbl = document.getElementById('<%= lblMsg.ClientID %>');
+(function () {
+    var alertBox = document.getElementById('subAlert');
+    var icon = document.getElementById('alertIcon');
+    var message = document.getElementById('<%= lblMsg.ClientID %>');
     var badge = document.getElementById('planStatusBadge');
-    var planLbl = document.getElementById('<%= lblPlan.ClientID %>');
-
-    /* ── Message styling ── */
-    if (lbl) {
-        var txt = lbl.textContent.trim();
-        if (txt) {
-            alert.classList.add('show');
-            if (txt.indexOf('submitted') > -1 || txt.indexOf('Pay cash') > -1) {
-                alert.classList.add('success');
-                icon.className = 'fa fa-circle-check';
-            } else if (txt.indexOf('pending') > -1 || txt.indexOf('already') > -1) {
-                alert.classList.add('warning');
-                icon.className = 'fa fa-triangle-exclamation';
-            } else {
-                alert.classList.add('info');
-                icon.className = 'fa fa-circle-info';
-            }
-            alert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    var planLabel = document.getElementById('<%= lblPlan.ClientID %>');
+    if (message && message.textContent.trim()) {
+        var text = message.textContent.trim().toLowerCase();
+        alertBox.classList.add('show');
+        if (text.indexOf('submitted') >= 0 || text.indexOf('success') >= 0) {
+            alertBox.classList.add('success'); icon.className = 'fas fa-circle-check';
+        } else if (text.indexOf('pending') >= 0 || text.indexOf('already') >= 0) {
+            alertBox.classList.add('warning'); icon.className = 'fas fa-triangle-exclamation';
+        } else {
+            alertBox.classList.add('info'); icon.className = 'fas fa-circle-info';
         }
     }
-
-    /* ── Plan badge ── */
-    if (badge && planLbl) {
-        var plan = planLbl.textContent.trim();
-        badge.className = (plan === '' || plan === 'No Active Plan')
-            ? 'plan-status inactive'
-            : 'plan-status active';
+    if (badge && planLabel) {
+        badge.className = (planLabel.textContent.trim() === '' || planLabel.textContent.trim() === 'No Active Plan') ? 'vs-status inactive' : 'vs-status';
     }
 })();
 </script>
 </asp:Content>
-
