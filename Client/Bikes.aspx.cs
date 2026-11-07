@@ -220,7 +220,7 @@ categoryFilter +
 
                     html.Append("<div class='bike-body'>");
                     html.Append("<h6>" + encodedModel + "</h6>");
-                    html.Append("<div class='price'>₹ " +
+                    html.Append("<div class='price'>&#8377; " +
                         Convert.ToDecimal(dr["Price"]).ToString("N0") +
                         " /-</div>");
                     html.Append("<div>Range: " + HttpUtility.HtmlEncode(dr["RangeKM"].ToString()) + " KM</div>");
