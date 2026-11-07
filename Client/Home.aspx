@@ -1259,6 +1259,29 @@
     }
     
 
+
+/* ===== Hero heading legibility fix ===== */
+.hero-main-title{
+    font-family:"Bebas Neue",sans-serif!important;
+    font-size:clamp(52px,5.2vw,76px)!important;
+    font-weight:400!important;
+    line-height:1.08!important;
+    letter-spacing:.035em!important;
+    text-transform:uppercase;
+    word-spacing:.06em;
+    overflow:visible;
+}
+.hero-main-title .text-gradient{
+    letter-spacing:.015em!important;
+}
+@media(max-width:600px){
+    .hero-main-title{
+        font-size:clamp(42px,10.5vw,54px)!important;
+        line-height:1.08!important;
+        letter-spacing:.025em!important;
+    }
+}
+
 /* ===== EBikes Duniya | Reference-led responsive hero ===== */
 .hero-v4{
  position:relative;isolation:isolate;overflow:hidden;
