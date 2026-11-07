@@ -147,6 +147,51 @@ public partial class Client_Home : System.Web.UI.Page
         }
     }
 
+
+    // Build reliable URLs for database image values. Supports filename-only values,
+    // "Bikes/file.jpg", "Uploads/Bikes/file.jpg", "~/Uploads/Bikes/file.jpg"
+    // and "/Uploads/Bikes/file.jpg" without duplicating folder names.
+    public string GetHomeAssetUrl(object value, string folder)
+    {
+        string raw = value == null || value == DBNull.Value ? "" : Convert.ToString(value).Trim();
+        if (string.IsNullOrWhiteSpace(raw))
+            return ResolveUrl("~/Uploads/images/bike.png");
+
+        raw = raw.Replace((char)92, '/');
+        if (raw.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+            raw.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            return raw;
+
+        raw = raw.Replace("~/", "").TrimStart('/');
+        int uploadsIndex = raw.IndexOf("Uploads/", StringComparison.OrdinalIgnoreCase);
+        if (uploadsIndex >= 0)
+            raw = raw.Substring(uploadsIndex + "Uploads/".Length);
+
+        string folderName = (folder ?? "").Replace(((char)92).ToString(), "/").Trim('/');
+        if (folderName.StartsWith("Uploads/", StringComparison.OrdinalIgnoreCase))
+            folderName = folderName.Substring("Uploads/".Length);
+
+        if (raw.StartsWith(folderName + "/", StringComparison.OrdinalIgnoreCase))
+            raw = raw.Substring(folderName.Length + 1);
+
+        string relativePath = "~/Uploads/" + folderName + "/" + raw;
+        string resolvedPath = ResolveUrl(relativePath);
+        string physicalPath = Server.MapPath(resolvedPath);
+
+        if (!System.IO.File.Exists(physicalPath))
+        {
+            if (folderName.Equals("Brands", StringComparison.OrdinalIgnoreCase))
+                return ResolveUrl("~/Uploads/favicon/favicon-ebd.svg");
+            if (folderName.Equals("Parts", StringComparison.OrdinalIgnoreCase))
+                return ResolveUrl("~/Uploads/images/parts.png");
+            if (folderName.Equals("Profile", StringComparison.OrdinalIgnoreCase))
+                return ResolveUrl("~/Uploads/user.jpg");
+            return ResolveUrl("~/Uploads/images/bike.png");
+        }
+
+        return resolvedPath;
+    }
+
     public string GenerateStars(int rating)
     {
         string stars = "";

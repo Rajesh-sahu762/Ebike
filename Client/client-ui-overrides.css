@@ -325,3 +325,20 @@ a, button, input, select { -webkit-tap-highlight-color: transparent; }
  .footer-wordmark{font-size:22vw;padding:20px 0 6px}
  .premium-footer .footer-brand-name{font-size:20px}
 }
+
+/* Footer wordmark: fit the full brand name cleanly */
+.footer-wordmark{
+  font-size:clamp(64px,11vw,168px)!important;
+  line-height:.92!important;
+  letter-spacing:-.065em!important;
+  -webkit-text-stroke:1px rgba(249,115,22,.5)!important;
+  background:none!important;
+  color:transparent!important;
+  display:block;
+  width:100%;
+  overflow:hidden;
+  text-align:center;
+  transform:none!important;
+  padding:24px 0 8px!important;
+}
+@media(max-width:640px){.footer-wordmark{font-size:12vw!important;letter-spacing:-.07em!important}}

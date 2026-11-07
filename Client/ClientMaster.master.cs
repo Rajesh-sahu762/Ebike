@@ -114,10 +114,9 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
             lblSiteTitle.Text = settings.SiteTitle;
         }
 
-        if (!string.IsNullOrEmpty(settings.LogoPath))
-        {
-            imgLogo.ImageUrl = settings.LogoPath;
-        }
+        // Use the committed EBikes Duniya SVG mark as the dependable client logo.
+        // SiteSettings.LogoPath can contain legacy relative paths from older uploads.
+        imgLogo.ImageUrl = ResolveUrl("~/Uploads/favicon/favicon-ebd.svg");
 
         if (!string.IsNullOrEmpty(settings.AdminEmail))
         {
