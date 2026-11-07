@@ -156,7 +156,7 @@ brandFilter +
                     html.Append("<div class='bike-card'>");
                     html.Append("<div class='bike-img'>");
                     html.Append("<img src='/Uploads/Bikes/" + image1 + "' alt='" + encodedModel + "'/>");
-                    html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + bikeId + ")'>♥</div>");
+                    html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + bikeId + ")'><i class='fa-regular fa-heart' aria-hidden='true'></i></div>");
                     html.Append("</div>");
 
                     html.Append("<div class='bike-body'>");
