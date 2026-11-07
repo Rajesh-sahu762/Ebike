@@ -125,101 +125,200 @@
 </div>
 
 <style>
-    :root {
-        --primary-ev: #ff6b35;
-        --dark-ev: #0f172a;
-        --text-ev: #64748b;
-    }
-
+    /* ===== Electric Pulse - Sell Bike ===== */
     .sell-container {
-        padding: 100px 15px;
-        background: #f8fafc;
+        padding: 50px 15px 90px;
+        background: var(--ep-bg, #F4F8FC);
         min-height: 100vh;
-        font-family: 'Outfit', sans-serif;
+        font-family: var(--font-body, 'Inter', sans-serif);
     }
 
     .sell-glass-card {
-        max-width: 900px;
+        max-width: 860px;
         margin: 0 auto;
-        background: #ffffff;
-        border-radius: 30px;
-        padding: 50px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.05);
-        border: 1px solid #f1f5f9;
+        background: #FFFFFF;
+        border-radius: 24px;
+        padding: 48px;
+        box-shadow: 0 4px 24px rgba(7, 26, 47, 0.05);
+        border: 1px solid var(--ep-border, #E2E8F0);
     }
 
     .icon-box {
-        width: 70px; height: 70px; background: rgba(255,107,53,0.1);
-        color: var(--primary-ev); border-radius: 20px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 30px; margin: 0 auto 20px;
+        width: 68px;
+        height: 68px;
+        background: #ECFEFF;
+        color: var(--ep-secondary-cyan, #0891B2);
+        border: 1px solid rgba(34, 211, 238, 0.35);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin: 0 auto 20px;
     }
 
-    .sell-title { font-size: 32px; font-weight: 800; color: var(--dark-ev); margin-bottom: 10px; }
-    .sell-sub { color: var(--text-ev); font-size: 16px; margin-bottom: 40px; }
+    .sell-title {
+        font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+        font-size: 30px;
+        font-weight: 800;
+        color: var(--ep-heading, #0F172A);
+        margin-bottom: 8px;
+    }
+
+    .sell-sub {
+        color: var(--ep-text-muted, #64748B);
+        font-size: 15px;
+        margin-bottom: 36px;
+    }
 
     .form-section-title {
-        font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
-        font-weight: 700; color: var(--primary-ev);
-        margin: 30px 0 20px; display: flex; align-items: center; gap: 10px;
+        font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        font-weight: 800;
+        color: var(--ep-secondary-cyan, #0891B2);
+        margin: 28px 0 18px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
-    .form-label { font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 8px; }
+    .form-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--ep-text, #334155);
+        margin-bottom: 6px;
+        display: block;
+    }
 
     /* Custom Inputs */
     .form-control, .form-select {
-        border: 1.5px solid #e2e8f0; border-radius: 12px;
-        padding: 12px 15px; font-size: 15px; transition: 0.3s;
+        border: 1.5px solid var(--ep-border, #E2E8F0);
+        border-radius: 12px;
+        padding: 11px 16px;
+        font-size: 14px;
+        font-family: var(--font-body, 'Inter', sans-serif);
+        color: var(--ep-text, #334155);
+        transition: all 0.2s ease;
+        background: #FFFFFF;
     }
 
-    .form-control:focus {
-        border-color: var(--primary-ev); box-shadow: 0 0 0 4px rgba(255,107,53,0.1);
+    .form-control:focus, .form-select:focus {
+        border-color: var(--ep-secondary-cyan, #0891B2);
+        box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.15);
+        outline: none;
     }
 
-    .input-group-custom { position: relative; }
+    .input-group-custom {
+        position: relative;
+    }
+
     .input-group-custom i {
-        position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-        color: #94a3b8;
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--ep-text-muted, #64748B);
+        font-size: 14px;
     }
-    .input-group-custom .form-control { padding-left: 45px; }
+
+    .input-group-custom .form-control {
+        padding-left: 44px;
+    }
 
     .price-input .currency-symbol {
-        position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-        font-weight: 700; color: var(--dark-ev);
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-weight: 700;
+        color: var(--ep-primary-navy, #071A2F);
+        font-size: 16px;
     }
 
     /* Upload Cards */
     .upload-card {
-        border: 2px dashed #e2e8f0; border-radius: 15px;
-        padding: 25px 15px; text-align: center; cursor: pointer;
-        transition: 0.3s; position: relative; overflow: hidden;
+        border: 2px dashed #CBD5E1;
+        border-radius: 16px;
+        padding: 24px 16px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        position: relative;
+        overflow: hidden;
+        background: #F8FAFC;
     }
-    .upload-card:hover { border-color: var(--primary-ev); background: rgba(255,107,53,0.02); }
-    .upload-card i { font-size: 24px; color: #94a3b8; display: block; margin-bottom: 8px; }
-    .upload-card span { font-size: 12px; font-weight: 600; color: #64748b; }
-    .fu-hidden { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
 
-    .upload-hint { font-size: 13px; color: #94a3b8; margin-bottom: 15px; }
+    .upload-card:hover {
+        border-color: var(--ep-secondary-cyan, #0891B2);
+        background: #ECFEFF;
+    }
+
+    .upload-card i {
+        font-size: 26px;
+        color: var(--ep-secondary-cyan, #0891B2);
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .upload-card span {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--ep-text, #334155);
+    }
+
+    .fu-hidden {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .upload-hint {
+        font-size: 13px;
+        color: var(--ep-text-muted, #64748B);
+        margin-bottom: 16px;
+    }
 
     /* Button */
     .btn-premium-sell {
-        width: 100%; padding: 16px; background: var(--dark-ev);
-        color: #fff; border: none; border-radius: 15px;
-        font-size: 16px; font-weight: 700; margin-top: 30px;
-        transition: 0.3s; cursor: pointer;
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, var(--ep-brand-orange, #F97316), #EA580C);
+        color: #FFFFFF;
+        border: none;
+        border-radius: 12px;
+        font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+        font-size: 16px;
+        font-weight: 700;
+        margin-top: 24px;
+        transition: all 0.25s ease;
+        cursor: pointer;
+        box-shadow: 0 6px 18px rgba(249, 115, 22, 0.35);
     }
-    .btn-premium-sell:hover { background: var(--primary-ev); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255,107,53,0.3); }
 
-    .status-msg { font-weight: 600; font-size: 14px; }
+    .btn-premium-sell:hover {
+        background: linear-gradient(135deg, #FB923C, var(--ep-brand-orange, #F97316));
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(249, 115, 22, 0.45);
+    }
+
+    .status-msg {
+        font-weight: 600;
+        font-size: 14px;
+    }
 
     @media (max-width: 768px) {
-        .sell-glass-card { padding: 30px 20px; }
+        .sell-glass-card { padding: 28px 18px; }
         .sell-title { font-size: 24px; }
     }
 </style>
 
 <script>
-    // Just a small UI helper for image preview names
     function previewImg(input, boxId) {
         if (input.files && input.files[0]) {
             let name = input.files[0].name;
@@ -227,9 +326,10 @@
             if (box) {
                 box.innerHTML = "";
                 let div = document.createElement("div");
-                div.style.fontSize = "11px";
-                div.style.color = "#ff6b35";
-                div.style.marginTop = "5px";
+                div.style.fontSize = "12px";
+                div.style.fontWeight = "600";
+                div.style.color = "#0891B2";
+                div.style.marginTop = "6px";
                 div.textContent = "Selected: " + name;
                 box.appendChild(div);
             }

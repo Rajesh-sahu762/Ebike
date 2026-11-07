@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Compare Bikes"
+<%@ Page Title="Compare Bikes"
 Language="C#"
 MasterPageFile="~/Client/ClientMaster.master"
 AutoEventWireup="true"
@@ -10,260 +10,204 @@ ContentPlaceHolderID="ContentPlaceHolder1"
 runat="server">
 
 <style>
+/* ===============================
+   ELECTRIC PULSE - COMPARE BIKES
+================================ */
 
-/* ===========================
-   SECTION 1 WRAPPER
-=========================== */
-
-.compare-section{
-padding:100px 20px;
-background:linear-gradient(180deg,#f8fafc 0%,#eef2f7 100%);
-display:flex;
-justify-content:center;
+.compare-section {
+    padding: 60px 20px 80px;
+    background: var(--ep-bg, #F4F8FC);
+    display: flex;
+    justify-content: center;
+    font-family: var(--font-body, 'Inter', sans-serif);
 }
 
-/* ===========================
-   CARD CONTAINER
-=========================== */
-
-.compare-card{
-width:100%;
-max-width:1000px;
-background:#ffffff;
-border-radius:24px;
-padding:60px 50px;
-box-shadow:
-0 25px 60px rgba(0,0,0,0.08),
-0 8px 20px rgba(0,0,0,0.04);
-transition:0.3s ease;
+.compare-card {
+    width: 100%;
+    max-width: 960px;
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 48px;
+    border: 1px solid var(--ep-border, #E2E8F0);
+    box-shadow: 0 4px 24px rgba(7, 26, 47, 0.05);
+    transition: all 0.3s ease;
 }
 
-.compare-card:hover{
-transform:translateY(-4px);
-box-shadow:
-0 35px 75px rgba(0,0,0,0.12),
-0 10px 30px rgba(0,0,0,0.06);
+.compare-title {
+    text-align: center;
+    margin-bottom: 40px;
 }
 
-/* ===========================
-   HEADER
-=========================== */
-
-.compare-title{
-text-align:center;
-margin-bottom:50px;
+.compare-title h1 {
+    font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--ep-heading, #0F172A);
+    margin-bottom: 8px;
 }
 
-.compare-title h1{
-font-size:30px;
-font-weight:700;
-color:#0f172a;
-margin-bottom:12px;
+.compare-title p {
+    font-size: 15px;
+    color: var(--ep-text-muted, #64748B);
+    margin: 0;
 }
 
-.compare-title p{
-font-size:15px;
-color:#64748b;
-margin:0;
+.compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 36px;
 }
 
-/* ===========================
-   FORM GRID
-=========================== */
-
-.compare-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:35px;
-margin-bottom:45px;
+.compare-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-/* ===========================
-   FIELD
-=========================== */
-
-.compare-field{
-display:flex;
-flex-direction:column;
-gap:8px;
+.compare-field label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ep-text, #334155);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.compare-field label{
-font-size:14px;
-font-weight:600;
-color:#334155;
+.compare-field select {
+    height: 52px;
+    border-radius: 12px;
+    border: 1.5px solid var(--ep-border, #E2E8F0);
+    padding: 0 16px;
+    font-size: 14px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    color: var(--ep-text, #334155);
+    background: #FFFFFF;
+    transition: all 0.2s ease;
+    outline: none;
 }
 
-/* ===========================
-   DROPDOWN
-=========================== */
-
-.compare-field select{
-height:54px;
-border-radius:14px;
-border:1px solid #e2e8f0;
-padding:0 18px;
-font-size:15px;
-background:#f8fafc;
-transition:all 0.25s ease;
+.compare-field select:focus {
+    border-color: var(--ep-secondary-cyan, #0891B2);
+    box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.15);
 }
 
-.compare-field select:focus{
-border-color:#2563eb;
-background:#ffffff;
-box-shadow:0 0 0 4px rgba(37,99,235,0.15);
-outline:none;
+.compare-action {
+    text-align: center;
 }
 
-/* ===========================
-   BUTTON
-=========================== */
-
-.compare-action{
-text-align:center;
+.compare-btn {
+    padding: 14px 48px;
+    border-radius: 40px;
+    border: none;
+    font-size: 15px;
+    font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+    font-weight: 700;
+    color: #FFFFFF;
+    background: linear-gradient(135deg, var(--ep-brand-orange, #F97316), #EA580C);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 18px rgba(249, 115, 22, 0.35);
 }
 
-.compare-btn{
-padding:14px 55px;
-border-radius:40px;
-border:none;
-font-size:15px;
-font-weight:600;
-letter-spacing:0.5px;
-color:#ffffff;
-background:linear-gradient(135deg,#ef4444,#dc2626);
-cursor:pointer;
-transition:all 0.3s ease;
-box-shadow:0 12px 25px rgba(239,68,68,0.35);
+.compare-btn:hover {
+    background: linear-gradient(135deg, #FB923C, var(--ep-brand-orange, #F97316));
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(249, 115, 22, 0.45);
 }
-
-.compare-btn:hover{
-transform:translateY(-3px);
-box-shadow:0 18px 35px rgba(239,68,68,0.45);
-}
-
-.compare-btn:active{
-transform:translateY(0);
-}
-
-/* ===========================
-   RESPONSIVE
-=========================== */
 
 @media(max-width:900px){
-
-.compare-card{
-padding:45px 30px;
-}
-
-.compare-grid{
-grid-template-columns:1fr;
-gap:25px;
-}
-
-.compare-title h1{
-font-size:24px;
-}
-
+    .compare-card{ padding:36px 24px; }
+    .compare-grid{ grid-template-columns:1fr; gap:20px; }
+    .compare-title h1{ font-size:24px; }
 }
 
 @media(max-width:500px){
-
-.compare-section{
-padding:70px 15px;
-}
-
-.compare-card{
-padding:35px 20px;
-border-radius:18px;
-}
-
-.compare-btn{
-width:100%;
-padding:14px 0;
-}
-
+    .compare-section{ padding:40px 15px; }
+    .compare-card{ padding:28px 18px; border-radius:18px; }
+    .compare-btn{ width:100%; padding:14px 0; }
 }
 
 
     /* ================= HERO SECTION ================= */
 
 .compare-hero{
-margin-top:60px;
-background:#0f172a;
-border-radius:22px;
-padding:60px 50px;
-display:flex;
-align-items:center;
-justify-content:center;
-gap:50px;
-color:#ffffff;
-box-shadow:0 25px 60px rgba(0,0,0,0.5);
-position:relative;
-overflow:hidden;
+    margin-top: 50px;
+    background: var(--ep-primary-navy, #071A2F);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    border-radius: 22px;
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    color: #ffffff;
+    box-shadow: 0 12px 36px rgba(7, 26, 47, 0.25);
+    position: relative;
+    overflow: hidden;
 }
 
 .hero-bike{
-flex:1;
-text-align:center;
+    flex: 1;
+    text-align: center;
 }
 
 .hero-bike img{
-height:190px;
-object-fit:contain;
-margin-bottom:20px;
-transition:0.3s ease;
+    height: 180px;
+    object-fit: contain;
+    margin-bottom: 16px;
+    transition: transform 0.3s ease;
 }
 
 .hero-bike img:hover{
-transform:scale(1.05);
+    transform: scale(1.06);
 }
 
 .hero-bike h3{
-font-size:20px;
-font-weight:600;
-margin-bottom:6px;
+    font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+    font-size: 20px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 6px;
 }
 
 .hero-bike p{
-font-size:16px;
-color:#94a3b8;
-margin:0;
+    font-size: 16px;
+    color: var(--ep-accent-cyan, #22D3EE);
+    font-weight: 700;
+    margin: 0;
 }
 
 .hero-vs{
-width:100px;
-height:100px;
-border-radius:50%;
-background:linear-gradient(135deg,#ef4444,#dc2626);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:28px;
-font-weight:700;
-box-shadow:0 10px 25px rgba(239,68,68,0.5);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ep-brand-orange, #F97316), #EA580C);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+    font-size: 22px;
+    font-weight: 800;
+    box-shadow: 0 8px 24px rgba(249, 115, 22, 0.45);
+    flex-shrink: 0;
 }
 
 /* ===== RESPONSIVE ===== */
 
 @media(max-width:900px){
-
-.compare-hero{
-flex-direction:column;
-gap:30px;
-padding:40px 25px;
-}
-
-.hero-vs{
-width:70px;
-height:70px;
-font-size:20px;
-}
-
-.hero-bike img{
-height:150px;
-}
-
+    .compare-hero{
+        flex-direction: column;
+        gap: 30px;
+        padding: 40px 25px;
+    }
+    .hero-vs{
+        width: 60px;
+        height: 60px;
+        font-size: 18px;
+    }
+    .hero-bike img{
+        height: 140px;
+    }
 }
 
     /* ================= SECTION 3 - SPECS ================= */
@@ -569,8 +513,9 @@ flex-wrap:wrap;
 
 .score-divider{
 font-size:26px;
-font-weight:700;
-color:#ef4444;
+font-weight:800;
+font-family:var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+color:var(--ep-brand-orange, #F97316);
 letter-spacing:3px;
 }
 
@@ -943,9 +888,9 @@ box-shadow:0 10px 25px rgba(0,0,0,0.15);
 }
 
 .popular-controls button:hover{
-background:#dc2626;
+background:var(--ep-secondary-cyan, #0891B2);
 transform:translateY(-4px);
-box-shadow:0 15px 35px rgba(220,38,38,0.4);
+box-shadow:0 12px 28px rgba(8,145,178,0.35);
 }
 
 .popular-controls button:active{
@@ -964,17 +909,22 @@ color:#374151;
 .popular-compare-btn{
 margin-top:15px;
 padding:14px 0;
-background:#dc2626;
-color:#ffffff;
+background:var(--ep-primary-navy, #071A2F);
+color:#ffffff !important;
 text-align:center;
 border-radius:10px;
-font-weight:600;
+font-family:var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+font-weight:700;
+font-size:14px;
 text-decoration:none;
-transition:0.3s;
+transition:all 0.25s ease;
+display:block;
 }
 
 .popular-compare-btn:hover{
-background:#b91c1c;
+background:linear-gradient(135deg, var(--ep-brand-orange, #F97316), #EA580C);
+box-shadow:0 6px 18px rgba(249,115,22,0.35);
+transform:translateY(-2px);
 }
 
 /* CENTER SCALE EFFECT */

@@ -1,37 +1,149 @@
-﻿<%@ Page Title="E-Bike Parts" Language="C#" MasterPageFile="~/Client/ClientMaster.master" AutoEventWireup="true" CodeFile="Parts.aspx.cs" Inherits="PartsPage" %>
+<%@ Page Title="E-Bike Parts" Language="C#" MasterPageFile="~/Client/ClientMaster.master" AutoEventWireup="true" CodeFile="Parts.aspx.cs" Inherits="PartsPage" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
- <style>
-    body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
+<style>
+    /* ===== Electric Pulse - Spare Parts Store ===== */
+    .parts-page-wrapper {
+        background-color: var(--ep-bg, #F4F8FC);
+        font-family: var(--font-body, 'Inter', sans-serif);
+        min-height: 100vh;
+        padding-bottom: 80px;
+    }
+    
+    .parts-hero {
+        background: linear-gradient(135deg, var(--ep-primary-navy, #071A2F) 0%, #0c2b4d 100%);
+        color: #FFFFFF;
+        padding: 56px 0 48px;
+        border-bottom: 1px solid rgba(34, 211, 238, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .parts-hero::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 450px;
+        height: 450px;
+        background: radial-gradient(circle, rgba(8, 145, 178, 0.2) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .parts-hero-title {
+        font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+        font-size: 32px;
+        font-weight: 800;
+        color: #FFFFFF;
+        letter-spacing: -0.5px;
+        margin-bottom: 8px;
+    }
+
+    .parts-hero-title span {
+        color: var(--ep-accent-cyan, #22D3EE);
+    }
+
+    .parts-hero-desc {
+        color: #94A3B8;
+        font-size: 16px;
+        max-width: 600px;
+        margin: 0;
+    }
+
+    /* Category & Search Sidebar */
+    .parts-sidebar-card {
+        background: #FFFFFF;
+        border: 1px solid var(--ep-border, #E2E8F0);
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 4px 16px rgba(7, 26, 47, 0.04);
+        position: sticky;
+        top: 96px;
+    }
+
+    .parts-sidebar-title {
+        font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--ep-heading, #0F172A);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .part-search-input {
+        width: 100%;
+        background: #F8FAFC;
+        border: 1.5px solid var(--ep-border, #E2E8F0);
+        border-radius: 12px;
+        padding: 11px 16px 11px 42px;
+        font-size: 14px;
+        color: var(--ep-text, #334155);
+        font-family: var(--font-body, 'Inter', sans-serif);
+        outline: none;
+        transition: all 0.2s ease;
+    }
+
+    .part-search-input:focus {
+        background: #FFFFFF;
+        border-color: var(--ep-secondary-cyan, #0891B2);
+        box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.15);
+    }
+
+    .category-btn {
+        width: 100%;
+        text-align: left;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ep-text, #334155);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .category-btn:hover, .category-btn.active {
+        background: #F1F5F9;
+        color: var(--ep-secondary-cyan, #0891B2);
+    }
     
     /* Compact Card UI */
     .part-card { 
-        background: white; 
-        border-radius: 12px; 
+        background: #FFFFFF; 
+        border-radius: 18px; 
         overflow: hidden; 
-        border: 1px solid #e2e8f0;
-        transition: all 0.3s ease;
-        height: 100%; /* Height content ke hisab se lega */
+        border: 1px solid var(--ep-border, #E2E8F0);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        height: 100%;
         display: flex;
         flex-direction: column;
+        box-shadow: 0 4px 14px rgba(7, 26, 47, 0.04);
     }
     
     .part-card:hover { 
         transform: translateY(-5px); 
-        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08); 
-        border-color: #3b82f6; 
+        box-shadow: 0 16px 32px rgba(7, 26, 47, 0.1); 
+        border-color: var(--ep-accent-cyan, #22D3EE); 
     }
 
     /* Fixed Image Box */
     .img-container {
         position: relative;
         width: 100%;
-        padding-top: 65%; /* Height kam kar di (Pehele 75% thi) */
-        background: #f8fafc;
-        border-bottom: 1px solid #f1f5f9;
+        padding-top: 65%;
+        background: #F8FAFC;
+        border-bottom: 1px solid var(--ep-border, #E2E8F0);
         overflow: hidden;
     }
 
@@ -43,85 +155,122 @@
         max-width: 80%;
         max-height: 80%;
         object-fit: contain;
+        transition: transform 0.3s ease;
     }
 
-    /* Compact Content */
+    .part-card:hover .img-container img {
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    /* Content */
     .part-title {
-        font-size: 1rem;
+        font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+        font-size: 15px;
         font-weight: 700;
-        color: #1e293b;
-        line-height: 1.3;
+        color: var(--ep-heading, #0F172A);
+        line-height: 1.35;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        height: 2.6rem; /* Title height adjust ki */
-        margin-bottom: 4px;
+        height: 2.7rem;
+        margin-bottom: 6px;
     }
 
     .category-badge {
-        background: #eff6ff;
-        color: #3b82f6;
-        font-size: 9px;
+        background: #ECFEFF;
+        color: var(--ep-secondary-cyan, #0891B2);
+        font-size: 10px;
         font-weight: 800;
-        padding: 2px 8px;
-        border-radius: 4px;
+        padding: 3px 10px;
+        border-radius: 6px;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-block;
+    }
+
+    .part-price-value {
+        font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--ep-primary-navy, #071A2F);
     }
 
     .btn-add {
-        background: #1e293b;
-        color: white;
-        padding: 8px 14px;
-        border-radius: 8px;
-        font-weight: 600;
+        background: var(--ep-primary-navy, #071A2F);
+        color: #FFFFFF;
+        padding: 9px 16px;
+        border-radius: 10px;
+        font-weight: 700;
         font-size: 13px;
-        transition: 0.3s;
+        font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+        border: none;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
 
-    .btn-add:hover { background: #3b82f6; }
+    .btn-add:hover { 
+        background: var(--ep-brand-orange, #F97316); 
+        color: #FFFFFF;
+        box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
+        transform: translateY(-2px);
+    }
 
     .line-clamp-2 {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        font-size: 0.8rem;
+        font-size: 0.825rem;
+        color: var(--ep-text-muted, #64748B);
     }
 </style>
-    <div class="min-h-screen pb-20">
-        <div class="bg-white py-14 border-b border-slate-200">
+    <div class="parts-page-wrapper">
+        <!-- Hero Banner -->
+        <div class="parts-hero">
             <div class="max-w-7xl mx-auto px-6">
-                <h1 class="text-4xl font-black text-slate-900 tracking-tight">Spare Parts <span class="text-blue-600">Store</span></h1>
-                <p class="mt-2 text-slate-500 text-lg">Genuine components for your electric vehicle.</p>
+                <span class="badge-ep badge-ep-cyan mb-2">⚡ OEM & GENUINE ACCESSORIES</span>
+                <h1 class="parts-hero-title">E-Bike Spare Parts <span>Store</span></h1>
+                <p class="parts-hero-desc">Certified batteries, smart chargers, controllers, brake pads, and OEM components with direct warranty.</p>
             </div>
         </div>
 
         <div class="max-w-7xl mx-auto px-6 mt-10">
             <div class="flex flex-col lg:flex-row gap-10">
                 
+                <!-- Left Sidebar Filters -->
                 <div class="w-full lg:w-72 flex-shrink-0">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 sticky top-10 shadow-sm">
-                        <div class="mb-8">
-                            <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Search Part</h3>
+                    <div class="parts-sidebar-card">
+                        <div class="mb-6">
+                            <h3 class="parts-sidebar-title">
+                                <span>Search Part</span>
+                                <i class="fas fa-search text-slate-400"></i>
+                            </h3>
                             <div class="relative">
                                 <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                                 <input type="text" id="partSearch" onkeyup="filterParts()" placeholder="Type model or name..." 
-                                    class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" />
+                                    class="part-search-input" />
                             </div>
                         </div>
 
                         <div>
-                            <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Categories</h3>
-                            <div class="flex flex-wrap lg:flex-col gap-2">
+                            <h3 class="parts-sidebar-title">
+                                <span>Categories</span>
+                                <i class="fas fa-tags text-slate-400"></i>
+                            </h3>
+                            <div class="flex flex-wrap lg:flex-col gap-1">
                                 <asp:Literal ID="LitCategories" runat="server"></asp:Literal>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Right Parts Grid -->
                 <div class="flex-1">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8" id="partsGrid">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" id="partsGrid">
                         <asp:Repeater ID="rptParts" runat="server">
                            <ItemTemplate>
     <div class="part-card" data-category='<%# Eval("Category") %>' data-name='<%# Eval("PartName") %>'>
@@ -142,16 +291,16 @@
             </div>
             
             <h3 class="part-title"><%# Eval("PartName") %></h3>
-            <p class="text-slate-500 line-clamp-2 mb-4"><%# Eval("Description") %></p>
+            <p class="line-clamp-2 mb-4"><%# Eval("Description") %></p>
             
-            <div class="mt-auto pt-3 border-t border-slate-50 flex items-center justify-between">
+            <div class="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
                 <div>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase">Price</p>
-                    <p class="text-xl font-black text-slate-900">₹<%# Eval("Price", "{0:N0}") %> /-</p>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Price</p>
+                    <p class="part-price-value">₹<%# Eval("Price", "{0:N0}") %> /-</p>
                 </div>
                     
                 <button type="button" onclick="addToCart(<%# Eval("PartID") %>)" class="btn-add">
-                    <i class="fas fa-plus mr-1"></i> Add
+                    <i class="fas fa-plus"></i> Add
                 </button>
             </div>
         </div>
@@ -160,7 +309,7 @@
                         </asp:Repeater>
                     </div>
 
-                    <div id="noResults" class="hidden text-center py-24 bg-white rounded-3xl border border-dashed border-slate-300">
+                    <div id="noResults" class="hidden text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
                         <div class="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
                             <i class="fas fa-box-open text-slate-300 text-3xl"></i>
                         </div>
