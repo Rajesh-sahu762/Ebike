@@ -1257,7 +1257,150 @@
         .cta-btn-v15 { width: 100%; }
         .cta-button-group { flex-direction: column; }
     }
-    </style>
+    
+    /* El<section class="hero-v4">
+    <div class="container">
+        <div class="hero-grid">
+            <div class="hero-copy">
+                <div class="hero-badge-wrapper">
+                    <span class="hero-badge">
+                        <i class="fa-solid fa-bolt-lightning"></i>
+                        NEXT-GEN ELECTRIC MOBILITY
+                    </span>
+                </div>
+                <h1 class="hero-main-title">
+                    Ride the Future.<br />
+                    <span class="text-gradient">Pure Electric.</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Discover electric bikes, compare real-world specifications and connect with verified dealers — all in one place.
+                </p>
+                <div class="hero-actions">
+                    <a href="Bikes.aspx" class="hero-action hero-action-primary">
+                        Explore Electric Bikes <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="Compare.aspx" class="hero-action hero-action-secondary">
+                        <i class="fa-solid fa-code-compare"></i> Compare Models
+                    </a>
+                </div>
+                <div class="hero-proof-points">
+                    <div class="hero-proof-item"><i class="fa-solid fa-shield-halved"></i><span>Verified Dealers</span></div>
+                    <div class="hero-proof-item"><i class="fa-solid fa-bolt"></i><span>EV Focused</span></div>
+                    <div class="hero-proof-item"><i class="fa-solid fa-scale-balanced"></i><span>Compare Easily</span></div>
+                </div>
+            </div>
+            <div class="hero-media">
+                <div class="hero-media-orbit"></div>
+                <div class="hero-image-frame">
+                    <img src="<%= ResolveUrl("~/Uploads/Bikes/Ather450X.jpg") %>" alt="Featured electric scooter" fetchpriority="high" />
+                </div>
+                <div class="hero-float-card">
+                    <strong><i class="fa-solid fa-leaf"></i> 100% Electric</strong>
+                    <span>Move towards cleaner mobility</span>
+                </div>
+            </div>
+        </div>
+        <div class="search-glass-wrapper">
+            <div class="search-glass-inner">
+                <div class="search-item">
+                    <label><i class="fa-solid fa-wallet"></i>Your Budget</label>
+                    <asp:DropDownList ID="ddlBudget" runat="server" CssClass="search-select">
+                        <asp:ListItem Value="">Select Max Budget</asp:ListItem>
+                        <asp:ListItem Value="80000">Under ₹80,000</asp:ListItem>
+                        <asp:ListItem Value="120000">Under ₹1.2 Lakh</asp:ListItem>
+                        <asp:ListItem Value="180000">Under ₹1.8 Lakh</asp:ListItem>
+                        <asp:ListItem Value="500000">Premium EVs</asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+                <div class="search-divider"></div>
+                <div class="search-item">
+                    <label><i class="fa-solid fa-tag"></i>Preferred Brand</label>
+                    <asp:DropDownList ID="ddlBrand" runat="server" CssClass="search-select"></asp:DropDownList>
+                </div>
+                <div class="search-action">
+                    <asp:LinkButton ID="btnSearch" runat="server" CssClass="btn-search-hero" OnClick="btnSearch_Click">
+                        <i class="fa-solid fa-magnifying-glass"></i> Explore
+                    </asp:LinkButton>
+                </div>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat"><i class="fa-solid fa-users"></i><div><strong>10K+</strong><span>Happy Buyers</span></div></div>
+            <div class="hero-stat"><i class="fa-solid fa-store"></i><div><strong>200+</strong><span>Verified Dealers</span></div></div>
+            <div class="hero-stat"><i class="fa-solid fa-motorcycle"></i><div><strong>500+</strong><span>Electric Bikes</span></div></div>
+            <div class="hero-stat"><i class="fa-solid fa-shield-halved"></i><div><strong>Trusted</strong><span>Genuine Listings</span></div></div>
+        </div>
+    </div>
+</section>,238,.10);font-size:13px; }
+    .hero-media { min-width:0;position:relative;min-height:365px;display:flex;align-items:center;justify-content:center;isolation:isolate; }
+    .hero-media-orbit { position:absolute;width:min(92%,440px);aspect-ratio:1;border:1px solid rgba(34,211,238,.28);border-radius:50%;box-shadow:0 0 0 22px rgba(34,211,238,.025),0 0 0 55px rgba(34,211,238,.018); }
+    .hero-media-orbit:after { content:"";position:absolute;inset:12%;border:1px dashed rgba(34,211,238,.20);border-radius:50%; }
+    .hero-image-frame { position:relative;width:min(100%,580px);z-index:1;padding:12px;border:1px solid rgba(255,255,255,.7);border-radius:34px;background:linear-gradient(145deg,#FFFFFF,#EAF4F8);box-shadow:0 28px 58px rgba(0,0,0,.26);transform:rotate(1deg); }
+    .hero-image-frame img { width:100%;height:auto;max-height:370px;object-fit:contain;mix-blend-mode:multiply;border-radius:25px; }
+    .hero-float-card { position:absolute;z-index:2;right:0;top:42px;min-width:154px;padding:13px 15px;border:1px solid rgba(148,163,184,.23);border-radius:15px;background:rgba(8,31,52,.76);box-shadow:0 16px 35px rgba(0,0,0,.20);backdrop-filter:blur(12px); }
+    .hero-float-card strong { display:block;color:#fff;font:700 13px var(--ep-font-heading); }
+    .hero-float-card span { display:block;margin-top:3px;color:#A9C0D4;font-size:11px; }
+    .hero-float-card i { color:var(--ep-accent-cyan);margin-right:6px; }
+    .search-glass-wrapper { position:relative;z-index:3;margin:26px auto 0;padding:0; }
+    .search-glass-inner { max-width:1050px;padding:13px 16px 13px 26px;border:1px solid rgba(226,232,240,.85);border-radius:20px;box-shadow:0 22px 52px rgba(0,0,0,.22);gap:14px; }
+    .search-item { padding:8px 10px; }
+    .search-item label { color:#8293A6;font-size:10px;letter-spacing:.10em; }
+    .search-select { font-weight:700;font-size:14px; }
+    .btn-search-hero { background:var(--ep-primary-navy);color:#fff!important;border-radius:13px;min-height:48px;justify-content:center;padding:13px 25px;box-shadow:0 8px 18px rgba(7,26,47,.18); }
+    .btn-search-hero:hover { background:#0D3556;box-shadow:0 12px 22px rgba(7,26,47,.23); }
+    .hero-stats { display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:28px auto 0;max-width:1000px;border:1px solid rgba(148,163,184,.16);border-radius:16px;background:rgba(255,255,255,.035); }
+    .hero-stat { display:flex;align-items:center;justify-content:center;gap:11px;padding:15px 12px;border-right:1px solid rgba(148,163,184,.15); }
+    .hero-stat:last-child { border-right:0; }
+    .hero-stat i { color:var(--ep-accent-cyan);font-size:19px; }
+    .hero-stat strong { display:block;color:#fff;font:700 17px var(--ep-font-heading);line-height:1.2; }
+    .hero-stat span { display:block;color:#9DB2C5;font-size:11px;margin-top:3px; }
+    .featured-ev-v7 { padding:72px 0!important;background:#F7FAFD!important; }
+    .section-title-v7 { font-size:clamp(25px,3vw,32px); }
+    .compact-card-v7 { border-radius:19px;box-shadow:0 8px 22px rgba(7,26,47,.055); }
+    .compact-card-v7:hover { transform:translateY(-6px);box-shadow:0 18px 34px rgba(7,26,47,.12); }
+    .browse-section { background:linear-gradient(135deg,#071A2F,#0B2B46);padding:76px 0; }
+    .browse-tabs { display:flex;gap:9px;flex-wrap:wrap;margin:22px 0 28px; }
+    .browse-tabs .tab { padding:10px 17px;border-radius:999px;border:1px solid rgba(148,163,184,.2);background:rgba(255,255,255,.045);color:#B6C9DA;transition:all .2s;cursor:pointer; }
+    .browse-tabs .tab:hover,.browse-tabs .tab.active-tab { background:var(--ep-accent-cyan);color:#071A2F;border-color:var(--ep-accent-cyan); }
+    .brand-card,.body-card { border-radius:15px!important;transition:all .22s ease!important; }
+    .brand-card:hover,.body-card:hover { transform:translateY(-4px);box-shadow:0 15px 25px rgba(0,0,0,.16); }
+    @media(max-width:991px) {
+      .hero-v4 { padding:42px 0 36px; }
+      .hero-grid { grid-template-columns:1fr;gap:0; }
+      .hero-copy { padding:18px 0 4px;text-align:center; }
+      .hero-subtitle { margin:0 auto; }
+      .hero-actions,.hero-proof-points { justify-content:center; }
+      .hero-media { min-height:280px;margin-top:4px; }
+      .hero-image-frame img { max-height:285px; }
+      .hero-float-card { right:5%;top:20px; }
+      .search-glass-inner { padding:20px;border-radius:18px; }
+      .hero-stats { grid-template-columns:repeat(2,1fr); }
+      .hero-stat:nth-child(2) { border-right:0; }
+      .hero-stat:nth-child(-n+2) { border-bottom:1px solid rgba(148,163,184,.15); }
+    }
+    @media(max-width:575px) {
+      .hero-v4 { padding:30px 0 28px; }
+      .hero-main-title { font-size:clamp(37px,11vw,48px); }
+      .hero-subtitle { font-size:14px; }
+      .hero-actions { display:grid;grid-template-columns:1fr 1fr;gap:9px; }
+      .hero-action { justify-content:center;padding:11px 10px;font-size:11px; }
+      .hero-proof-points { gap:10px 14px;margin-top:22px; }
+      .hero-proof-item { font-size:10px; }
+      .hero-proof-item i { width:26px;height:26px; }
+      .hero-media { min-height:220px; }
+      .hero-image-frame img { max-height:220px; }
+      .hero-float-card { top:8px;right:0;min-width:126px;padding:9px 10px; }
+      .hero-float-card strong { font-size:11px; }
+      .hero-float-card span { font-size:9px; }
+      .search-glass-wrapper { margin-top:18px; }
+      .search-glass-inner { padding:15px;gap:7px; }
+      .hero-stat { padding:12px 7px;gap:7px; }
+      .hero-stat i { font-size:15px; }
+      .hero-stat strong { font-size:14px; }
+      .hero-stat span { font-size:9px; }
+      .featured-ev-v7 { padding:48px 0!important; }
+    }
+</style>
 
 <section class="hero-v4">
     <div class="container">
@@ -1279,33 +1422,7 @@
                     India's most trusted marketplace for Electric Bikes, Scooters & Genuine Spares.
                 </p>
 
-                <div class="search-glass-wrapper">
-                    <div class="search-glass-inner">
-                        <div class="search-item">
-                            <label><i class="fa-solid fa-wallet text-info mr-2"></i>Your Budget</label>
-                            <asp:DropDownList ID="ddlBudget" runat="server" CssClass="search-select">
-                                <asp:ListItem Value="">Select Max Budget</asp:ListItem>
-                                <asp:ListItem Value="80000">Under ₹80,000</asp:ListItem>
-                                <asp:ListItem Value="120000">Under ₹1.2 Lakh</asp:ListItem>
-                                <asp:ListItem Value="180000">Under ₹1.8 Lakh</asp:ListItem>
-                                <asp:ListItem Value="500000">Premium EVs</asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
-
-                        <div class="search-divider"></div>
-
-                        <div class="search-item">
-                            <label><i class="fa-solid fa-charging-station text-info mr-2"></i>Preferred Brand</label>
-                            <asp:DropDownList ID="ddlBrand" runat="server" CssClass="search-select"></asp:DropDownList>
-                        </div>
-
-                        <div class="search-action">
-                            <asp:LinkButton ID="btnSearch" runat="server" CssClass="btn-search-hero" OnClick="btnSearch_Click">
-                                <i class="fa-solid fa-magnifying-glass mr-2"></i> Explore
-                            </asp:LinkButton>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -1334,7 +1451,7 @@
                         <div class="swiper-slide">
                             <div class="compact-card-v7">
                                 <div class="img-holder-v7">
-                                    <img src='/Uploads/Bikes/<%# Eval("Image1") %>' alt='<%# Eval("ModelName") %>' />
+                                    <img src='<%# ResolveUrl("~/Uploads/Bikes/") + Eval("Image1") %>' alt='<%# Eval("ModelName") %>' />
                                 </div>
                                 <div class="info-holder-v7">
                                     <h3 class="title-v7"><%# Eval("ModelName") %></h3>
@@ -1383,7 +1500,7 @@
             <div class="brand-card">
              <a href='Bikes.aspx?brand=<%# Eval("BrandID") %>' class="brand-card">
     <div class="brand-logo">
-        <img src='/Uploads/Brands/<%# Eval("LogoPath") %>' loading="lazy"
+        <img src='<%# ResolveUrl("~/Uploads/Brands/") + Eval("LogoPath") %>' loading="lazy"
  />
     </div>
     <div class="brand-name">
@@ -1528,7 +1645,7 @@
                             <div class="part-cat-tag"><%# Eval("Category") %></div>
                             
                             <div class="part-img-v9">
-                                <img src='/Uploads/Parts/<%# Eval("Image1") %>' alt='<%# Eval("PartName") %>' />
+                                <img src='<%# ResolveUrl("~/Uploads/Parts/") + Eval("Image1") %>' alt='<%# Eval("PartName") %>' />
                                 <div class="part-overlay-v9">
                                     <a href="Parts.aspx" class="quick-add-btn">
                                         <i class="fa-solid fa-plus"></i>
@@ -1559,7 +1676,7 @@
             <div class="col-lg-5 mb-5 mb-lg-0">
                 <div class="battery-image-wrapper">
                     <div class="blob-bg"></div>
-                    <img src="../Uploads/Banner/maintain.png" class="img-fluid main-battery-img" alt="Battery Maintenance" loading="lazy" />
+                    <img src="<%= ResolveUrl("~/Uploads/Banner/maintain.png") %>" class="img-fluid main-battery-img" alt="Battery Maintenance" loading="lazy" />
                     <div class="floating-info-card">
                         <i class="fa-solid fa-heart-pulse text-danger"></i>
                         <span>Longer Battery Life</span>
@@ -1778,7 +1895,7 @@
                             <div class="review-card-v14">
                                 <div class="review-user-row">
                                     <div class="user-profile-v14">
-                                        <img src='<%# Eval("ProfileImage") == DBNull.Value ? "../Uploads/user.jpg" : "/Uploads/Profile/" + Eval("ProfileImage") %>' alt='<%# Eval("FullName") %>' />
+                                        <img src='<%# Eval("ProfileImage") == DBNull.Value ? ResolveUrl("~/Uploads/user.jpg") : ResolveUrl("~/Uploads/Profile/") + Eval("ProfileImage") %>' alt='<%# Eval("FullName") %>' />
                                         <%# (bool)Eval("IsVerified") ? "<div class='verified-check'><i class='fa-solid fa-check'></i></div>" : "" %>
                                     </div>
                                     <div class="user-details-v14">
