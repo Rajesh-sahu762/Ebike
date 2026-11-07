@@ -1501,6 +1501,8 @@
    </div>
   </div>
   <div class="search-glass-wrapper"><div class="search-glass-inner">
+   <div class="search-heading"><i class="fa-solid fa-sliders"></i><strong>Find Your Electric Bike</strong></div>
+   <div class="search-divider"></div>
    <div class="search-item"><label><i class="fa-solid fa-wallet"></i>Your Budget</label><asp:DropDownList ID="ddlBudget" runat="server" CssClass="search-select"><asp:ListItem Value="">Select Max Budget</asp:ListItem><asp:ListItem Value="80000">Under ₹80,000</asp:ListItem><asp:ListItem Value="120000">Under ₹1.2 Lakh</asp:ListItem><asp:ListItem Value="180000">Under ₹1.8 Lakh</asp:ListItem><asp:ListItem Value="500000">Premium EVs</asp:ListItem></asp:DropDownList></div>
    <div class="search-divider"></div>
    <div class="search-item"><label><i class="fa-solid fa-tag"></i>Preferred Brand</label><asp:DropDownList ID="ddlBrand" runat="server" CssClass="search-select"></asp:DropDownList></div>
