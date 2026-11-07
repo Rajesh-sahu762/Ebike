@@ -33,9 +33,9 @@ Inherits="Client_Wishlist" %>
 
 <a href="MyProfile.aspx">👤 Profile</a>
 
-<a href="Wishlist.aspx" class="active">❤️ Wishlist</a>
+<a href="Wishlist.aspx" class="active"><i class="fa-solid fa-heart" aria-hidden="true"></i> Wishlist</a>
 
-<a href="MyRentals.aspx">🛵 My Rentals</a>
+<a href="MyRentals.aspx"><i class="fa-solid fa-motorcycle" aria-hidden="true"></i> My Rentals</a>
 
 <a href="MyEnquiries.aspx">📨 My Enquiries & Orders</a>
 
@@ -93,7 +93,7 @@ onclick="removeWishlist(<%# Eval("BikeID") %>,this)">
 </h3>
 
 <div class="bike-price">
-₹ <%# Eval("Price","{0:N0}") %>
+&#8377; <%# Eval("Price","{0:N0}") %>
 </div>
 
 <div class="wishlist-actions">
