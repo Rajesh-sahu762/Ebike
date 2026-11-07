@@ -710,12 +710,21 @@ body {
     EnablePartialRendering="true" />
 
 <!-- ═══ TOPBAR ═══ -->
-<div class="topbar" id="topbar">
-    ⚡ <strong>New 2026:</strong> Ather Rizta &amp; OLA S1 X+ now listed —
-    <a href="Bikes.aspx">Explore Now →</a>
-    <span class="topbar-close" onclick="document.getElementById('topbar').style.display='none'">
-        <i class="fa fa-times"></i>
-    </span>
+<div class="announcement-bar" id="topbar">
+    <div class="announcement-copy"><i class="fa-solid fa-bolt"></i> <strong>New 2026:</strong> Ather Rizta &amp; OLA S1 X+ now listed on EBikes Duniya! <a href="Bikes.aspx">Explore Now <i class="fa-solid fa-arrow-right"></i></a></div>
+    <button type="button" class="topbar-close" aria-label="Dismiss announcement" onclick="document.getElementById('topbar').style.display='none'"><i class="fa fa-xmark"></i></button>
+</div>
+<div class="utility-bar">
+    <div class="utility-inner">
+        <div class="utility-left"><span><i class="fa-solid fa-location-dot"></i> India's Electric Mobility Marketplace</span></div>
+        <div class="utility-links">
+            <a href="#siteFooter"><i class="fa-regular fa-building"></i> Company</a>
+            <a href="../Vendor/VendorRegister.aspx"><i class="fa-solid fa-handshake"></i> Partners</a>
+            <a href="Enquiry.aspx"><i class="fa-regular fa-circle-question"></i> Support</a>
+            <a href="ClientLogin.aspx"><i class="fa-regular fa-user"></i> Login</a>
+            <label class="language-select"><i class="fa-solid fa-globe"></i><select aria-label="Language" title="Language"><option value="en">English</option></select><i class="fa-solid fa-chevron-down"></i></label>
+        </div>
+    </div>
 </div>
 
 <!-- ═══ NAVBAR ═══ -->
@@ -872,17 +881,15 @@ body {
     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
 </div>
 
-<footer class="premium-footer">
+<footer class="premium-footer" id="siteFooter">
 <div class="container">
   <div class="footer-grid">
     
     <div class="footer-col">
-      <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px">
-        <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--ep-brand-orange),#ea580c); display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 15px rgba(249,115,22,0.3);">
-          <i class="fa fa-bolt" style="color:white; font-size:18px"></i>
-        </div>
-        <span style="font-size:20px; font-weight:800; color:#f8fafc; letter-spacing:-0.5px; font-family: var(--ep-font-heading);">EBikes <span style="color:var(--ep-brand-orange);">Duniya</span></span>
-      </div>
+      <a href="Home.aspx" class="footer-brand-lockup" aria-label="EBikes Duniya home">
+        <span class="footer-logo-mark"><img id="footerLogoImg" alt="EBikes Duniya logo" /><i class="fa fa-bolt" id="footerLogoFallback"></i></span>
+        <span class="footer-brand-name">EBikes <em>Duniya</em><small>ELECTRIC · FREEDOM</small></span>
+      </a>
       <p style="font-size:14px; line-height:1.75; color:#94a3b8; margin-bottom:20px;">
         India's trusted EV marketplace connecting buyers with verified dealers. Compare, Rent, or Buy with 100% transparency.
       </p>
@@ -930,6 +937,7 @@ body {
 
   </div>
 
+  <div class="footer-wordmark" aria-hidden="true">EBikes</div>
   <div style="margin-top:50px; padding-top:25px; border-top:1px solid rgba(255,255,255,0.05); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:20px;">
     <p style="font-size:13px; color:#475569; margin:0;">
       © 2026 <b>EBikes Duniya</b>. All rights reserved. | Made with ⚡ in India
@@ -1327,6 +1335,27 @@ body {
     }, { passive: true });
 
     setActiveNavLink();
+    /* Reuse the configured SiteSettings logo in the footer without duplicating server IDs. */
+    (function () {
+        var headerLogo = document.getElementById("imgLogo");
+        var footerLogo = document.getElementById("footerLogoImg");
+        var footerFallback = document.getElementById("footerLogoFallback");
+        if (!headerLogo || !footerLogo) return;
+        function syncFooterLogo() {
+            if (headerLogo.complete && headerLogo.naturalWidth > 0) {
+                footerLogo.src = headerLogo.src;
+                footerLogo.style.display = "block";
+                if (footerFallback) footerFallback.style.display = "none";
+            } else {
+                footerLogo.style.display = "none";
+                if (footerFallback) footerFallback.style.display = "block";
+            }
+        }
+        headerLogo.addEventListener("load", syncFooterLogo);
+        headerLogo.addEventListener("error", syncFooterLogo);
+        syncFooterLogo();
+    })();
+
 </script>
 
     <script>
