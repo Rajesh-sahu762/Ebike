@@ -1469,6 +1469,22 @@
  .hero-image-frame{animation:heroBikeFloat 6s ease-in-out infinite}
  @keyframes heroBikeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 }
+
+/* Explore by category */
+.home-category-section{position:relative;z-index:2;background:#F4F8FC;padding:24px 0 30px;border-bottom:1px solid #E5EDF4}
+.home-category-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 15px}
+.home-category-heading h2{margin:0;color:#0F172A;font:800 19px/1.25 var(--ep-font-heading);letter-spacing:-.025em}
+.home-category-heading p{margin:4px 0 0;color:#64748B;font-size:11px}
+.home-category-track{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.home-category-card{min-width:0;min-height:76px;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px 10px;border:1px solid #E1EAF2;border-radius:13px;background:linear-gradient(145deg,#fff,#F2F7FB);color:#24364B!important;text-decoration:none!important;box-shadow:0 4px 12px rgba(15,35,55,.035);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease}
+.home-category-card:hover,.home-category-card:focus-visible{transform:translateY(-3px);border-color:#67DCEB;background:linear-gradient(145deg,#E9FCFF,#DDF8FC);box-shadow:0 8px 20px rgba(8,145,178,.12);color:#071A2F!important}
+.home-category-icon{width:38px;height:38px;flex:0 0 38px;display:inline-flex;align-items:center;justify-content:center;border-radius:11px;background:#E4F9FC;color:#0891B2;font-size:17px}
+.home-category-copy{min-width:0;text-align:left}
+.home-category-name{display:block;color:#172B43;font:700 11px/1.3 var(--ep-font-heading);white-space:nowrap}
+.home-category-count{display:block;margin-top:3px;color:#718096;font:500 9px/1.2 var(--ep-font-body)}
+@media(max-width:767px){.home-category-section{padding:18px 0 22px}.home-category-heading{margin-bottom:12px}.home-category-heading h2{font-size:17px}.home-category-track{display:flex;gap:9px;overflow-x:auto;overflow-y:hidden;padding:2px 2px 10px;margin:0 -2px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#B8DCE4 transparent}.home-category-card{flex:0 0 158px;min-height:68px;justify-content:flex-start;scroll-snap-align:start;padding:10px}.home-category-icon{width:34px;height:34px;flex-basis:34px;font-size:15px}.home-category-name{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.home-category-card{transition:none}}
+
 </style>
 
 <section class="hero-v4">
@@ -1513,6 +1529,24 @@
    <div class="hero-stat"><i class="fa-solid fa-store"></i><div><strong>200+</strong><span>Verified Dealers</span></div></div>
    <div class="hero-stat"><i class="fa-solid fa-motorcycle"></i><div><strong>500+</strong><span>Electric Bikes</span></div></div>
    <div class="hero-stat"><i class="fa-solid fa-shield-halved"></i><div><strong>100%</strong><span>Genuine &amp; Trusted</span></div></div>
+  </div>
+ </div>
+</section>
+
+
+<section class="home-category-section" aria-labelledby="homeCategoryTitle">
+ <div class="container">
+  <div class="home-category-heading">
+   <div><h2 id="homeCategoryTitle">Explore by Category</h2><p>Find the right electric ride for you</p></div>
+   <a href="Bikes.aspx" class="view-all-v7">View All <i class="fa-solid fa-arrow-right-long ml-1"></i></a>
+  </div>
+  <div class="home-category-track">
+   <asp:Repeater ID="rptHomeCategories" runat="server"><ItemTemplate>
+    <a class="home-category-card" href='Bikes.aspx?category=<%# Eval("CategorySlug") %>' aria-label='<%# Eval("CategoryName") %> - <%# Eval("BikeCount") %> bikes'>
+     <span class="home-category-icon"><i class='<%# Eval("CategoryIcon") %>' aria-hidden="true"></i></span>
+     <span class="home-category-copy"><span class="home-category-name"><%# Eval("CategoryName") %></span><span class="home-category-count"><%# Eval("BikeCount") %> available rides</span></span>
+    </a>
+   </ItemTemplate></asp:Repeater>
   </div>
  </div>
 </section>
