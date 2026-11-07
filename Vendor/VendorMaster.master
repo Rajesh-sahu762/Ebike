@@ -18,7 +18,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Quicksand:wght@300..700&display=swap" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
@@ -44,7 +44,7 @@
             margin: 0;
             background: var(--vendor-bg);
             color: var(--vendor-text);
-            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-family: 'Nunito Sans', 'Segoe UI', sans-serif;
             font-size: 14px;
             -webkit-font-smoothing: antialiased;
         }
@@ -90,11 +90,11 @@
         }
 
         .vendor-brand-copy { min-width: 0; }
-        .vendor-brand-title { margin: 0; color: #f7fbff; font-size: 16px; line-height: 1.2; font-weight: 800; letter-spacing: -.35px; }
-        .vendor-brand-subtitle { display: block; margin-top: 4px; color: #91a6c0; font-size: 10px; font-weight: 600; letter-spacing: 1.45px; text-transform: uppercase; }
+        .vendor-brand-title { font-family: 'Manrope', sans-serif; margin: 0; color: #f7fbff; font-size: 16px; line-height: 1.2; font-weight: 800; letter-spacing: -.35px; }
+         .vendor-brand-subtitle { font-family: 'Quicksand', sans-serif; display: block; margin-top: 4px; color: #91a6c0; font-size: 10px; font-weight: 600; letter-spacing: 1.45px; text-transform: uppercase; }
 
         .vendor-nav { display: flex; flex-direction: column; gap: 5px; }
-        .vendor-nav a {
+         .vendor-nav a { font-family: 'Nunito Sans', sans-serif;
             display: flex;
             align-items: center;
             min-height: 44px;
@@ -180,8 +180,8 @@
             font-size: 16px;
         }
 
-        .vendor-welcome-label { display: block; color: var(--vendor-muted); font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; }
-        .vendor-welcome-name { display: block; overflow: hidden; margin-top: 3px; color: var(--vendor-text); font-size: 16px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+         .vendor-welcome-label { font-family: 'Quicksand', sans-serif; display: block; color: var(--vendor-muted); font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; }
+        .vendor-welcome-name { font-family: 'Manrope', sans-serif; display: block; overflow: hidden; margin-top: 3px; color: var(--vendor-text); font-size: 16px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
 
         .vendor-notification-wrap { position: relative; }
         .vendor-notification-trigger {
