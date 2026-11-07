@@ -936,6 +936,19 @@ body {
   </div>
 
   <div class="footer-wordmark" aria-hidden="true">EBIKES DUNIYA</div>
+  <section class="footer-newsletter" aria-labelledby="footerNewsletterTitle">
+    <div class="footer-newsletter-copy">
+      <span class="footer-newsletter-kicker"><i class="fa-solid fa-bolt"></i> THE ELECTRIC UPDATE</span>
+      <h3 id="footerNewsletterTitle">Stay Charged. Stay Ahead.</h3>
+      <p>Get the latest electric bike launches, marketplace updates and riding insights from EBikes Duniya.</p>
+    </div>
+    <div class="footer-newsletter-form">
+      <label class="visually-hidden" for="footerNewsletterEmail">Email address</label>
+      <input id="footerNewsletterEmail" type="email" placeholder="you@example.com" autocomplete="email" />
+      <a href="Enquiry.aspx" class="footer-newsletter-submit">Get Updates <i class="fa-solid fa-arrow-right"></i></a>
+      <small>Discover updates and get in touch with our team.</small>
+    </div>
+  </section>
   <div class="footer-bottom-row" style="margin-top:34px; padding-top:25px; border-top:1px solid rgba(255,255,255,0.08); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:20px;">
     <p style="font-size:13px; color:#475569; margin:0;">
       © 2026 <b>EBikes Duniya</b>. All rights reserved. | Made with <i class="fa-solid fa-bolt" aria-hidden="true"></i> in India
