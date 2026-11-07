@@ -157,7 +157,7 @@ public partial class Client_Home : System.Web.UI.Page
         if (string.IsNullOrWhiteSpace(raw))
             return ResolveUrl("~/Uploads/images/bike.png");
 
-        raw = raw.Replace('\\\\', '/');
+        raw = raw.Replace((char)92, '/');
         if (raw.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
             raw.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             return raw;
@@ -167,7 +167,7 @@ public partial class Client_Home : System.Web.UI.Page
         if (uploadsIndex >= 0)
             raw = raw.Substring(uploadsIndex + "Uploads/".Length);
 
-        string folderName = (folder ?? "").Replace("\\\\", "/").Trim('/');
+        string folderName = (folder ?? "").Replace(((char)92).ToString(), "/").Trim('/');
         if (folderName.StartsWith("Uploads/", StringComparison.OrdinalIgnoreCase))
             folderName = folderName.Substring("Uploads/".Length);
 
