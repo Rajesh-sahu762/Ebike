@@ -734,7 +734,7 @@ body {
     <!-- LOGO -->
     <a href="Home.aspx" class="logo-wrap">
         <div class="logo-icon">
-            <asp:Image ID="imgLogo" runat="server" ClientIDMode="Static" Height="42px" style="display:block" AlternateText="EBikes Duniya" onerror="this.onerror=null;this.src='<%= ResolveUrl("~/Uploads/favicon/favicon-ebd.svg") %>';" />
+            <asp:Image ID="imgLogo" runat="server" ClientIDMode="Static" Height="42px" style="display:block" AlternateText="EBikes Duniya" />
             <i class="fa fa-bolt" id="iconFallback"></i>
         </div>
         <div class="logo-text">
