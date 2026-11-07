@@ -52,7 +52,7 @@
                                 <div class="flex-1">
                                     <h4 class="font-bold text-gray-800"><%# Eval("PartName") %></h4>
                                     <p class="text-xs text-gray-500 mt-1">Quantity: <span class="font-bold text-gray-700"><%# Eval("Qty") %></span></p>
-                                    <p class="text-sm font-black text-gray-900 mt-2">₹<%# Eval("Price", "{0:N0}") %></p>
+                                    <p class="text-sm font-black text-gray-900 mt-2">&#8377;<%# Eval("Price", "{0:N0}") %></p>
                                 </div>
                                 <div class="hidden sm:block">
                                     <a href='ProductDetails.aspx?id=<%# Eval("PartID") %>' class="text-xs font-bold text-blue-600 hover:underline">Buy Again</a>
