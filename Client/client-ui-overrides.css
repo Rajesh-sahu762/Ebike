@@ -1189,7 +1189,9 @@ a, button, input, select { -webkit-tap-highlight-color: transparent; }
   letter-spacing:-.082em;
   color:transparent;
   -webkit-text-stroke:1px rgba(249,115,22,.31);
-  background:linear-gradient(180deg,rgba(249,115,22,.035) 0%,rgba(34,211,238,.018) 48%,rgba(7,26,47,0) 100%);
+  background:
+    linear-gradient(105deg,rgba(8,145,178,.055) 0%,rgba(7,26,47,.08) 48%,rgba(249,115,22,.025) 100%),
+    linear-gradient(180deg,rgba(255,255,255,.012),transparent);
   -webkit-background-clip:text;
   background-clip:text;
   -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 48%,rgba(0,0,0,.62) 72%,transparent 100%);
@@ -1205,15 +1207,7 @@ a, button, input, select { -webkit-tap-highlight-color: transparent; }
   grid-template-columns:minmax(240px,.85fr) minmax(360px,1.15fr);
   align-items:center;
   gap:34px;
-  padding:27px 30px 29px;
   margin-top:0;
-  border:1px solid rgba(148,163,184,.105);
-  border-left:0;
-  border-right:0;
-  border-radius:0;
-  background:
-    linear-gradient(105deg,rgba(8,145,178,.055) 0%,rgba(7,26,47,.08) 48%,rgba(249,115,22,.025) 100%),
-    linear-gradient(180deg,rgba(255,255,255,.012),transparent);
   box-shadow:none;
 }
 .footer-newsletter:before{
