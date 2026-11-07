@@ -43,6 +43,24 @@ form#Form1,form#form1{width:min(100%,1040px);position:relative;z-index:1}
 @media(max-width:760px){body{padding:14px;align-items:flex-start}.auth-container{grid-template-columns:1fr;min-height:0;border-radius:22px}.left-panel{padding:28px 26px;min-height:190px}.left-panel h2{font-size:27px}.left-panel p{font-size:13px}.left-panel .btn-outline{margin-top:16px;padding:9px 16px}.right-panel{padding:30px 24px 34px}.right-panel h3{font-size:27px}}
 @media(max-width:420px){body{padding:10px}.right-panel{padding:26px 18px}.auth-container{border-radius:18px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+/* Supporting standalone authentication states */
+.verify-card,.box{
+  width:min(100%,480px);margin:0 auto;padding:clamp(26px,5vw,46px);
+  background:#fff;border:1px solid #E2E8F0;border-radius:24px;
+  box-shadow:0 28px 80px rgba(7,26,47,.14);animation:authIn .5s ease both;
+}
+.verify-card{text-align:center}
+.verify-card h3,.box h4{font:800 27px/1.2 'Plus Jakarta Sans',sans-serif;color:#0F172A;letter-spacing:-1px;margin:0 0 10px}
+.verify-card h3:after,.box h4:after{content:"";display:block;width:42px;height:4px;margin:14px auto 0;border-radius:9px;background:linear-gradient(90deg,#0891B2,#22D3EE)}
+.verify-card p,.box p{color:#64748B;font-size:14px;line-height:1.7}
+.verify-card .form-control,.box .form-control{height:52px;border:1px solid #E2E8F0;border-radius:12px;background:#FBFDFF;color:#0F172A;font:600 16px Inter,sans-serif;box-shadow:none}
+.verify-card .form-control:focus,.box .form-control:focus{border-color:#0891B2;box-shadow:0 0 0 4px rgba(8,145,178,.12)}
+.verify-card .btn-gradient,.box .btn-gradient{width:100%;min-height:50px;border-radius:12px;background:linear-gradient(100deg,#0891B2,#22D3EE);color:#071A2F;font:800 14px 'Plus Jakarta Sans',sans-serif;box-shadow:0 9px 22px rgba(8,145,178,.2)}
+.verify-card .timer{margin-top:18px;color:#64748B;font-size:13px}
+.verify-card .btn-link{color:#0891B2;font-weight:700;text-decoration:none}
+.box h4{text-align:center}
+.box .form-control{margin:0 0 16px}
+@media(max-width:520px){.verify-card,.box{padding:28px 22px;border-radius:20px}}
 </style>
 </head>
 
