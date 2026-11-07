@@ -24,7 +24,7 @@ Inherits="Vendor_VendorOrders" %>
 .vo-order-card .actions-btn select{min-height:39px;border:0;border-radius:10px;background:#edf1f7;padding:8px 10px;box-shadow:inset 3px 3px 6px #d5dbe4,inset -3px -3px 6px #fff;color:#475569;font-size:12px}
 .vo-status{display:inline-block;padding:5px 10px;border-radius:20px;font:700 10px 'Quicksand',sans-serif}
 .vo-order-card .bg-yellow-100{background:#fff1c9;color:#8a650c}.vo-order-card .bg-green-100{background:#d9f2e3;color:#176a43}.vo-order-card .bg-red-100{background:#fde1e1;color:#a52b2b}.vo-order-card .bg-blue-100{background:#dcecf8;color:#235b8a}
-#orderModal{z-index:1055;padding:18px}#orderModal>div{max-height:90vh;overflow:auto;background:#edf1f7;border-radius:21px;padding:25px;box-shadow:12px 12px 28px rgba(0,0,0,.2)}
+#orderModal{z-index:1055;padding:18px;display:none}#orderModal.flex{display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.62)}#orderModal>div{position:relative;width:95%;max-width:48rem;max-height:90vh;overflow:auto;background:#edf1f7;border-radius:21px;padding:25px;box-shadow:12px 12px 28px rgba(0,0,0,.2)}
 #orderModal h2{font:800 22px 'Manrope',sans-serif;color:#26344a}
 #orderItems>div{background:#f4f6fa!important;border:0!important;border-radius:12px!important}
 #orderTotal{color:#147f9e!important}
