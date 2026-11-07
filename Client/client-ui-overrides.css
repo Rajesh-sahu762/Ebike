@@ -644,3 +644,120 @@ a, button, input, select { -webkit-tap-highlight-color: transparent; }
   .hero-stat strong{font-size:15px!important}
   .hero-stat span{font-size:9px!important}
 }
+
+
+/* ==========================================================
+   SPACING POLISH — mobile hero rhythm + featured section gap
+   ========================================================== */
+
+/* Give the transition from the dark hero into the light content
+   a deliberate, premium breathing space on every screen. */
+.hero-v4{
+  padding-bottom:34px!important;
+}
+.featured-ev-v7{
+  padding:58px 0 68px!important;
+  margin-top:0!important;
+}
+.featured-ev-v7>.container{
+  padding-left:12px;
+  padding-right:12px;
+}
+.featured-ev-v7 .d-flex.justify-content-between{
+  margin-bottom:34px!important;
+}
+.featured-ev-v7 .section-title-v7{
+  margin-bottom:10px!important;
+}
+.featured-ev-v7 .swiper{
+  padding:2px 2px 24px!important;
+}
+.featured-ev-v7 .swiper-pagination{
+  bottom:0!important;
+}
+
+/* Mobile: increase vertical rhythm between each hero element. */
+@media(max-width:640px){
+  .hero-v4{
+    padding-top:30px!important;
+    padding-bottom:30px!important;
+  }
+  .hero-badge-wrapper{margin-bottom:20px!important}
+  .hero-main-title{margin-bottom:18px!important}
+  .hero-subtitle{margin-top:0!important;line-height:1.7!important}
+  .hero-actions{
+    margin-top:23px!important;
+    gap:12px!important;
+    row-gap:12px!important;
+  }
+  .hero-proof-points{
+    margin-top:22px!important;
+    gap:12px 16px!important;
+    row-gap:12px!important;
+  }
+  .hero-media{
+    margin-top:17px!important;
+    margin-bottom:8px!important;
+    height:292px!important;
+    min-height:292px!important;
+  }
+  .hero-info-stack{gap:8px!important}
+  .hero-float-card{
+    min-height:62px!important;
+    padding:8px 5px!important;
+  }
+  .search-glass-wrapper{
+    margin-top:22px!important;
+  }
+  .search-glass-inner{
+    gap:9px!important;
+    padding:16px!important;
+  }
+  .search-item{
+    padding:10px 7px!important;
+  }
+  .search-item label{margin-bottom:8px!important}
+  .search-divider{margin:1px 0!important}
+  .search-action{padding-top:7px!important}
+  .hero-stats{
+    margin-top:18px!important;
+    padding:12px 7px 13px!important;
+  }
+  .hero-stat{
+    min-height:58px!important;
+    gap:10px!important;
+    padding:11px 9px!important;
+  }
+
+  /* Stronger visual separation before Featured Rides */
+  .featured-ev-v7{
+    margin-top:0!important;
+    padding:48px 0 56px!important;
+  }
+  .featured-ev-v7>.container{
+    padding-left:14px!important;
+    padding-right:14px!important;
+  }
+  .featured-ev-v7 .d-flex.justify-content-between{
+    align-items:flex-end!important;
+    margin-bottom:25px!important;
+    padding-left:2px!important;
+    padding-right:2px!important;
+  }
+  .featured-ev-v7 .swiper{
+    padding:0 2px 28px!important;
+  }
+  .featured-ev-v7 .compact-card-v7{
+    margin-bottom:4px!important;
+  }
+}
+@media(min-width:641px) and (max-width:850px){
+  .hero-v4{padding-bottom:32px!important}
+  .hero-copy{padding-bottom:20px!important}
+  .hero-actions{margin-top:24px!important}
+  .hero-proof-points{margin-top:22px!important;row-gap:12px!important}
+  .hero-media{margin-top:12px!important;margin-bottom:10px!important}
+  .search-glass-wrapper{margin-top:18px!important}
+  .hero-stats{margin-top:18px!important}
+  .featured-ev-v7{padding:54px 0 64px!important}
+}
