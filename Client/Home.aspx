@@ -1792,7 +1792,7 @@
                             <div class="review-card-v14">
                                 <div class="review-user-row">
                                     <div class="user-profile-v14">
-                                        <img src='<%# GetHomeAssetUrl(Eval("ProfileImage") == DBNull.Value ? "user.jpg" : Eval("ProfileImage"), Eval("ProfileImage") == DBNull.Value ? "images" : "Profile") %>' alt='<%# Eval("FullName") %>' />
+                                        <img src='<%# GetHomeAssetUrl(Eval("ProfileImage") == DBNull.Value ? "user.jpg" : Eval("ProfileImage"), "Profile") %>' alt='<%# Eval("FullName") %>' />
                                         <%# (bool)Eval("IsVerified") ? "<div class='verified-check'><i class='fa-solid fa-check'></i></div>" : "" %>
                                     </div>
                                     <div class="user-details-v14">
