@@ -36,7 +36,7 @@
         <div class="dr-stat">
             <div class="dr-stat-label">Average Rating</div>
             <div class="dr-stat-value"><asp:Label ID="lblAvg" runat="server" /></div>
-            <div id="starDisplay" class="dr-stars" aria-label="Average rating stars">★★★★★</div>
+            <div id="starDisplay" class="dr-stars" aria-hidden="true"></div>
         </div>
         <div class="dr-stat">
             <div class="dr-stat-label">Total Reviews</div>
