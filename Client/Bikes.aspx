@@ -519,6 +519,7 @@
 
 <asp:HiddenField ID="hfSearch" runat="server" />
 <asp:HiddenField ID="hfDealer" runat="server" />
+<asp:HiddenField ID="hfCategory" runat="server" />
 
 <section class="bike-wrapper">
     <div class="container">
@@ -693,7 +694,8 @@
                 sort:$("#sortFilter").val(),
                 brands:brands,
                 search: $("#<%= hfSearch.ClientID %>").val(),
-    dealer: $("#<%= hfDealer.ClientID %>").val()
+    dealer: $("#<%= hfDealer.ClientID %>").val(),
+                category: $("#<%= hfCategory.ClientID %>").val()
         }),
             contentType:"application/json; charset=utf-8",
             dataType:"json",

@@ -156,17 +156,17 @@ brandFilter +
                     html.Append("<div class='bike-card'>");
                     html.Append("<div class='bike-img'>");
                     html.Append("<img src='/Uploads/Bikes/" + image1 + "' alt='" + encodedModel + "'/>");
-                    html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + bikeId + ")'>♥</div>");
+                    html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + bikeId + ")'><i class='fa-regular fa-heart' aria-hidden='true'></i></div>");
                     html.Append("</div>");
 
                     html.Append("<div class='bike-body'>");
                     html.Append("<h6>" + encodedModel + "</h6>");
-                    html.Append("<div class='price'>₹ " +
+                    html.Append("<div class='price'>&#8377; " +
                         Convert.ToDecimal(dr["Price"]).ToString("N0") +
                         " /-</div>");
                     html.Append("<div>Range: " + HttpUtility.HtmlEncode(dr["RangeKM"].ToString()) + " KM</div>");
 
-                    html.Append("<div style='font-size:13px;margin-top:5px;'>Rent / Day : ₹" +
+                    html.Append("<div style='font-size:13px;margin-top:5px;'>Rent / Day : &#8377;" +
                         HttpUtility.HtmlEncode(dr["RentPerDay"] != DBNull.Value ? dr["RentPerDay"].ToString() : "0") +
                         "</div>");
 

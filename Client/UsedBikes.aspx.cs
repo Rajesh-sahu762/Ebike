@@ -121,7 +121,7 @@ AND ISNULL(B.IsForRent,0)=0
 
                     html.Append("<img src='/Uploads/Bikes/" + safeImg + "' alt='" + safeModel + "'/>");
 
-                    html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + safeBikeId + ")'>♥</div>");
+                    html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + safeBikeId + ")'><i class='fa-regular fa-heart' aria-hidden='true'></i></div>");
 
                     html.Append("</div>");
 
@@ -129,7 +129,7 @@ AND ISNULL(B.IsForRent,0)=0
 
                     html.Append("<h6>" + safeModel + "</h6>");
 
-                    html.Append("<div class='price'>₹ " +
+                    html.Append("<div class='price'>&#8377; " +
                     safePrice +
                     " /-</div>");
 

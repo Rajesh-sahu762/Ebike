@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Collections.Generic;
@@ -18,6 +19,13 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
         public string AdminEmail { get; set; }
         public string SupportPhone { get; set; }
         public bool MaintenanceMode { get; set; }
+    }
+
+    protected void Page_Init(object sender, EventArgs e)
+    {
+        // Explicit UTF-8 output keeps the Indian rupee sign and other Unicode characters intact.
+        Response.ContentEncoding = Encoding.UTF8;
+        Response.Charset = "utf-8";
     }
 
     protected void Page_Load(object sender, EventArgs e)
@@ -110,13 +118,13 @@ public partial class Client_ClientMaster : System.Web.UI.MasterPage
 
         if (!string.IsNullOrEmpty(settings.SiteTitle))
         {
+            // Keep the dynamic browser title; the visible duplicate logo text was removed from the master markup.
             Page.Title = settings.SiteTitle;
-            lblSiteTitle.Text = settings.SiteTitle;
         }
 
         // Use the committed EBikes Duniya SVG mark as the dependable client logo.
         // SiteSettings.LogoPath can contain legacy relative paths from older uploads.
-        imgLogo.ImageUrl = ResolveUrl("~/Uploads/favicon/favicon-ebd.svg");
+        imgLogo.ImageUrl = ResolveUrl("~/Uploads/EBikes-Duniya-Logo.png");
 
         if (!string.IsNullOrEmpty(settings.AdminEmail))
         {

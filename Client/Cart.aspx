@@ -69,7 +69,7 @@
                                     <div class="flex-1 text-center sm:text-left">
                                         <p class="text-[10px] font-bold text-cyan-600 uppercase tracking-widest mb-1"><%# Eval("Category") %></p>
                                         <h4 class="text-lg font-bold text-slate-900 leading-tight mb-1 font-['Plus_Jakarta_Sans']"><%# Eval("PartName") %></h4>
-                                        <p class="text-slate-500 text-xs font-medium">Unit Price: ₹<%# Eval("Price", "{0:N0}") %></p>
+                                        <p class="text-slate-500 text-xs font-medium">Unit Price: &#8377;<%# Eval("Price", "{0:N0}") %></p>
                                     </div>
 
                                     <div class="flex items-center gap-4 bg-slate-50 p-2 rounded-xl border border-slate-100">
@@ -79,7 +79,7 @@
                                     </div>
 
                                     <div class="text-right flex flex-col items-end gap-2">
-                                        <span class="text-lg font-black text-slate-900 font-['Plus_Jakarta_Sans']">₹<%# (Convert.ToDecimal(Eval("Price")) * Convert.ToInt32(Eval("Qty"))).ToString("N0") %></span>
+                                        <span class="text-lg font-black text-slate-900 font-['Plus_Jakarta_Sans']">&#8377;<%# (Convert.ToDecimal(Eval("Price")) * Convert.ToInt32(Eval("Qty"))).ToString("N0") %></span>
                                         <asp:LinkButton ID="btnDelete" runat="server" CommandName="Remove" CommandArgument='<%# Eval("PartID") %>' class="text-slate-300 hover:text-red-500 transition-colors">
                                             <i class="fas fa-trash-alt text-sm"></i>
                                         </asp:LinkButton>
@@ -107,11 +107,11 @@
                     <div class="space-y-4 mb-8">
                         <div class="flex justify-between text-sm">
                             <span class="text-slate-500 font-medium">Subtotal</span>
-                            <span class="font-bold text-slate-900">₹<asp:Literal ID="litSubtotal" runat="server">0</asp:Literal></span>
+                            <span class="font-bold text-slate-900">&#8377;<asp:Literal ID="litSubtotal" runat="server">0</asp:Literal></span>
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-slate-500 font-medium">Tax</span>
-                            <span class="font-bold text-slate-900">₹<asp:Literal ID="litTax" runat="server">0</asp:Literal></span>
+                            <span class="font-bold text-slate-900">&#8377;<asp:Literal ID="litTax" runat="server">0</asp:Literal></span>
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-slate-500 font-medium">Shipping</span>
@@ -120,7 +120,7 @@
                         <div class="h-[1px] bg-slate-100 my-4"></div>
                         <div class="flex justify-between items-center text-2xl">
                             <span class="font-black text-slate-900 font-['Plus_Jakarta_Sans']">Total</span>
-                            <span class="font-black text-slate-900 font-['Plus_Jakarta_Sans']">₹<asp:Literal ID="litTotal" runat="server">0</asp:Literal></span>
+                            <span class="font-black text-slate-900 font-['Plus_Jakarta_Sans']">&#8377;<asp:Literal ID="litTotal" runat="server">0</asp:Literal></span>
                         </div>
                     </div>
 

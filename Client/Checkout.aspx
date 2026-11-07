@@ -98,7 +98,7 @@
             <%# Eval("PartName") %> x <%# Eval("Qty") %>
         </span>
         <span class="font-bold">
-            ₹<%# (Convert.ToDecimal(Eval("Price")) * Convert.ToInt32(Eval("Qty"))).ToString("N0") %>
+            &#8377;<%# (Convert.ToDecimal(Eval("Price")) * Convert.ToInt32(Eval("Qty"))).ToString("N0") %>
         </span>
     </div>
 </ItemTemplate>
@@ -113,7 +113,7 @@
 
 <div class="flex justify-between items-center text-xl pt-4">
     <span class="font-black">Total</span>
-    <span class="font-black text-blue-400">₹<asp:Literal ID="litTotal" runat="server"></asp:Literal></span>
+    <span class="font-black text-blue-400">&#8377;<asp:Literal ID="litTotal" runat="server"></asp:Literal></span>
 </div>
 
 <asp:Button ID="btnPlaceOrder" runat="server" Text="Complete Purchase"

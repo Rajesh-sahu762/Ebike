@@ -974,11 +974,11 @@ h1,h2,h3,h4,p {
 </div>
 
 <div class="bike-price">
-₹ <asp:Literal ID="litPrice" runat="server"></asp:Literal> /-
+&#8377; <asp:Literal ID="litPrice" runat="server"></asp:Literal> /-
 </div>
 
 <div class="bike-emi">
-EMI starting from ₹ <span id="emiAmount"></span> / month
+EMI starting from &#8377; <span id="emiAmount"></span> / month
 </div>
 
 <hr class="divider"/>
@@ -1256,7 +1256,7 @@ Based on <asp:Literal ID="litReviewCount" runat="server"></asp:Literal>
 <asp:Literal ID="litStickyName" runat="server"></asp:Literal>
 </div>
 <div class="sticky-price">
-₹ <asp:Literal ID="litStickyPrice" runat="server"></asp:Literal> /-
+&#8377; <asp:Literal ID="litStickyPrice" runat="server"></asp:Literal> /-
 </div>
 </div>
 

@@ -1170,8 +1170,8 @@ Compare Now
         </div>
 
         <div class="popular-prices">
-            <span>₹ <%# FormatPrice(Eval("BikeID1")) %></span>
-            <span>₹ <%# FormatPrice(Eval("BikeID2")) %></span>
+            <span>&#8377; <%# FormatPrice(Eval("BikeID1")) %></span>
+            <span>&#8377; <%# FormatPrice(Eval("BikeID2")) %></span>
         </div>
 
         <a href='Compare.aspx?b1=<%# Eval("BikeID1") %>&b2=<%# Eval("BikeID2") %>'

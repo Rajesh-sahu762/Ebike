@@ -90,7 +90,7 @@ WHERE R.CustomerID=@user
                 Convert.ToDateTime(dr["EndDate"]).ToString("dd MMM") +
                 "</div>");
 
-                html.Append("<div class='rental-price'>₹ " +
+                html.Append("<div class='rental-price'>&#8377; " +
                 Convert.ToDecimal(dr["RentAmount"]).ToString("N0") +
                 "</div>");
 

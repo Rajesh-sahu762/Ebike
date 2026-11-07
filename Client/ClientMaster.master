@@ -24,7 +24,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist+Mono:wght@100..900&family=Uchen&display=swap" rel="stylesheet" />
     <link href="<%= ResolveUrl("~/Client/client-design-system.css") %>" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -738,10 +738,7 @@ body {
             <asp:Image ID="imgLogo" runat="server" ClientIDMode="Static" Height="42px" style="display:block" AlternateText="EBikes Duniya" />
             <i class="fa fa-bolt" id="iconFallback"></i>
         </div>
-        <div class="logo-text">
-            <asp:Label ID="lblSiteTitle" runat="server" CssClass="logo-title">EBikes Duniya</asp:Label>
-            <span class="logo-sub">ELECTRIC · FREEDOM</span>
-        </div>
+
     </a>
 
     <!-- ═══ NAV MENU — UPDATED WITH NEW PAGES ═══ -->
@@ -888,8 +885,8 @@ body {
     
     <div class="footer-col">
       <a href="Home.aspx" class="footer-brand-lockup" aria-label="EBikes Duniya home">
-        <span class="footer-logo-mark"><img id="footerLogoImg" src="<%= ResolveUrl("~/Uploads/favicon/favicon-ebd.svg") %>" alt="EBikes Duniya logo" /><i class="fa fa-bolt" id="footerLogoFallback"></i></span>
-        <span class="footer-brand-name">EBikes <em>Duniya</em><small>ELECTRIC · FREEDOM</small></span>
+        <span class="footer-logo-mark"><img id="footerLogoImg" src="<%= ResolveUrl("~/Uploads/EBikes-Duniya-Logo.png") %>" alt="EBikes Duniya logo" /><i class="fa fa-bolt" id="footerLogoFallback"></i></span>
+
       </a>
       <p style="font-size:14px; line-height:1.75; color:#94a3b8; margin-bottom:20px;">
         India's trusted EV marketplace connecting buyers with verified dealers. Compare, Rent, or Buy with 100% transparency.
@@ -941,7 +938,7 @@ body {
   <div class="footer-wordmark" aria-hidden="true">EBikes Duniya</div>
   <div style="margin-top:50px; padding-top:25px; border-top:1px solid rgba(255,255,255,0.05); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:20px;">
     <p style="font-size:13px; color:#475569; margin:0;">
-      © 2026 <b>EBikes Duniya</b>. All rights reserved. | Made with ⚡ in India
+      © 2026 <b>EBikes Duniya</b>. All rights reserved. | Made with <i class="fa-solid fa-bolt" aria-hidden="true"></i> in India
     </p>
     <div style="display:flex; gap:20px; font-size:13px;">
         <a href="PrivacyPolicy.aspx" class="f-legal">Privacy Policy</a>
@@ -1211,7 +1208,7 @@ body {
                 imgHtml = '<img src="/Uploads/Parts/' + item.ImagePath + '" />';
 
             else
-                imgHtml = '<span>⚡</span>';
+                imgHtml = '<span><i class="fa-solid fa-bolt"></i></span>';
 
             html += '<a class="sd-item" href="' + url + '">' +
                 '<div class="sd-img">' + imgHtml + '</div>' +
@@ -1392,5 +1389,28 @@ body {
 
 <asp:ContentPlaceHolder ID="PageScripts" runat="server"></asp:ContentPlaceHolder>
 
+
+<style id="ebd-global-typography">
+/* Shared font roles: Geist Mono UI, Bebas Neue headings, Uchen editorial accents. */
+html,body,body :where(p,span,a,li,label,button,input,select,textarea,small,strong,b,em,div,td,th,dt,dd,option,figcaption){font-family:"Geist Mono",monospace!important}
+body :where(h1,h2,h3,h4,h5,h6,.logo-title,.section-title-v7,.bike-header-title){font-family:"Bebas Neue",sans-serif!important;font-weight:400!important;letter-spacing:.015em}
+body :where(.font-uchen,.ep-font-accent,.editorial-accent,blockquote){font-family:"Uchen",Georgia,serif!important}
+body i.fa,body i.fas,body i.fa-solid,body i.fa-regular,body i.fa-brands,body .fa-solid,body .fa-regular{font-family:"Font Awesome 6 Free"!important}
+body .fa-solid{font-weight:900!important}body .fa-regular{font-weight:400!important}body .fa-brands{font-family:"Font Awesome 6 Brands"!important;font-weight:400!important}
+</style>
+
+<style id="ebd-brand-logo-sizing">
+/* Show the supplied full brand artwork on its own; remove the duplicate text lockups. */
+.logo-wrap{gap:0!important;min-width:0}
+.logo-icon{width:172px!important;height:58px!important;padding:0!important;margin:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important;flex:0 0 172px}
+.logo-icon img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:left center!important;display:block!important}
+#iconFallback{display:none!important}
+.footer-brand-lockup{display:inline-flex;align-items:center;justify-content:flex-start;gap:0;text-decoration:none;margin-bottom:22px}
+.footer-logo-mark{width:230px;height:86px;display:inline-flex;align-items:center;justify-content:flex-start;flex:0 0 230px;background:transparent!important;overflow:visible}
+.footer-logo-mark img{display:block;width:100%;height:100%;object-fit:contain;object-position:left center}
+#footerLogoFallback{display:none!important}
+@media(max-width:992px){.logo-icon{width:148px!important;height:52px!important;flex-basis:148px}}
+@media(max-width:600px){.logo-icon{width:132px!important;height:48px!important;flex-basis:132px}.footer-logo-mark{width:190px;height:72px;flex-basis:190px}}
+</style>
 </body>
 </html>
