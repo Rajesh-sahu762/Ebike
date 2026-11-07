@@ -359,7 +359,7 @@ a, button, input, select { -webkit-tap-highlight-color: transparent; }
 }
 .hero-grid{
   display:grid!important;
-  grid-template-columns:minmax(0, .94fr) minmax(0,,1.06fr)!important;
+  grid-template-columns:minmax(0, .94fr) minmax(0,1.06fr)!important;
   align-items:center!important;
   gap:18px!important;
   min-height:365px!important;
