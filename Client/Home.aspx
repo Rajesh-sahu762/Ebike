@@ -1422,33 +1422,7 @@
                     India's most trusted marketplace for Electric Bikes, Scooters & Genuine Spares.
                 </p>
 
-                <div class="search-glass-wrapper">
-                    <div class="search-glass-inner">
-                        <div class="search-item">
-                            <label><i class="fa-solid fa-wallet text-info mr-2"></i>Your Budget</label>
-                            <asp:DropDownList ID="ddlBudget" runat="server" CssClass="search-select">
-                                <asp:ListItem Value="">Select Max Budget</asp:ListItem>
-                                <asp:ListItem Value="80000">Under ₹80,000</asp:ListItem>
-                                <asp:ListItem Value="120000">Under ₹1.2 Lakh</asp:ListItem>
-                                <asp:ListItem Value="180000">Under ₹1.8 Lakh</asp:ListItem>
-                                <asp:ListItem Value="500000">Premium EVs</asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
-
-                        <div class="search-divider"></div>
-
-                        <div class="search-item">
-                            <label><i class="fa-solid fa-charging-station text-info mr-2"></i>Preferred Brand</label>
-                            <asp:DropDownList ID="ddlBrand" runat="server" CssClass="search-select"></asp:DropDownList>
-                        </div>
-
-                        <div class="search-action">
-                            <asp:LinkButton ID="btnSearch" runat="server" CssClass="btn-search-hero" OnClick="btnSearch_Click">
-                                <i class="fa-solid fa-magnifying-glass mr-2"></i> Explore
-                            </asp:LinkButton>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
