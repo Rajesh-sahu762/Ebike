@@ -734,7 +734,7 @@ body {
     <!-- LOGO -->
     <a href="Home.aspx" class="logo-wrap">
         <div class="logo-icon">
-            <asp:Image ID="imgLogo" runat="server" Height="36px" style="display:none"/>
+            <asp:Image ID="imgLogo" runat="server" Height="42px" style="display:block" AlternateText="EBikes Duniya" onerror="this.style.display='none';document.getElementById('iconFallback').style.display='block';" />
             <i class="fa fa-bolt" id="iconFallback"></i>
         </div>
         <div class="logo-text">
@@ -937,7 +937,7 @@ body {
 
   </div>
 
-  <div class="footer-wordmark" aria-hidden="true">EBikes</div>
+  <div class="footer-wordmark" aria-hidden="true">EBikes Duniya</div>
   <div style="margin-top:50px; padding-top:25px; border-top:1px solid rgba(255,255,255,0.05); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:20px;">
     <p style="font-size:13px; color:#475569; margin:0;">
       © 2026 <b>EBikes Duniya</b>. All rights reserved. | Made with ⚡ in India
@@ -1340,14 +1340,17 @@ body {
         var headerLogo = document.getElementById("imgLogo");
         var footerLogo = document.getElementById("footerLogoImg");
         var footerFallback = document.getElementById("footerLogoFallback");
+        var headerFallback = document.getElementById("iconFallback");
         if (!headerLogo || !footerLogo) return;
         function syncFooterLogo() {
             if (headerLogo.complete && headerLogo.naturalWidth > 0) {
                 footerLogo.src = headerLogo.src;
                 footerLogo.style.display = "block";
+                if (headerFallback) headerFallback.style.display = "none";
                 if (footerFallback) footerFallback.style.display = "none";
             } else {
                 footerLogo.style.display = "none";
+                if (headerFallback) headerFallback.style.display = "block";
                 if (footerFallback) footerFallback.style.display = "block";
             }
         }
