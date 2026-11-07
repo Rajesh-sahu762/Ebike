@@ -738,10 +738,7 @@ body {
             <asp:Image ID="imgLogo" runat="server" ClientIDMode="Static" Height="42px" style="display:block" AlternateText="EBikes Duniya" />
             <i class="fa fa-bolt" id="iconFallback"></i>
         </div>
-        <div class="logo-text">
-            <asp:Label ID="lblSiteTitle" runat="server" CssClass="logo-title">EBikes Duniya</asp:Label>
-            <span class="logo-sub">ELECTRIC · FREEDOM</span>
-        </div>
+
     </a>
 
     <!-- ═══ NAV MENU — UPDATED WITH NEW PAGES ═══ -->
@@ -889,7 +886,7 @@ body {
     <div class="footer-col">
       <a href="Home.aspx" class="footer-brand-lockup" aria-label="EBikes Duniya home">
         <span class="footer-logo-mark"><img id="footerLogoImg" src="<%= ResolveUrl("~/Uploads/EBikes-Duniya-Logo.png") %>" alt="EBikes Duniya logo" /><i class="fa fa-bolt" id="footerLogoFallback"></i></span>
-        <span class="footer-brand-name">EBikes <em>Duniya</em><small>ELECTRIC · FREEDOM</small></span>
+
       </a>
       <p style="font-size:14px; line-height:1.75; color:#94a3b8; margin-bottom:20px;">
         India's trusted EV marketplace connecting buyers with verified dealers. Compare, Rent, or Buy with 100% transparency.
@@ -1403,13 +1400,17 @@ body .fa-solid{font-weight:900!important}body .fa-regular{font-weight:400!import
 </style>
 
 <style id="ebd-brand-logo-sizing">
-/* Brand asset sizing: preserve the original logo proportions in header and footer. */
-.logo-icon{width:58px!important;height:48px!important;padding:3px!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important}
-.logo-icon img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important}
-#iconFallback{display:none}
-.footer-logo-mark{width:66px;height:54px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 66px;background:transparent!important;overflow:visible}
-.footer-logo-mark img{display:block;width:100%;height:100%;object-fit:contain}
-@media(max-width:600px){.logo-icon{width:48px!important;height:42px!important}.footer-logo-mark{width:56px;height:46px;flex-basis:56px}}
+/* Show the supplied full brand artwork on its own; remove the duplicate text lockups. */
+.logo-wrap{gap:0!important;min-width:0}
+.logo-icon{width:172px!important;height:58px!important;padding:0!important;margin:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important;flex:0 0 172px}
+.logo-icon img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:left center!important;display:block!important}
+#iconFallback{display:none!important}
+.footer-brand-lockup{display:inline-flex;align-items:center;justify-content:flex-start;gap:0;text-decoration:none;margin-bottom:22px}
+.footer-logo-mark{width:230px;height:86px;display:inline-flex;align-items:center;justify-content:flex-start;flex:0 0 230px;background:transparent!important;overflow:visible}
+.footer-logo-mark img{display:block;width:100%;height:100%;object-fit:contain;object-position:left center}
+#footerLogoFallback{display:none!important}
+@media(max-width:992px){.logo-icon{width:148px!important;height:52px!important;flex-basis:148px}}
+@media(max-width:600px){.logo-icon{width:132px!important;height:48px!important;flex-basis:132px}.footer-logo-mark{width:190px;height:72px;flex-basis:190px}}
 </style>
 </body>
 </html>
