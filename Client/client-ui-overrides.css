@@ -881,3 +881,213 @@ a, button, input, select { -webkit-tap-highlight-color: transparent; }
     padding:0 2px 30px!important;
   }
 }
+
+
+/* REFERENCE-STYLE BIKE FINDER: compact horizontal search + trust row */
+.hero-v4 .search-glass-wrapper{
+  max-width:1310px!important;
+  width:calc(100% - 48px)!important;
+  margin:22px auto 0!important;
+}
+.hero-v4 .search-glass-inner{
+  display:grid!important;
+  grid-template-columns:minmax(205px,1.15fr) 1px minmax(145px,1fr) 1px minmax(155px,1fr) 164px!important;
+  align-items:center!important;
+  gap:0!important;
+  min-height:88px!important;
+  padding:12px 18px 12px 24px!important;
+  border:1px solid rgba(220,235,246,.9)!important;
+  border-radius:20px!important;
+  background:rgba(255,255,255,.97)!important;
+  box-shadow:0 16px 40px rgba(5,25,44,.16)!important;
+}
+.hero-v4 .search-heading{
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  padding:0 18px 0 8px!important;
+  color:#0B1B32!important;
+}
+.hero-v4 .search-heading>i{
+  flex:0 0 auto!important;
+  font-size:22px!important;
+  color:#0891B2!important;
+}
+.hero-v4 .search-heading strong{
+  font-size:clamp(14px,1.25vw,18px)!important;
+  line-height:1.2!important;
+  font-weight:750!important;
+  white-space:nowrap!important;
+}
+.hero-v4 .search-glass-inner>.search-divider{
+  display:block!important;
+  width:1px!important;
+  height:46px!important;
+  min-height:46px!important;
+  margin:0!important;
+  background:#DCE8F0!important;
+}
+.hero-v4 .search-glass-inner>.search-item{
+  min-width:0!important;
+  padding:7px 20px!important;
+}
+.hero-v4 .search-item label{
+  display:flex!important;
+  align-items:center!important;
+  gap:7px!important;
+  margin:0 0 7px!important;
+  color:#7890A5!important;
+  font-size:10px!important;
+  line-height:1.2!important;
+  font-weight:700!important;
+  letter-spacing:.035em!important;
+  text-transform:uppercase!important;
+}
+.hero-v4 .search-item label i{color:#0891B2!important}
+.hero-v4 .search-select{
+  width:100%!important;
+  height:28px!important;
+  min-height:28px!important;
+  padding:0 22px 0 0!important;
+  border:0!important;
+  background-color:transparent!important;
+  color:#10243A!important;
+  font-size:13px!important;
+  font-weight:650!important;
+  outline:none!important;
+}
+.hero-v4 .search-action{
+  width:164px!important;
+  min-width:164px!important;
+  flex:0 0 164px!important;
+  padding:0 0 0 12px!important;
+}
+.hero-v4 .btn-search-hero{
+  width:100%!important;
+  min-height:48px!important;
+  border-radius:999px!important;
+  font-size:13px!important;
+  font-weight:750!important;
+  white-space:nowrap!important;
+}
+
+/* Compact trust indicators sit directly below the finder, not in a card */
+.hero-v4 .hero-stats{
+  width:min(1100px,calc(100% - 80px))!important;
+  max-width:1100px!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  align-items:center!important;
+  margin:12px auto 0!important;
+  padding:7px 8px 11px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.hero-v4 .hero-stat{
+  min-height:42px!important;
+  display:flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:10px!important;
+  padding:4px 12px!important;
+  border-right:1px solid rgba(8,145,178,.16)!important;
+  border-bottom:0!important;
+}
+.hero-v4 .hero-stat:last-child{border-right:0!important}
+.hero-v4 .hero-stat>i{font-size:21px!important;color:#078CA5!important}
+.hero-v4 .hero-stat>div{gap:2px!important}
+.hero-v4 .hero-stat strong{font-size:15px!important}
+.hero-v4 .hero-stat span{font-size:10px!important}
+
+/* Tablet: keep finder compact, with title on its own row */
+@media(max-width:850px){
+  .hero-v4 .search-glass-wrapper{
+    width:calc(100% - 36px)!important;
+    margin-top:20px!important;
+  }
+  .hero-v4 .search-glass-inner{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:0!important;
+    padding:15px 18px!important;
+  }
+  .hero-v4 .search-heading{
+    grid-column:1/-1!important;
+    padding:4px 7px 13px!important;
+  }
+  .hero-v4 .search-glass-inner>.search-divider{display:none!important}
+  .hero-v4 .search-glass-inner>.search-item{
+    padding:12px 9px!important;
+    border-top:1px solid #E5EDF3!important;
+  }
+  .hero-v4 .search-glass-inner>.search-item:nth-of-type(3){
+    border-right:1px solid #E5EDF3!important;
+  }
+  .hero-v4 .search-action{
+    grid-column:1/-1!important;
+    width:100%!important;
+    min-width:0!important;
+    padding:12px 0 0!important;
+  }
+  .hero-v4 .hero-stats{
+    width:calc(100% - 48px)!important;
+    margin-top:12px!important;
+    padding:7px 4px 10px!important;
+  }
+}
+@media(max-width:640px){
+  .hero-v4 .search-glass-wrapper{
+    width:calc(100% - 28px)!important;
+    margin-top:22px!important;
+  }
+  .hero-v4 .search-glass-inner{
+    grid-template-columns:minmax(0,1fr)!important;
+    min-height:0!important;
+    padding:14px 15px!important;
+    border-radius:17px!important;
+  }
+  .hero-v4 .search-heading{
+    grid-column:1!important;
+    padding:3px 5px 13px!important;
+    gap:10px!important;
+  }
+  .hero-v4 .search-heading>i{font-size:19px!important}
+  .hero-v4 .search-heading strong{font-size:15px!important}
+  .hero-v4 .search-glass-inner>.search-item{
+    width:100%!important;
+    padding:12px 5px!important;
+    border-top:1px solid #E7EEF4!important;
+    border-right:0!important;
+  }
+  .hero-v4 .search-item label{
+    margin-bottom:6px!important;
+    font-size:9px!important;
+  }
+  .hero-v4 .search-select{font-size:12px!important}
+  .hero-v4 .search-action{
+    grid-column:1!important;
+    width:100%!important;
+    min-width:0!important;
+    padding:10px 0 0!important;
+  }
+  .hero-v4 .btn-search-hero{min-height:46px!important}
+  .hero-v4 .hero-stats{
+    width:calc(100% - 40px)!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    margin:13px auto 0!important;
+    padding:5px 0 9px!important;
+  }
+  .hero-v4 .hero-stat{
+    min-height:48px!important;
+    justify-content:flex-start!important;
+    gap:8px!important;
+    padding:7px 8px!important;
+  }
+  .hero-v4 .hero-stat:nth-child(odd){border-right:1px solid rgba(8,145,178,.16)!important}
+  .hero-v4 .hero-stat:nth-child(-n+2){border-bottom:1px solid rgba(8,145,178,.16)!important}
+  .hero-v4 .hero-stat>i{font-size:18px!important}
+  .hero-v4 .hero-stat strong{font-size:13px!important}
+  .hero-v4 .hero-stat span{font-size:9px!important}
+}
