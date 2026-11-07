@@ -941,7 +941,7 @@ body {
   <div class="footer-wordmark" aria-hidden="true">EBikes Duniya</div>
   <div style="margin-top:50px; padding-top:25px; border-top:1px solid rgba(255,255,255,0.05); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:20px;">
     <p style="font-size:13px; color:#475569; margin:0;">
-      © 2026 <b>EBikes Duniya</b>. All rights reserved. | Made with ⚡ in India
+      © 2026 <b>EBikes Duniya</b>. All rights reserved. | Made with <i class="fa-solid fa-bolt" aria-hidden="true"></i> in India
     </p>
     <div style="display:flex; gap:20px; font-size:13px;">
         <a href="PrivacyPolicy.aspx" class="f-legal">Privacy Policy</a>
@@ -1211,7 +1211,7 @@ body {
                 imgHtml = '<img src="/Uploads/Parts/' + item.ImagePath + '" />';
 
             else
-                imgHtml = '<span>⚡</span>';
+                imgHtml = '<span><i class="fa-solid fa-bolt"></i></span>';
 
             html += '<a class="sd-item" href="' + url + '">' +
                 '<div class="sd-img">' + imgHtml + '</div>' +
@@ -1392,5 +1392,14 @@ body {
 
 <asp:ContentPlaceHolder ID="PageScripts" runat="server"></asp:ContentPlaceHolder>
 
+
+<style id="ebd-global-typography">
+/* Shared font roles: Geist Mono UI, Bebas Neue headings, Uchen editorial accents. */
+html,body,body :where(p,span,a,li,label,button,input,select,textarea,small,strong,b,em,div,td,th,dt,dd,option,figcaption){font-family:"Geist Mono",monospace!important}
+body :where(h1,h2,h3,h4,h5,h6,.logo-title,.section-title-v7,.bike-header-title){font-family:"Bebas Neue",sans-serif!important;font-weight:400!important;letter-spacing:.015em}
+body :where(.font-uchen,.ep-font-accent,.editorial-accent,blockquote){font-family:"Uchen",Georgia,serif!important}
+body i.fa,body i.fas,body i.fa-solid,body i.fa-regular,body i.fa-brands,body .fa-solid,body .fa-regular{font-family:"Font Awesome 6 Free"!important}
+body .fa-solid{font-weight:900!important}body .fa-regular{font-weight:400!important}body .fa-brands{font-family:"Font Awesome 6 Brands"!important;font-weight:400!important}
+</style>
 </body>
 </html>
