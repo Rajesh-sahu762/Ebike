@@ -1091,3 +1091,82 @@ a, button, input, select { -webkit-tap-highlight-color: transparent; }
   .hero-v4 .hero-stat strong{font-size:13px!important}
   .hero-v4 .hero-stat span{font-size:9px!important}
 }
+
+
+/* SOFT HERO-TO-STATS GRADIENT — blend into the light featured section */
+.hero-v4{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  background:linear-gradient(180deg,#06182B 0%,#082B43 68%,#0B4054 100%)!important;
+}
+.hero-v4:after{
+  content:""!important;
+  position:absolute!important;
+  z-index:-1!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  height:270px!important;
+  opacity:1!important;
+  pointer-events:none!important;
+  background:linear-gradient(
+    180deg,
+    rgba(8,43,67,0) 0%,
+    rgba(12,76,96,.28) 25%,
+    rgba(63,157,174,.48) 55%,
+    rgba(184,231,237,.88) 82%,
+    #EAF6F9 100%
+  )!important;
+}
+.hero-v4 .hero-stats{
+  position:relative!important;
+  z-index:1!important;
+  width:min(1100px,calc(100% - 80px))!important;
+  max-width:1100px!important;
+  margin:12px auto 0!important;
+  padding:10px 8px 16px!important;
+  background:transparent!important;
+}
+.hero-v4 .hero-stat{
+  border-right:1px solid rgba(7,69,91,.18)!important;
+}
+.hero-v4 .hero-stat:last-child{border-right:0!important}
+.hero-v4 .hero-stat>i{color:#087F98!important}
+.hero-v4 .hero-stat strong{
+  color:#08263D!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.2)!important;
+}
+.hero-v4 .hero-stat span{
+  color:#244E63!important;
+}
+.featured-ev-v7{
+  background:#EAF6F9!important;
+}
+@media(max-width:850px){
+  .hero-v4:after{height:310px!important}
+  .hero-v4 .hero-stats{
+    width:calc(100% - 48px)!important;
+    margin-top:12px!important;
+  }
+}
+@media(max-width:640px){
+  .hero-v4:after{
+    height:350px!important;
+    background:linear-gradient(
+      180deg,
+      rgba(8,43,67,0) 0%,
+      rgba(12,76,96,.25) 24%,
+      rgba(63,157,174,.42) 52%,
+      rgba(184,231,237,.9) 82%,
+      #EAF6F9 100%
+    )!important;
+  }
+  .hero-v4 .hero-stats{
+    width:calc(100% - 40px)!important;
+    padding:7px 0 13px!important;
+  }
+  .hero-v4 .hero-stat strong{color:#08263D!important}
+  .hero-v4 .hero-stat span{color:#244E63!important}
+  .featured-ev-v7{background:#EAF6F9!important}
+}
