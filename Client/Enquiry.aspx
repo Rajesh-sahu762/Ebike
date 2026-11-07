@@ -175,7 +175,7 @@ grid-template-columns:1fr;
 </div>
 
 <div class="bike-price">
-₹ <asp:Literal ID="litPrice" runat="server"></asp:Literal>
+&#8377; <asp:Literal ID="litPrice" runat="server"></asp:Literal>
 </div>
 
 <div class="bike-specs">
