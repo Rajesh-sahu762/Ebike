@@ -296,7 +296,7 @@
             <div class="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
                 <div>
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Price</p>
-                    <p class="part-price-value">₹<%# Eval("Price", "{0:N0}") %> /-</p>
+                    <p class="part-price-value">&#8377;<%# Eval("Price", "{0:N0}") %> /-</p>
                 </div>
                     
                 <button type="button" onclick="addToCart(<%# Eval("PartID") %>)" class="btn-add">
