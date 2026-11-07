@@ -1573,6 +1573,7 @@
 @media(prefers-reduced-motion:reduce){.compact-card-v7,.img-holder-v7 img{transition:none}}
 
 
+.browse-section .brand-card-wrap{min-width:0;display:block}
 /* Browse Bikes By — Electric Pulse gradient and contrast */
 .browse-section{position:relative;isolation:isolate;overflow:hidden;padding:68px 0 74px!important;color:#f7fbff!important;background:radial-gradient(ellipse at 12% 0%,rgba(34,211,238,.16),transparent 38%),radial-gradient(ellipse at 92% 100%,rgba(8,145,178,.22),transparent 42%),linear-gradient(135deg,#0b2942 0%,#071d32 52%,#06283b 100%)!important}
 .browse-section:before,.browse-section:after{content:"";position:absolute;z-index:-1;pointer-events:none;border-radius:50%}
@@ -1751,7 +1752,7 @@
 
         <asp:Repeater ID="rptBrandsTop" runat="server">
         <ItemTemplate>
-            <div class="brand-card">
+            <div class="brand-card-wrap">
              <a href='Bikes.aspx?brand=<%# Eval("BrandID") %>' class="brand-card">
     <div class="brand-logo">
         <img src='<%# GetHomeAssetUrl(Eval("LogoPath"), "Brands") %>' loading="lazy"
@@ -1773,7 +1774,7 @@
 
             <asp:Repeater ID="rptBrandsAll" runat="server">
             <ItemTemplate>
-                <div class="brand-card">
+                <div class="brand-card-wrap">
                     <a href='Bikes.aspx?brand=<%# Eval("BrandID") %>' class="brand-card">
                         <div class="brand-logo">
                             <img src='<%# GetHomeAssetUrl(Eval("LogoPath"), "Brands") %>' loading="lazy"
