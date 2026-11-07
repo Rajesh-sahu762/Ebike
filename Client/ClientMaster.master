@@ -730,7 +730,7 @@ body {
         </div>
         <div class="logo-text">
             <asp:Label ID="lblSiteTitle" runat="server" CssClass="logo-title">EBikes Duniya</asp:Label>
-            <span class="logo-sub">ELECTRIC · MOBILITY</span>
+            <span class="logo-sub">ELECTRIC · FREEDOM</span>
         </div>
     </a>
 
