@@ -1,4 +1,4 @@
-
+﻿
 <%@ OutputCache Duration="120" VaryByParam="none" %>
 
 
@@ -1258,6 +1258,37 @@
         .cta-button-group { flex-direction: column; }
     }
     
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+/* Reference-matched hero: strong left copy, cinematic bike visual on right */
+.hero-v4{position:relative;isolation:isolate;overflow:hidden;padding:48px 0 0!important;background:linear-gradient(90deg,rgba(3,15,29,.96),rgba(5,27,48,.86) 43%,rgba(5,28,48,.44)),url('<%= ResolveUrl("~/Uploads/Banner/banner1.jpg") %>') center/cover no-repeat,#061A2F!important}
+.hero-v4:after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 74% 55%,rgba(34,211,238,.25),transparent 35%),linear-gradient(0deg,rgba(34,211,238,.18),transparent 28%)}
+.hero-v4 .container{max-width:1440px}
+.hero-grid{display:grid;grid-template-columns:.92fr 1.08fr;align-items:center;gap:20px;min-height:390px}
+.hero-copy{padding:12px 0 30px;text-align:left}
+.hero-main-title{font-size:clamp(42px,5vw,68px);line-height:1.03;letter-spacing:-.055em;color:#F8FAFC}
+.hero-subtitle{margin:0!important;color:#D7E5F0!important;max-width:560px;font-size:16px}
+.hero-media{position:relative;min-height:370px;display:flex;align-items:center;justify-content:center}
+.hero-image-frame{position:relative;width:min(100%,650px);padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;transform:none;filter:drop-shadow(0 25px 24px rgba(0,0,0,.48))}
+.hero-image-frame img{width:100%;height:370px;max-height:370px;object-fit:contain;mix-blend-mode:normal;border-radius:0}
+.hero-media-orbit{position:absolute;width:min(85%,420px);aspect-ratio:1;border:1px solid rgba(34,211,238,.65);border-radius:50%;box-shadow:0 0 45px rgba(34,211,238,.2),0 0 0 24px rgba(34,211,238,.04)}
+.hero-float-card{right:0;top:35px;min-width:175px;background:rgba(7,32,54,.78);border:1px solid rgba(125,211,252,.4)}
+.hero-actions{margin-top:24px}
+.hero-action-primary{background:#F97316!important;color:#fff!important}
+.hero-action-secondary{border:1px solid rgba(226,242,255,.8)!important;background:rgba(5,23,42,.35)!important;color:#fff!important}
+.search-glass-wrapper{margin:0!important;position:relative;z-index:4}
+.search-glass-inner{max-width:1220px!important;border-radius:20px!important;padding:13px 20px 13px 26px!important;box-shadow:0 22px 52px rgba(7,26,47,.25)!important;gap:14px}
+.btn-search-hero{background:#22D3EE!important;color:#071A2F!important;min-height:48px}
+.hero-stats{max-width:1100px;margin:18px auto 0!important;background:#fff!important;border:1px solid #E2EAF1!important;border-radius:16px 16px 0 0!important;box-shadow:0 8px 24px rgba(7,26,47,.08)}
+.hero-stat strong{color:#071A2F!important}.hero-stat span{color:#456078!important}.hero-stat i{color:#0891B2!important}
+@media(max-width:991px){.hero-grid{grid-template-columns:1fr;gap:0}.hero-copy{text-align:center;padding:18px 0 8px}.hero-subtitle{margin:0 auto!important}.hero-actions,.hero-proof-points{justify-content:center}.hero-media{min-height:280px}.hero-image-frame img{height:285px}.hero-float-card{right:5%;top:15px}.hero-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:575px){.hero-v4{padding:28px 0 0!important}.hero-main-title{font-size:clamp(37px,10vw,48px)}.hero-media{min-height:220px}.hero-image-frame img{height:220px}.hero-float-card{top:5px;right:0;min-width:126px;padding:9px}.hero-stats{margin:12px 8px 0!important}}
+/* Make image slots show useful fallback artwork instead of broken-image icons */
+.img-holder-v7 img,.brand-logo img,.part-img-v9 img,.mention-img img{max-width:100%;max-height:100%;object-fit:contain}
+.footer-wordmark{font-size:clamp(78px,15vw,210px)!important;letter-spacing:-.075em!important;white-space:nowrap;line-height:.9;transform:none!important}
+=======
+>>>>>>> Stashed changes
 
 
 
@@ -1621,15 +1652,23 @@
     font-size:clamp(48px,4.8vw,68px)!important;
     font-weight:400!important;
     line-height:1.16!important;
+<<<<<<< Updated upstream
     letter-spacing:.085em!important;
     word-spacing:.20em!important;
+=======
+    letter-spacing:.025em!important;
+    word-spacing:.10em!important;
+>>>>>>> Stashed changes
     text-transform:uppercase;
     white-space:normal;
     overflow:visible;
 }
 .hero-v4 .hero-main-title .text-gradient{
     display:inline-block;
+<<<<<<< Updated upstream
     letter-spacing:.045em!important;
+=======
+>>>>>>> Stashed changes
     word-spacing:normal!important;
     padding-right:.08em;
 }
@@ -1644,6 +1683,10 @@
         letter-spacing:.035em!important;
     }
 }
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 </style>
 
