@@ -18,6 +18,9 @@ public partial class Client_Bikes : System.Web.UI.Page
             if (!string.IsNullOrEmpty(keyword))
                 hfSearch.Value = keyword;
 
+            string category = Request.QueryString["category"];
+            if (!string.IsNullOrEmpty(category)) hfCategory.Value = category.Trim().ToLowerInvariant();
+
             string dealer = Request.QueryString["dealer"];
             if (!string.IsNullOrEmpty(dealer))
                 hfDealer.Value = dealer;
@@ -57,7 +60,7 @@ public partial class Client_Bikes : System.Web.UI.Page
 
     [WebMethod(EnableSession = true)]
     public static object GetBikes(int page, int minPrice, int maxPrice,
-     string range, string sort, string[] brands, string search, string dealer)
+     string range, string sort, string[] brands, string search, string dealer, string category)
     {
         string constr = ConfigurationManager.ConnectionStrings["Electronic"].ConnectionString;
 
@@ -109,9 +112,33 @@ public partial class Client_Bikes : System.Web.UI.Page
             if (hasDealer)
                 dealerFilter = " AND B.DealerID=@dealer";
 
+
             string searchFilter = "";
             if (!string.IsNullOrEmpty(search))
-                searchFilter = " AND B.ModelName LIKE @search";
+                searchFilter = " AND (B.ModelName LIKE @search OR B.Description LIKE @search)";
+
+            // Whitelisted category rules mirror the homepage's inference logic.
+            string categoryFilter = "";
+            string categoryText = "LOWER(ISNULL(B.ModelName,'') + ' ' + ISNULL(B.Description,''))";
+            switch ((category ?? "").Trim().ToLowerInvariant())
+            {
+                case "electric-bikes":
+                    categoryFilter = " AND " + categoryText + " NOT LIKE '%scooter%' AND " + categoryText + " NOT LIKE '%moped%' AND " + categoryText + " NOT LIKE '%off-road%' AND " + categoryText + " NOT LIKE '%off road%' AND " + categoryText + " NOT LIKE '%dirt bike%' AND " + categoryText + " NOT LIKE '%enduro%' AND " + categoryText + " NOT LIKE '%trail riding%' AND " + categoryText + " NOT LIKE '%ather 450%' AND " + categoryText + " NOT LIKE '%ather rizta%' AND " + categoryText + " NOT LIKE '%ola s1%' AND " + categoryText + " NOT LIKE '%vida v2%' AND " + categoryText + " NOT LIKE '%tvs iqube%' AND " + categoryText + " NOT LIKE '%activa e%'";
+                    break;
+                case "electric-scooters":
+                    categoryFilter = " AND (" + categoryText + " LIKE '%scooter%' OR " + categoryText + " LIKE '%ather 450%' OR " + categoryText + " LIKE '%ather rizta%' OR " + categoryText + " LIKE '%ola s1%' OR " + categoryText + " LIKE '%vida v2%' OR " + categoryText + " LIKE '%tvs iqube%' OR " + categoryText + " LIKE '%activa e%')";
+                    break;
+                case "mopeds": categoryFilter = " AND " + categoryText + " LIKE '%moped%'"; break;
+                case "off-road-evs":
+                    categoryFilter = " AND (" + categoryText + " LIKE '%off-road%' OR " + categoryText + " LIKE '%off road%' OR " + categoryText + " LIKE '%dirt bike%' OR " + categoryText + " LIKE '%enduro%' OR " + categoryText + " LIKE '%trail riding%')";
+                    break;
+                case "daily-commute":
+                    categoryFilter = " AND (" + categoryText + " LIKE '%commut%' OR " + categoryText + " LIKE '%urban%' OR " + categoryText + " LIKE '%city ride%' OR " + categoryText + " LIKE '%daily ride%' OR " + categoryText + " LIKE '%family-friendly%' OR " + categoryText + " LIKE '%everyday ride%')";
+                    break;
+                case "long-range":
+                    categoryFilter = " AND (ISNULL(B.RangeKM,0)>=150 OR " + categoryText + " LIKE '%long range%' OR " + categoryText + " LIKE '%extended range%')";
+                    break;
+            }
 
             string query =
 @"SELECT * FROM (
@@ -132,6 +159,7 @@ public partial class Client_Bikes : System.Web.UI.Page
 brandFilter +
 dealerFilter +
 searchFilter +
+categoryFilter +
 (!string.IsNullOrEmpty(range) ? " AND B.RangeKM<=@range" : "") +
 @") X WHERE RowNum BETWEEN @start AND @end";
 
