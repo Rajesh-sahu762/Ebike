@@ -147,6 +147,36 @@ public partial class Client_Home : System.Web.UI.Page
         }
     }
 
+
+    // Build reliable URLs for database image values. Supports filename-only values,
+    // "Bikes/file.jpg", "Uploads/Bikes/file.jpg", "~/Uploads/Bikes/file.jpg"
+    // and "/Uploads/Bikes/file.jpg" without duplicating folder names.
+    public string GetHomeAssetUrl(object value, string folder)
+    {
+        string raw = value == null || value == DBNull.Value ? "" : Convert.ToString(value).Trim();
+        if (string.IsNullOrWhiteSpace(raw))
+            return ResolveUrl("~/Uploads/images/bike.png");
+
+        raw = raw.Replace('\\\\', '/');
+        if (raw.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+            raw.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            return raw;
+
+        raw = raw.Replace("~/", "").TrimStart('/');
+        int uploadsIndex = raw.IndexOf("Uploads/", StringComparison.OrdinalIgnoreCase);
+        if (uploadsIndex >= 0)
+            raw = raw.Substring(uploadsIndex + "Uploads/".Length);
+
+        string folderName = (folder ?? "").Replace("\\\\", "/").Trim('/');
+        if (folderName.StartsWith("Uploads/", StringComparison.OrdinalIgnoreCase))
+            folderName = folderName.Substring("Uploads/".Length);
+
+        if (raw.StartsWith(folderName + "/", StringComparison.OrdinalIgnoreCase))
+            raw = raw.Substring(folderName.Length + 1);
+
+        return ResolveUrl("~/Uploads/" + folderName + "/" + raw);
+    }
+
     public string GenerateStars(int rating)
     {
         string stars = "";
