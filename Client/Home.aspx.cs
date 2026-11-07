@@ -14,10 +14,68 @@ public partial class Client_Home : System.Web.UI.Page
         {
             LoadReviews();
             LoadHeroBrands();
+            LoadHomeCategories();
             LoadBrowseBrands();
             LoadFeaturedBikes(null, null);
             LoadSpareParts();
         }
+    }
+
+
+    // Categories are inferred from existing bike data; no schema changes are needed.
+    void LoadHomeCategories()
+    {
+        string[] names = { "Electric Bikes", "Electric Scooters", "Mopeds", "Off-Road EVs", "Daily Commute", "Long Range" };
+        string[] slugs = { "electric-bikes", "electric-scooters", "mopeds", "off-road-evs", "daily-commute", "long-range" };
+        string[] icons = { "fa-solid fa-motorcycle", "fa-solid fa-motorcycle", "fa-solid fa-person-biking", "fa-solid fa-mountain-sun", "fa-solid fa-route", "fa-solid fa-road" };
+        int[] counts = new int[names.Length];
+        using (SqlConnection con = new SqlConnection(constr))
+        using (SqlCommand cmd = new SqlCommand(@"SELECT ModelName, Description, ISNULL(RangeKM,0) AS RangeKM FROM Bikes WHERE IsApproved=1 AND ISNULL(IsUsed,0)=0 AND ISNULL(IsForRent,0)=0", con))
+        {
+            con.Open();
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    string model = reader["ModelName"] == DBNull.Value ? "" : Convert.ToString(reader["ModelName"]);
+                    string description = reader["Description"] == DBNull.Value ? "" : Convert.ToString(reader["Description"]);
+                    string text = (model + " " + description).ToLowerInvariant();
+                    int range = Convert.ToInt32(reader["RangeKM"]);
+                    bool scooter = ContainsAny(text, "scooter", "ather 450", "ather rizta", "ola s1", "vida v2", "tvs iqube", "activa e");
+                    bool moped = ContainsAny(text, "moped");
+                    bool offRoad = ContainsAny(text, "off-road", "off road", "dirt bike", "enduro", "trail riding");
+                    bool daily = ContainsAny(text, "commut", "urban", "city ride", "daily ride", "family-friendly", "everyday ride");
+                    bool longRange = range >= 150 || ContainsAny(text, "long range", "extended range");
+                    if (!scooter && !moped && !offRoad) counts[0]++;
+                    if (scooter) counts[1]++;
+                    if (moped) counts[2]++;
+                    if (offRoad) counts[3]++;
+                    if (daily) counts[4]++;
+                    if (longRange) counts[5]++;
+                }
+            }
+        }
+        DataTable categories = new DataTable();
+        categories.Columns.Add("CategoryName", typeof(string));
+        categories.Columns.Add("CategorySlug", typeof(string));
+        categories.Columns.Add("CategoryIcon", typeof(string));
+        categories.Columns.Add("BikeCount", typeof(int));
+        for (int i = 0; i < names.Length; i++)
+        {
+            DataRow row = categories.NewRow();
+            row["CategoryName"] = names[i]; row["CategorySlug"] = slugs[i];
+            row["CategoryIcon"] = icons[i]; row["BikeCount"] = counts[i];
+            categories.Rows.Add(row);
+        }
+        rptHomeCategories.DataSource = categories;
+        rptHomeCategories.DataBind();
+    }
+
+    private bool ContainsAny(string value, params string[] keywords)
+    {
+        foreach (string keyword in keywords)
+            if (value.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0) return true;
+        return false;
     }
 
     void LoadSpareParts()
