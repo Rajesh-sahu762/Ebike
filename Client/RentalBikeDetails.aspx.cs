@@ -247,7 +247,7 @@ ORDER BY NEWID()
 
                 html += "<div class='similar-name'>" + dr["ModelName"] + "</div>";
 
-                html += "<div class='similar-price'>₹ "
+                html += "<div class='similar-price'>&#8377; "
                 + Convert.ToDecimal(dr["RentPerDay"]).ToString("N0")
                 + " / Day</div>";
 
