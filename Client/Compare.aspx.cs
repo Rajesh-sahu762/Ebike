@@ -167,7 +167,7 @@ public partial class Compare : System.Web.UI.Page
                 string html =
                 "<img src='/Uploads/Bikes/" + dr["Image1"] + "' />" +
                 "<h3>" + dr["ModelName"] + "</h3>" +
-                "<p>₹ " + Convert.ToDecimal(dr["Price"]).ToString("N0") + "</p>";
+                "<p>&#8377; " + Convert.ToDecimal(dr["Price"]).ToString("N0") + "</p>";
 
                 if (count == 0)
                     html1 = html;
