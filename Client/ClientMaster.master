@@ -6,6 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head id="Head1" runat="server">
+    <meta charset="utf-8" />
     <title>EBikes Duniya</title>
 
     <link rel="icon" type="image/svg+xml" 
