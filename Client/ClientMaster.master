@@ -734,7 +734,7 @@ body {
     <!-- LOGO -->
     <a href="Home.aspx" class="logo-wrap">
         <div class="logo-icon">
-            <asp:Image ID="imgLogo" runat="server" Height="42px" style="display:block" AlternateText="EBikes Duniya" onerror="this.style.display='none';document.getElementById('iconFallback').style.display='block';" />
+            <asp:Image ID="imgLogo" runat="server" ClientIDMode="Static" Height="42px" style="display:block" AlternateText="EBikes Duniya" onerror="this.onerror=null;this.src='<%= ResolveUrl("~/Uploads/favicon/favicon-ebd.svg") %>';" />
             <i class="fa fa-bolt" id="iconFallback"></i>
         </div>
         <div class="logo-text">
@@ -887,7 +887,7 @@ body {
     
     <div class="footer-col">
       <a href="Home.aspx" class="footer-brand-lockup" aria-label="EBikes Duniya home">
-        <span class="footer-logo-mark"><img id="footerLogoImg" alt="EBikes Duniya logo" /><i class="fa fa-bolt" id="footerLogoFallback"></i></span>
+        <span class="footer-logo-mark"><img id="footerLogoImg" src="<%= ResolveUrl("~/Uploads/favicon/favicon-ebd.svg") %>" alt="EBikes Duniya logo" /><i class="fa fa-bolt" id="footerLogoFallback"></i></span>
         <span class="footer-brand-name">EBikes <em>Duniya</em><small>ELECTRIC · FREEDOM</small></span>
       </a>
       <p style="font-size:14px; line-height:1.75; color:#94a3b8; margin-bottom:20px;">
