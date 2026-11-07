@@ -1646,7 +1646,7 @@
   <div class="search-glass-wrapper"><div class="search-glass-inner">
    <div class="search-heading"><i class="fa-solid fa-sliders"></i><strong>Find Your Electric Bike</strong></div>
    <div class="search-divider"></div>
-   <div class="search-item"><label><i class="fa-solid fa-wallet"></i>Your Budget</label><asp:DropDownList ID="ddlBudget" runat="server" CssClass="search-select"><asp:ListItem Value="">Select Max Budget</asp:ListItem><asp:ListItem Value="80000">Under ₹80,000</asp:ListItem><asp:ListItem Value="120000">Under ₹1.2 Lakh</asp:ListItem><asp:ListItem Value="180000">Under ₹1.8 Lakh</asp:ListItem><asp:ListItem Value="500000">Premium EVs</asp:ListItem></asp:DropDownList></div>
+   <div class="search-item"><label><i class="fa-solid fa-wallet"></i>Your Budget</label><asp:DropDownList ID="ddlBudget" runat="server" CssClass="search-select"><asp:ListItem Value="">Select Max Budget</asp:ListItem><asp:ListItem Value="80000">Under &#8377;80,000</asp:ListItem><asp:ListItem Value="120000">Under &#8377;1.2 Lakh</asp:ListItem><asp:ListItem Value="180000">Under &#8377;1.8 Lakh</asp:ListItem><asp:ListItem Value="500000">Premium EVs</asp:ListItem></asp:DropDownList></div>
    <div class="search-divider"></div>
    <div class="search-item"><label><i class="fa-solid fa-tag"></i>Preferred Brand</label><asp:DropDownList ID="ddlBrand" runat="server" CssClass="search-select"></asp:DropDownList></div>
    <div class="search-action"><asp:LinkButton ID="btnSearch" runat="server" CssClass="btn-search-hero" OnClick="btnSearch_Click"><i class="fa-solid fa-magnifying-glass"></i> Search Bikes</asp:LinkButton></div>
@@ -1709,7 +1709,7 @@
                                 </a>
                                 <div class="info-holder-v7">
                                     <h3 class="title-v7"><a href='BikeDetails.aspx?slug=<%# Eval("Slug") %>'><%# Eval("ModelName") %></a></h3>
-                                    <div class="price-v7">₹<%# Eval("Price", "{0:N0}") %><span class="price-note">*</span></div>
+                                    <div class="price-v7">&#8377;<%# Eval("Price", "{0:N0}") %><span class="price-note">*</span></div>
                                     <div class="stats-row-v7">
                                         <span><i class="fa-solid fa-bolt"></i><%# Eval("RangeKM") %> km</span>
                                         <span><i class="fa-solid fa-gauge-high"></i>80 km/h</span>
@@ -1802,10 +1802,10 @@
 <!-- BUDGET -->
 <div id="budgetTab" class="tab-content">
     <div class="browse-grid">
-        <a href="Bikes.aspx?budget=100000" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-wallet"></i></span><span class="browse-filter-copy"><strong>Under ₹1 Lakh</strong><small>Budget-friendly rides</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
-        <a href="Bikes.aspx?budget=150000" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span><span class="browse-filter-copy"><strong>Under ₹1.5 Lakh</strong><small>More choices to explore</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
-        <a href="Bikes.aspx?budget=200000" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-tags"></i></span><span class="browse-filter-copy"><strong>Under ₹2 Lakh</strong><small>Performance and value</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
-        <a href="Bikes.aspx?budget=300000" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-gem"></i></span><span class="browse-filter-copy"><strong>Under ₹3 Lakh</strong><small>Premium electric rides</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
+        <a href="Bikes.aspx?budget=100000" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-wallet"></i></span><span class="browse-filter-copy"><strong>Under &#8377;1 Lakh</strong><small>Budget-friendly rides</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
+        <a href="Bikes.aspx?budget=150000" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span><span class="browse-filter-copy"><strong>Under &#8377;1.5 Lakh</strong><small>More choices to explore</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
+        <a href="Bikes.aspx?budget=200000" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-tags"></i></span><span class="browse-filter-copy"><strong>Under &#8377;2 Lakh</strong><small>Performance and value</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
+        <a href="Bikes.aspx?budget=300000" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-gem"></i></span><span class="browse-filter-copy"><strong>Under &#8377;3 Lakh</strong><small>Premium electric rides</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
     </div>
 </div>
 
@@ -1911,7 +1911,7 @@
                             <div class="part-info-v9">
                                 <h3 class="part-title-v9"><%# Eval("PartName") %></h3>
                                 <div class="part-price-row-v9">
-                                    <div class="part-price-v9">₹<%# Eval("Price", "{0:N0}") %> /-</div>
+                                    <div class="part-price-v9">&#8377;<%# Eval("Price", "{0:N0}") %> /-</div>
                                     <span class="stock-status"><i class="fa-solid fa-circle-check mr-1"></i> In Stock</span>
                                 </div>
                             </div>
@@ -2114,7 +2114,7 @@
                     <div class="compare-visual-wrapper">
                         <div class="vs-circle">VS</div>
                         <div class="bike-placeholder left-bike">
-                             <div class="fa-solid fa-3x text-white-50">🛵</div>
+                             <div class="bike-placeholder-icon"><i class="fa-solid fa-motorcycle fa-3x text-white-50" aria-hidden="true"></i></div>
 
                         </div>
                         <div class="bike-placeholder right-bike">
