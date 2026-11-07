@@ -1470,19 +1470,66 @@
  @keyframes heroBikeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 }
 
-/* Explore by category */
-.home-category-section{position:relative;z-index:2;background:#F4F8FC;padding:24px 0 30px;border-bottom:1px solid #E5EDF4}
-.home-category-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 15px}
-.home-category-heading h2{margin:0;color:#0F172A;font:800 19px/1.25 var(--ep-font-heading);letter-spacing:-.025em}
-.home-category-heading p{margin:4px 0 0;color:#64748B;font-size:11px}
-.home-category-track{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
-.home-category-card{min-width:0;min-height:76px;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px 10px;border:1px solid #E1EAF2;border-radius:13px;background:linear-gradient(145deg,#fff,#F2F7FB);color:#24364B!important;text-decoration:none!important;box-shadow:0 4px 12px rgba(15,35,55,.035);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease}
-.home-category-card:hover,.home-category-card:focus-visible{transform:translateY(-3px);border-color:#67DCEB;background:linear-gradient(145deg,#E9FCFF,#DDF8FC);box-shadow:0 8px 20px rgba(8,145,178,.12);color:#071A2F!important}
-.home-category-icon{width:38px;height:38px;flex:0 0 38px;display:inline-flex;align-items:center;justify-content:center;border-radius:11px;background:#E4F9FC;color:#0891B2;font-size:17px}
+
+/* Explore by category — blended bridge from hero stats into featured rides */
+.home-category-section{
+ position:relative;z-index:2;isolation:isolate;
+ padding:30px 0 38px;
+ background:linear-gradient(180deg,#E8F5F7 0%,#EDF7F9 38%,#F2F8FA 76%,#F4F8FC 100%);
+ border:0;
+}
+.home-category-section:before{
+ content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:radial-gradient(ellipse at 50% 0%,rgba(34,211,238,.10),transparent 62%);
+}
+.home-category-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 17px}
+.home-category-heading h2{margin:0;color:#0B1B32;font:400 27px/1.05 var(--ep-font-heading);letter-spacing:.025em}
+.home-category-heading p{margin:5px 0 0;color:#526B80;font:400 11px/1.5 var(--ep-font-body)}
+.home-category-heading .view-all-v7{font:600 11px/1.2 var(--ep-font-body);color:#0789A6;text-decoration:none}
+.home-category-track{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.home-category-card{
+ min-width:0;min-height:82px;display:flex;align-items:center;justify-content:center;gap:11px;
+ padding:13px 11px;border:1px solid rgba(190,216,226,.72);border-radius:15px;
+ background:rgba(255,255,255,.68);backdrop-filter:blur(8px);
+ color:#24364B!important;text-decoration:none!important;
+ box-shadow:0 5px 16px rgba(15,45,65,.045);
+ transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease;
+}
+.home-category-card:hover,.home-category-card:focus-visible{
+ transform:translateY(-3px);border-color:rgba(8,145,178,.42);
+ background:rgba(255,255,255,.92);box-shadow:0 10px 24px rgba(8,145,178,.10);
+ color:#071A2F!important;
+}
+.home-category-icon{
+ width:39px;height:39px;flex:0 0 39px;display:inline-flex;align-items:center;justify-content:center;
+ border-radius:12px;background:linear-gradient(145deg,#DDF8FB,#C9F1F6);color:#078EAA;font-size:16px;
+}
 .home-category-copy{min-width:0;text-align:left}
-.home-category-name{display:block;color:#172B43;font:700 11px/1.3 var(--ep-font-heading);white-space:nowrap}
-.home-category-count{display:block;margin-top:3px;color:#718096;font:500 9px/1.2 var(--ep-font-body)}
-@media(max-width:767px){.home-category-section{padding:18px 0 22px}.home-category-heading{margin-bottom:12px}.home-category-heading h2{font-size:17px}.home-category-track{display:flex;gap:9px;overflow-x:auto;overflow-y:hidden;padding:2px 2px 10px;margin:0 -2px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#B8DCE4 transparent}.home-category-card{flex:0 0 158px;min-height:68px;justify-content:flex-start;scroll-snap-align:start;padding:10px}.home-category-icon{width:34px;height:34px;flex-basis:34px;font-size:15px}.home-category-name{font-size:10px}}
+.home-category-name{display:block;color:#102A43;font:500 11px/1.35 var(--ep-font-body);white-space:nowrap}
+.home-category-count{display:block;margin-top:4px;color:#60798D;font:400 9px/1.3 var(--ep-font-body)}
+.featured-ev-v7{
+ background:linear-gradient(180deg,#F4F8FC 0%,#EDF6F9 100%)!important;
+ padding-top:58px!important;
+}
+@media(max-width:991px){
+ .home-category-track{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@media(max-width:767px){
+ .home-category-section{padding:22px 0 27px}
+ .home-category-heading{margin-bottom:13px}
+ .home-category-heading h2{font-size:24px}
+ .home-category-track{
+  display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;
+  padding:2px 2px 11px;margin:0 -2px;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:#B8DCE4 transparent;
+ }
+ .home-category-card{flex:0 0 166px;min-height:74px;justify-content:flex-start;scroll-snap-align:start;padding:10px}
+ .home-category-icon{width:36px;height:36px;flex-basis:36px;font-size:15px}
+ .home-category-name{font-size:10px}
+ .home-category-count{font-size:9px}
+ .featured-ev-v7{padding-top:42px!important}
+}
 @media(prefers-reduced-motion:reduce){.home-category-card{transition:none}}
 
 </style>
