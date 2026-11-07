@@ -1572,6 +1572,45 @@
 @media(max-width:767px){.featured-ev-v7{padding:35px 0 45px!important}.featured-heading-v8{align-items:flex-end;margin-bottom:15px;gap:10px}.featured-heading-v8 .section-title-v7{font-size:23px}.featured-section-subtitle{font-size:9px;max-width:230px}.featured-heading-actions{gap:0}.featured-heading-actions .slider-nav-wrapper{display:none}.featured-view-all{font-size:9px}.img-holder-v7{height:126px}.info-holder-v7{padding:10px}.title-v7{font-size:11px}.price-v7{font-size:13px}.stats-row-v7{gap:5px}.stats-row-v7 span{font-size:8px;padding:5px 6px}}
 @media(prefers-reduced-motion:reduce){.compact-card-v7,.img-holder-v7 img{transition:none}}
 
+
+/* Browse Bikes By — Electric Pulse gradient and contrast */
+.browse-section{position:relative;isolation:isolate;overflow:hidden;padding:68px 0 74px!important;color:#f7fbff!important;background:radial-gradient(ellipse at 12% 0%,rgba(34,211,238,.16),transparent 38%),radial-gradient(ellipse at 92% 100%,rgba(8,145,178,.22),transparent 42%),linear-gradient(135deg,#0b2942 0%,#071d32 52%,#06283b 100%)!important}
+.browse-section:before,.browse-section:after{content:"";position:absolute;z-index:-1;pointer-events:none;border-radius:50%}
+.browse-section:before{width:420px;height:420px;top:-300px;right:-100px;border:1px solid rgba(34,211,238,.16);box-shadow:0 0 0 38px rgba(34,211,238,.025),0 0 0 82px rgba(34,211,238,.018)}
+.browse-section:after{width:340px;height:340px;bottom:-270px;left:-110px;border:1px solid rgba(34,211,238,.13);box-shadow:0 0 0 34px rgba(34,211,238,.025)}
+.browse-section>.container{position:relative;z-index:1}
+.browse-section .browse-title{color:#f8fcff!important;font-size:clamp(25px,3vw,32px);font-weight:750;letter-spacing:-.035em;margin:0 0 22px!important}
+.browse-section .browse-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 26px!important}
+.browse-section .browse-tabs .tab{display:inline-flex;align-items:center;justify-content:center;min-height:39px;padding:9px 19px!important;border-radius:999px!important;background:rgba(255,255,255,.075)!important;border:1px solid rgba(255,255,255,.13)!important;color:#c6d7e5!important;font:600 12px/1.2 var(--ep-font-body)!important;transition:all .2s ease}
+.browse-section .browse-tabs .tab:hover{background:rgba(34,211,238,.13)!important;border-color:rgba(34,211,238,.45)!important;color:#fff!important;transform:translateY(-1px)}
+.browse-section .browse-tabs .tab.active-tab{background:linear-gradient(135deg,#22d3ee,#06b6d4)!important;border-color:#22d3ee!important;color:#062238!important;font-weight:750!important;box-shadow:0 6px 18px rgba(6,182,212,.25)!important}
+.browse-section .tab-content{display:none}.browse-section .tab-content.active-content{display:block;animation:browseTabIn .22s ease both}
+@keyframes browseTabIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.browse-section .browse-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.browse-section .brand-card{box-sizing:border-box;min-width:0;min-height:142px;padding:17px 14px!important;gap:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(145deg,#fff 0%,#f4fafd 100%)!important;border:1px solid #d3e5ef!important;border-radius:16px!important;color:#102a40!important;text-decoration:none!important;text-align:center;box-shadow:0 7px 20px rgba(0,12,28,.12)!important;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.browse-section .brand-card:hover{background:#fff!important;border-color:#22c7df!important;color:#08243a!important;transform:translateY(-4px);box-shadow:0 14px 28px rgba(0,12,28,.2),0 0 0 3px rgba(34,211,238,.1)!important}
+.browse-section .brand-logo{width:100%;height:62px;display:flex;align-items:center;justify-content:center}
+.browse-section .brand-logo img{display:block;width:auto;height:auto;max-width:112px;max-height:48px;object-fit:contain;margin:0!important;filter:none!important;opacity:1!important}
+.browse-section .brand-name{color:#18364e!important;font:650 13px/1.3 var(--ep-font-body)!important}
+.browse-section .brand-card:hover .brand-name{color:#078daa!important}
+.browse-section .browse-filter-card{min-height:94px;box-sizing:border-box;display:flex;align-items:center;gap:13px;padding:17px 16px;border-radius:15px;border:1px solid #d3e5ef;background:linear-gradient(145deg,#fff 0%,#f3f9fc 100%);color:#122d43!important;text-decoration:none!important;box-shadow:0 7px 20px rgba(0,12,28,.12);transition:all .22s ease}
+.browse-section .browse-filter-card:hover{transform:translateY(-3px);border-color:#22c7df;box-shadow:0 13px 25px rgba(0,12,28,.18);color:#102a40!important}
+.browse-section .browse-filter-icon{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:12px;background:#ddf8fc;color:#078daa;font-size:17px}
+.browse-section .browse-filter-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:5px;text-align:left}
+.browse-section .browse-filter-copy strong{font:700 13px/1.25 var(--ep-font-body)!important;color:#102a40!important}
+.browse-section .browse-filter-copy small{font:400 10px/1.3 var(--ep-font-body)!important;color:#667d90!important}
+.browse-section .browse-filter-arrow{font-size:12px;color:#079bb7;transition:transform .2s ease}
+.browse-section .browse-filter-card:hover .browse-filter-arrow{transform:translateX(3px)}
+.browse-section .body-card{min-height:130px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px 14px!important;border-radius:16px!important;background:linear-gradient(145deg,#fff 0%,#f4fafd 100%)!important;border:1px solid #d3e5ef!important;color:#17334b!important;font:650 13px/1.3 var(--ep-font-body)!important;text-decoration:none!important;text-align:center;box-shadow:0 7px 20px rgba(0,12,28,.12)!important;transition:all .22s ease}
+.browse-section .body-card:hover{transform:translateY(-4px);border-color:#22c7df!important;color:#078daa!important;box-shadow:0 14px 26px rgba(0,12,28,.18)!important}
+.browse-section .body-icon{width:48px;height:48px;margin:0!important;display:grid;place-items:center;border-radius:14px;background:#ddf8fc;color:#078daa;font-size:22px}
+.browse-section .body-card:hover .body-icon{background:#c5f4fa;color:#057f9a}
+.browse-section .view-more{margin-top:2px;color:#39d9f0!important;font:650 12px/1.3 var(--ep-font-body)!important;text-decoration:none!important}
+.browse-section .view-more:hover{color:#a5f3fc!important;text-decoration:underline!important}
+@media(max-width:767px){.browse-section{padding:44px 0 50px!important}.browse-section .browse-title{font-size:24px;margin-bottom:18px!important}.browse-section .browse-tabs{gap:7px;margin-bottom:20px!important}.browse-section .browse-tabs .tab{min-height:36px;padding:8px 14px!important;font-size:11px!important}.browse-section .browse-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.browse-section .brand-card{min-height:116px;padding:13px 10px!important;border-radius:13px!important}.browse-section .brand-logo{height:49px}.browse-section .brand-logo img{max-width:100px;max-height:40px}.browse-section .brand-name{font-size:11px!important}.browse-section .browse-filter-card{min-height:78px;padding:12px 10px;gap:9px;border-radius:12px}.browse-section .browse-filter-icon{width:35px;height:35px;flex-basis:35px;font-size:14px;border-radius:10px}.browse-section .browse-filter-copy strong{font-size:11px!important}.browse-section .browse-filter-copy small{font-size:9px!important}.browse-section .body-card{min-height:108px;padding:14px 9px!important;font-size:11px!important;border-radius:13px!important}.browse-section .body-icon{width:40px;height:40px;font-size:19px;border-radius:11px}}
+@media(max-width:380px){.browse-section .browse-grid{gap:8px}.browse-section .browse-filter-card{gap:7px;padding:10px 8px}.browse-section .browse-filter-copy strong{font-size:10px!important}}
+@media(prefers-reduced-motion:reduce){.browse-section *{animation:none!important;transition:none!important}}
+
 </style>
 
 <section class="hero-v4">
@@ -1762,19 +1801,19 @@
 <!-- BUDGET -->
 <div id="budgetTab" class="tab-content">
     <div class="browse-grid">
-        <a href="Bikes.aspx?budget=100000" class="brand-card">Under ₹1 Lakh</a>
-        <a href="Bikes.aspx?budget=150000" class="brand-card">Under ₹1.5 Lakh</a>
-        <a href="Bikes.aspx?budget=200000" class="brand-card">Under ₹2 Lakh</a>
-        <a href="Bikes.aspx?budget=300000" class="brand-card">Under ₹3 Lakh</a>
+        <a href="Bikes.aspx?budget=100000" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-wallet"></i></span><span class="browse-filter-copy"><strong>Under ₹1 Lakh</strong><small>Budget-friendly rides</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
+        <a href="Bikes.aspx?budget=150000" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span><span class="browse-filter-copy"><strong>Under ₹1.5 Lakh</strong><small>More choices to explore</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
+        <a href="Bikes.aspx?budget=200000" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-tags"></i></span><span class="browse-filter-copy"><strong>Under ₹2 Lakh</strong><small>Performance and value</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
+        <a href="Bikes.aspx?budget=300000" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-gem"></i></span><span class="browse-filter-copy"><strong>Under ₹3 Lakh</strong><small>Premium electric rides</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
     </div>
 </div>
 
 <!-- RANGE -->
 <div id="rangeTab" class="tab-content">
     <div class="browse-grid">
-        <a href="Bikes.aspx?range=80" class="brand-card">Under 80 KM</a>
-        <a href="Bikes.aspx?range=120" class="brand-card">Under 120 KM</a>
-        <a href="Bikes.aspx?range=200" class="brand-card">Under 200 KM</a>
+        <a href="Bikes.aspx?range=80" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-bolt"></i></span><span class="browse-filter-copy"><strong>Under 80 KM</strong><small>Everyday city rides</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
+        <a href="Bikes.aspx?range=120" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-route"></i></span><span class="browse-filter-copy"><strong>Under 120 KM</strong><small>Balanced daily range</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
+        <a href="Bikes.aspx?range=200" class="browse-filter-card"><span class="browse-filter-icon"><i class="fa-solid fa-mountain-sun"></i></span><span class="browse-filter-copy"><strong>Under 200 KM</strong><small>Long-distance freedom</small></span><i class="fa-solid fa-arrow-right browse-filter-arrow"></i></a>
     </div>
 </div>
 
@@ -1783,52 +1822,52 @@
     <div class="browse-grid">
 
         <a href="Bikes.aspx?type=Sports" class="body-card">
-            <div class="body-icon">🏍</div>
+            <div class="body-icon"><i class="fa-solid fa-motorcycle"></i></div>
             Sports Bike
         </a>
 
         <a href="Bikes.aspx?type=Scooter" class="body-card">
-            <div class="body-icon">🛵</div>
+            <div class="body-icon"><i class="fa-solid fa-motorcycle"></i></div>
             Scooter
         </a>
 
         <a href="Bikes.aspx?type=Cruiser" class="body-card">
-            <div class="body-icon">🏍</div>
+            <div class="body-icon"><i class="fa-solid fa-motorcycle"></i></div>
             Cruiser
         </a>
 
         <a href="Bikes.aspx?type=Commuter" class="body-card">
-            <div class="body-icon">🚲</div>
+            <div class="body-icon"><i class="fa-solid fa-bicycle"></i></div>
             Commuter
         </a>
 
         <a href="Bikes.aspx?type=Street" class="body-card">
-            <div class="body-icon">🏍</div>
+            <div class="body-icon"><i class="fa-solid fa-motorcycle"></i></div>
             Street Bike
         </a>
 
         <a href="Bikes.aspx?type=Super" class="body-card">
-            <div class="body-icon">🏍</div>
+            <div class="body-icon"><i class="fa-solid fa-motorcycle"></i></div>
             Super Bike
         </a>
 
         <a href="Bikes.aspx?type=Cafe" class="body-card">
-            <div class="body-icon">🏍</div>
+            <div class="body-icon"><i class="fa-solid fa-motorcycle"></i></div>
             Cafe Racer
         </a>
 
         <a href="Bikes.aspx?type=Adventure" class="body-card">
-            <div class="body-icon">🏍</div>
+            <div class="body-icon"><i class="fa-solid fa-motorcycle"></i></div>
             Adventure
         </a>
 
         <a href="Bikes.aspx?type=Moped" class="body-card">
-            <div class="body-icon">🛵</div>
+            <div class="body-icon"><i class="fa-solid fa-motorcycle"></i></div>
             Moped
         </a>
 
         <a href="Bikes.aspx?type=Tourer" class="body-card">
-            <div class="body-icon">🏍</div>
+            <div class="body-icon"><i class="fa-solid fa-motorcycle"></i></div>
             Tourer
         </a>
 
@@ -2223,21 +2262,13 @@
    <script>
 
        function showTab(evt, tabName) {
-
-           // remove active class from all tabs
-           document.querySelectorAll(".tab").forEach(t =>
-               t.classList.remove("active-tab"));
-
-           // activate clicked tab
+           var section = evt.currentTarget.closest(".browse-section");
+           if (!section) return;
+           section.querySelectorAll(".browse-tabs .tab").forEach(function (tab) { tab.classList.remove("active-tab"); });
            evt.currentTarget.classList.add("active-tab");
-
-           // hide all content
-           document.querySelectorAll(".tab-content").forEach(c =>
-               c.classList.remove("active-content"));
-
-           // show selected tab
-           document.getElementById(tabName + "Tab")
-               .classList.add("active-content");
+           section.querySelectorAll(".tab-content").forEach(function (content) { content.classList.remove("active-content"); });
+           var selected = section.querySelector("#" + tabName + "Tab");
+           if (selected) selected.classList.add("active-content");
        }
 
        function toggleBrands() {
