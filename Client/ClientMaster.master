@@ -888,7 +888,7 @@ body {
     
     <div class="footer-col">
       <a href="Home.aspx" class="footer-brand-lockup" aria-label="EBikes Duniya home">
-        <span class="footer-logo-mark"><img id="footerLogoImg" src="<%= ResolveUrl("~/Uploads/favicon/favicon-ebd.svg") %>" alt="EBikes Duniya logo" /><i class="fa fa-bolt" id="footerLogoFallback"></i></span>
+        <span class="footer-logo-mark"><img id="footerLogoImg" src="<%= ResolveUrl("~/Uploads/EBikes-Duniya-Logo.png") %>" alt="EBikes Duniya logo" /><i class="fa fa-bolt" id="footerLogoFallback"></i></span>
         <span class="footer-brand-name">EBikes <em>Duniya</em><small>ELECTRIC · FREEDOM</small></span>
       </a>
       <p style="font-size:14px; line-height:1.75; color:#94a3b8; margin-bottom:20px;">
@@ -1400,6 +1400,16 @@ body :where(h1,h2,h3,h4,h5,h6,.logo-title,.section-title-v7,.bike-header-title){
 body :where(.font-uchen,.ep-font-accent,.editorial-accent,blockquote){font-family:"Uchen",Georgia,serif!important}
 body i.fa,body i.fas,body i.fa-solid,body i.fa-regular,body i.fa-brands,body .fa-solid,body .fa-regular{font-family:"Font Awesome 6 Free"!important}
 body .fa-solid{font-weight:900!important}body .fa-regular{font-weight:400!important}body .fa-brands{font-family:"Font Awesome 6 Brands"!important;font-weight:400!important}
+</style>
+
+<style id="ebd-brand-logo-sizing">
+/* Brand asset sizing: preserve the original logo proportions in header and footer. */
+.logo-icon{width:58px!important;height:48px!important;padding:3px!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important}
+.logo-icon img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important}
+#iconFallback{display:none}
+.footer-logo-mark{width:66px;height:54px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 66px;background:transparent!important;overflow:visible}
+.footer-logo-mark img{display:block;width:100%;height:100%;object-fit:contain}
+@media(max-width:600px){.logo-icon{width:48px!important;height:42px!important}.footer-logo-mark{width:56px;height:46px;flex-basis:56px}}
 </style>
 </body>
 </html>
