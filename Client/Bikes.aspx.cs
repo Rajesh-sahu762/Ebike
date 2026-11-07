@@ -212,7 +212,7 @@ categoryFilter +
                     html.Append("<div class='bike-card'>");
                     html.Append("<div class='bike-img'>");
                     html.Append("<img src='/Uploads/Bikes/" + image1 + "' alt='" + encodedModel + "'/>");
-                    html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + bikeId + ")'>♥</div>");
+                    html.Append("<div class='wishlist " + active + "' onclick='toggleWishlist(this," + bikeId + ")'><i class='fa-regular fa-heart' aria-hidden='true'></i></div>");
                     html.Append("<label class='compare-label'>");
                     html.Append("<input type='checkbox' onchange='toggleCompare(this," + bikeId + ")'/> Compare");
                     html.Append("</label>");
