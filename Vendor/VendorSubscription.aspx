@@ -19,7 +19,7 @@
             <div class="vs-current-item"><div class="vs-current-label"><i class="fas fa-calendar-alt"></i> Expiry date</div><div class="vs-current-value"><asp:Label ID="lblExpiry" runat="server">—</asp:Label></div></div>
             <div class="vs-current-item"><div class="vs-current-label"><i class="fas fa-motorcycle"></i> Bike limit</div><div class="vs-current-value"><asp:Label ID="lblBikeLimit" runat="server">0</asp:Label> bikes</div></div>
             <div class="vs-current-item"><div class="vs-current-label"><i class="fas fa-star"></i> Featured slots</div><div class="vs-current-value"><asp:Label ID="lblFeaturedLimit" runat="server">0</asp:Label></div></div>
-            <div class="vs-current-item"><div class="vs-current-label"><i class="fas fa-layer-group"></i> Plan type</div><div class="vs-current-value"><asp:Label ID="lblPlan" runat="server">No Active Plan</asp:Label></div></div>
+            <div class="vs-current-item"><div class="vs-current-label"><i class="fas fa-layer-group"></i> Account type</div><div class="vs-current-value">Dealer</div></div>
         </div>
     </section>
 
