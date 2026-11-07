@@ -1335,8 +1335,8 @@
     .hero-media { min-width:0;position:relative;min-height:365px;display:flex;align-items:center;justify-content:center;isolation:isolate; }
     .hero-media-orbit { position:absolute;width:min(92%,440px);aspect-ratio:1;border:1px solid rgba(34,211,238,.28);border-radius:50%;box-shadow:0 0 0 22px rgba(34,211,238,.025),0 0 0 55px rgba(34,211,238,.018); }
     .hero-media-orbit:after { content:"";position:absolute;inset:12%;border:1px dashed rgba(34,211,238,.20);border-radius:50%; }
-    .hero-image-frame { position:relative;width:min(100%,580px);z-index:1;filter:drop-shadow(0 28px 28px rgba(0,0,0,.36)); }
-    .hero-image-frame img { width:100%;height:auto;max-height:370px;object-fit:contain;mix-blend-mode:screen; }
+    .hero-image-frame { position:relative;width:min(100%,580px);z-index:1;padding:12px;border:1px solid rgba(255,255,255,.7);border-radius:34px;background:linear-gradient(145deg,#FFFFFF,#EAF4F8);box-shadow:0 28px 58px rgba(0,0,0,.26);transform:rotate(1deg); }
+    .hero-image-frame img { width:100%;height:auto;max-height:370px;object-fit:contain;mix-blend-mode:multiply;border-radius:25px; }
     .hero-float-card { position:absolute;z-index:2;right:0;top:42px;min-width:154px;padding:13px 15px;border:1px solid rgba(148,163,184,.23);border-radius:15px;background:rgba(8,31,52,.76);box-shadow:0 16px 35px rgba(0,0,0,.20);backdrop-filter:blur(12px); }
     .hero-float-card strong { display:block;color:#fff;font:700 13px var(--ep-font-heading); }
     .hero-float-card span { display:block;margin-top:3px;color:#A9C0D4;font-size:11px; }
