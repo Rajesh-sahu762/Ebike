@@ -714,7 +714,7 @@ body {
 
 <!-- ═══ TOPBAR ═══ -->
 <div class="announcement-bar" id="topbar">
-    <div class="announcement-copy"><i class="fa-solid fa-bolt"></i> <strong>New 2026:</strong> Ather Rizta &amp; OLA S1 X+ now listed on EBikes Duniya! <a href="Bikes.aspx">Explore Now <i class="fa-solid fa-arrow-right"></i></a></div>
+    <div class="announcement-copy"><i class="fa-solid fa-bolt"></i> <strong>New 2026:</strong> Ather Rizta &amp; OLA S1 X+ now listed on EBikes Duniya! <a href="<%= ResolveUrl("~/Client/Bikes.aspx") %>">Explore Now <i class="fa-solid fa-arrow-right"></i></a></div>
     <button type="button" class="topbar-close" aria-label="Dismiss announcement" onclick="document.getElementById('topbar').style.display='none'"><i class="fa fa-xmark"></i></button>
 </div>
 <div class="utility-bar">
@@ -722,9 +722,9 @@ body {
         <div class="utility-left"><span><i class="fa-solid fa-location-dot"></i> India's Electric Mobility Marketplace</span></div>
         <div class="utility-links">
             <a href="#siteFooter"><i class="fa-regular fa-building"></i> Company</a>
-            <a href="../Vendor/VendorRegister.aspx"><i class="fa-solid fa-handshake"></i> Partners</a>
-            <a href="Enquiry.aspx"><i class="fa-regular fa-circle-question"></i> Support</a>
-            <a href="ClientLogin.aspx"><i class="fa-regular fa-user"></i> Login</a>
+            <a href="<%= ResolveUrl("~/Vendor/VendorRegister.aspx") %>"><i class="fa-solid fa-handshake"></i> Partners</a>
+            <a href="<%= ResolveUrl("~/Client/Enquiry.aspx") %>"><i class="fa-regular fa-circle-question"></i> Support</a>
+            <a href="<%= ResolveUrl("~/Client/ClientLogin.aspx") %>"><i class="fa-regular fa-user"></i> Login</a>
             <label class="language-select"><i class="fa-solid fa-globe"></i><select aria-label="Language" title="Language"><option value="en">English</option></select><i class="fa-solid fa-chevron-down"></i></label>
         </div>
     </div>
@@ -735,7 +735,7 @@ body {
 <div class="nav-inner">
 
     <!-- LOGO -->
-    <a href="Home.aspx" class="logo-wrap">
+    <a href="<%= ResolveUrl("~/Client/Home.aspx") %>" class="logo-wrap">
         <div class="logo-icon">
             <asp:Image ID="imgLogo" runat="server" ClientIDMode="Static" Height="42px" style="display:block" AlternateText="EBikes Duniya" />
             <i class="fa fa-bolt" id="iconFallback"></i>
@@ -746,58 +746,58 @@ body {
     <!-- ═══ NAV MENU — UPDATED WITH NEW PAGES ═══ -->
     <div class="nav-menu" id="navMenu">
 
-        <a href="Home.aspx" id="lnkHome">
+        <a href="<%= ResolveUrl("~/Client/Home.aspx") %>" id="lnkHome">
             <i class="fa fa-house"></i> Home
         </a>
 
         <!-- Buy Bikes dropdown (now includes Parts) -->
         <div class="dropdown" id="ddBuy">
-            <a href="Bikes.aspx">
+            <a href="<%= ResolveUrl("~/Client/Bikes.aspx") %>">
                 <i class="fa fa-bolt"></i> Buy Bikes
                 <i class="fa fa-chevron-down" style="font-size:9px;margin-left:2px;"></i>
             </a>
             <div class="dropdown-menu">
                 <span class="drop-section-label">Browse &amp; Buy</span>
-                <a href="Bikes.aspx">
+                <a href="<%= ResolveUrl("~/Client/Bikes.aspx") %>">
                     <span class="d-icon"><i class="fa fa-star"></i></span>
                     <span>New Bikes</span>
                 </a>
-                <a href="UsedBikes.aspx">
+                <a href="<%= ResolveUrl("~/Client/UsedBikes.aspx") %>">
                     <span class="d-icon"><i class="fa fa-recycle"></i></span>
                     <span>Used Bikes</span>
                 </a>
                 <!-- NEW: Parts Selling -->
-                <a href="Parts.aspx">
+                <a href="<%= ResolveUrl("~/Client/Parts.aspx") %>">
                     <span class="d-icon"><i class="fa fa-gear"></i></span>
                     <span>Parts & Accessories</span>
                 </a>
             </div>
         </div>
 
-        <a href="SellBike.aspx" id="lnkSell">
+        <a href="<%= ResolveUrl("~/Client/SellBike.aspx") %>" id="lnkSell">
             <i class="fa fa-tag"></i> Sell Bike
         </a>
 
         <!-- Rentals dropdown (unchanged) -->
         <div class="dropdown" id="ddRent">
-            <a href="Rental.aspx">
+            <a href="<%= ResolveUrl("~/Client/Rental.aspx") %>">
                 <i class="fa fa-motorcycle"></i> Rentals
                 <i class="fa fa-chevron-down" style="font-size:9px;margin-left:2px;"></i>
             </a>
             <div class="dropdown-menu">
                 <span class="drop-section-label">Rental Services</span>
-                <a href="Rental.aspx">
+                <a href="<%= ResolveUrl("~/Client/Rental.aspx") %>">
                     <span class="d-icon"><i class="fa fa-calendar-check"></i></span>
                     <span>Browse Rentals</span>
                 </a>
-                <a href="MyRentals.aspx">
+                <a href="<%= ResolveUrl("~/Client/MyRentals.aspx") %>">
                     <span class="d-icon"><i class="fa fa-clock-rotate-left"></i></span>
                     <span>My Rentals</span>
                 </a>
             </div>
         </div>
 
-        <a href="Compare.aspx" id="lnkCompare">
+        <a href="<%= ResolveUrl("~/Client/Compare.aspx") %>" id="lnkCompare">
             <i class="fa fa-code-compare"></i> Compare
         </a>
 
@@ -809,18 +809,18 @@ body {
             </a>
             <div class="dropdown-menu">
                 <span class="drop-section-label">EV Support</span>
-                <a href="ChargingStations.aspx">
+                <a href="<%= ResolveUrl("~/Client/ChargingStations.aspx") %>">
                     <span class="d-icon"><i class="fa fa-charging-station"></i></span>
                     <span>Charging Stations</span>
                 </a>
-                <a href="ServiceCenters.aspx">
+                <a href="<%= ResolveUrl("~/Client/ServiceCenters.aspx") %>">
                     <span class="d-icon"><i class="fa fa-wrench"></i></span>
                     <span>Service Centers</span>
                 </a>
             </div>
         </div>
 
-        <a href="MyEnquiries.aspx" id="lnkEnquiry">
+        <a href="<%= ResolveUrl("~/Client/MyEnquiries.aspx") %>" id="lnkEnquiry">
             <i class="fa fa-envelope"></i> Enquiry
         </a>
 
@@ -843,26 +843,26 @@ body {
         </div>
 
      <div class="relative inline-block">
-    <a href="Cart.aspx" class="icon-btn">
+    <a href="<%= ResolveUrl("~/Client/Cart.aspx") %>" class="icon-btn">
         <i class="fa fa-shopping-bag"></i>
       <span id="cartCount" runat="server" class="badge-count">0</span>
     </a>
 </div>
 
-        <a href="Wishlist.aspx" class="icon-btn" title="Wishlist">
+        <a href="<%= ResolveUrl("~/Client/Wishlist.aspx") %>" class="icon-btn" title="Wishlist">
             <i class="fa fa-heart"></i>
             <span id="wishCount" runat="server" class="badge-count">0</span>
         </a>
 
         <asp:Panel ID="pnlLogin" runat="server">
-            <a href="ClientLogin.aspx" class="btn-login">
+            <a href="<%= ResolveUrl("~/Client/ClientLogin.aspx") %>" class="btn-login">
                 <i class="fa fa-arrow-right-to-bracket"></i>
                 <span>Sign In</span>
             </a>
         </asp:Panel>
 
         <asp:Panel ID="pnlUser" runat="server" Visible="false">
-            <a href="myprofile.aspx" class="btn-login">
+            <a href="<%= ResolveUrl("~/Client/myprofile.aspx") %>" class="btn-login">
                 <i class="fa fa-user-circle"></i>
                 <asp:Label ID="lblUserName" runat="server"></asp:Label>
             </a>
@@ -886,7 +886,7 @@ body {
   <div class="footer-grid">
     
     <div class="footer-col">
-      <a href="Home.aspx" class="footer-brand-lockup" aria-label="EBikes Duniya home">
+      <a href="<%= ResolveUrl("~/Client/Home.aspx") %>" class="footer-brand-lockup" aria-label="EBikes Duniya home">
         <span class="footer-logo-mark"><img id="footerLogoImg" src="<%= ResolveUrl("~/Uploads/EBikes-Duniya-Logo.png") %>" alt="EBikes Duniya logo" /><i class="fa fa-bolt" id="footerLogoFallback"></i></span>
 
       </a>
@@ -903,30 +903,30 @@ body {
     <div class="footer-col">
       <h5 class="f-title">Explore & Buy</h5>
       <ul class="f-ul">
-        <li><a href="Bikes.aspx"><i class="fa fa-angle-right"></i> New Electric Bikes</a></li>
-        <li><a href="UsedBikes.aspx"><i class="fa fa-angle-right"></i> Certified Used Bikes</a></li>
-        <li><a href="Parts.aspx"><i class="fa fa-angle-right"></i> Spare Parts & Kits</a></li>
-        <li><a href="Rental.aspx"><i class="fa fa-angle-right"></i> Bike Rentals</a></li>
-        <li><a href="Compare.aspx"><i class="fa fa-angle-right"></i> Compare Bikes</a></li>
+        <li><a href="<%= ResolveUrl("~/Client/Bikes.aspx") %>"><i class="fa fa-angle-right"></i> New Electric Bikes</a></li>
+        <li><a href="<%= ResolveUrl("~/Client/UsedBikes.aspx") %>"><i class="fa fa-angle-right"></i> Certified Used Bikes</a></li>
+        <li><a href="<%= ResolveUrl("~/Client/Parts.aspx") %>"><i class="fa fa-angle-right"></i> Spare Parts & Kits</a></li>
+        <li><a href="<%= ResolveUrl("~/Client/Rental.aspx") %>"><i class="fa fa-angle-right"></i> Bike Rentals</a></li>
+        <li><a href="<%= ResolveUrl("~/Client/Compare.aspx") %>"><i class="fa fa-angle-right"></i> Compare Bikes</a></li>
       </ul>
     </div>
 
     <div class="footer-col">
       <h5 class="f-title">Quick Services</h5>
       <ul class="f-ul">
-        <li><a href="ChargingStations.aspx"><i class="fa fa-angle-right"></i> Charging Stations</a></li>
-        <li><a href="ServiceCenters.aspx"><i class="fa fa-angle-right"></i> Service Centers</a></li>
-        <li><a href="SellBike.aspx"><i class="fa fa-angle-right"></i> Sell Your Bike</a></li>
-        <li><a href="Enquiry.aspx"><i class="fa fa-angle-right"></i> Enquiry & Orders</a></li>
-        <li><a href="Maintenance.aspx"><i class="fa fa-angle-right"></i> Maintenance Guide</a></li>
+        <li><a href="<%= ResolveUrl("~/Client/ChargingStations.aspx") %>"><i class="fa fa-angle-right"></i> Charging Stations</a></li>
+        <li><a href="<%= ResolveUrl("~/Client/ServiceCenters.aspx") %>"><i class="fa fa-angle-right"></i> Service Centers</a></li>
+        <li><a href="<%= ResolveUrl("~/Client/SellBike.aspx") %>"><i class="fa fa-angle-right"></i> Sell Your Bike</a></li>
+        <li><a href="<%= ResolveUrl("~/Client/Enquiry.aspx") %>"><i class="fa fa-angle-right"></i> Enquiry & Orders</a></li>
+        <li><a href="<%= ResolveUrl("~/Client/Maintenance.aspx") %>"><i class="fa fa-angle-right"></i> Maintenance Guide</a></li>
       </ul>
     </div>
 
     <div class="footer-col">
       <h5 class="f-title">Customer Support</h5>
       <ul class="f-ul" style="margin-bottom:15px;">
-        <li><a href="myprofile.aspx"><i class="fa fa-angle-right"></i> My Profile</a></li>
-        <li><a href="MyRentals.aspx"><i class="fa fa-angle-right"></i> My Rental Orders</a></li>
+        <li><a href="<%= ResolveUrl("~/Client/myprofile.aspx") %>"><i class="fa fa-angle-right"></i> My Profile</a></li>
+        <li><a href="<%= ResolveUrl("~/Client/MyRentals.aspx") %>"><i class="fa fa-angle-right"></i> My Rental Orders</a></li>
         <li><a href="wishlist.aspx"><i class="fa fa-angle-right"></i> My Wishlist</a></li>
       </ul>
       <div class="f-contact-info">
@@ -947,7 +947,7 @@ body {
     <div class="footer-newsletter-form">
       <label class="visually-hidden" for="footerNewsletterEmail">Email address</label>
       <input id="footerNewsletterEmail" type="email" placeholder="you@example.com" autocomplete="email" />
-      <a href="Enquiry.aspx" class="footer-newsletter-submit">Get Updates <i class="fa-solid fa-arrow-right"></i></a>
+      <a href="<%= ResolveUrl("~/Client/Enquiry.aspx") %>" class="footer-newsletter-submit">Get Updates <i class="fa-solid fa-arrow-right"></i></a>
       <small>Discover updates and get in touch with our team.</small>
     </div>
   </section>
@@ -956,9 +956,9 @@ body {
       © 2026 <b>EBikes Duniya</b>. All rights reserved. | Made with <i class="fa-solid fa-bolt" aria-hidden="true"></i> in India
     </p>
     <div style="display:flex; gap:20px; font-size:13px;">
-        <a href="PrivacyPolicy.aspx" class="f-legal">Privacy Policy</a>
-        <a href="Terms.aspx" class="f-legal">Terms</a>
-        <a href="CommissionPolicy.aspx" class="f-legal">Commission Policy</a>
+        <a href="<%= ResolveUrl("~/Client/PrivacyPolicy.aspx") %>" class="f-legal">Privacy Policy</a>
+        <a href="<%= ResolveUrl("~/Client/Terms.aspx") %>" class="f-legal">Terms</a>
+        <a href="<%= ResolveUrl("~/Client/CommissionPolicy.aspx") %>" class="f-legal">Commission Policy</a>
     </div>
   </div>
 </div>
@@ -1025,7 +1025,7 @@ body {
 
 
 <div id="floatingCart">
-    <a href="Cart.aspx" class="cart-link group">
+    <a href="<%= ResolveUrl("~/Client/Cart.aspx") %>" class="cart-link group">
         <div style="position: relative;">
             <i class="fas fa-bag-shopping" style="font-size: 20px;"></i>
             <span id="floatingCount" class="badge-count" style="top: -8px; right: -8px; border: 2px solid #0f172a;">0</span>
@@ -1076,7 +1076,7 @@ body {
     function updateWishCount() {
         $.ajax({
             type: "POST",
-            url: "/Client/Bikes.aspx/GetWishlistCount",
+            url: "<%= ResolveUrl("~/Client/Bikes.aspx/GetWishlistCount") %>",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (res) {
@@ -1155,14 +1155,13 @@ body {
     function doSearch(q) {
         var base = window.location.pathname;
         var dir = base.substring(0, base.lastIndexOf("/") + 1);
-        window.location.href = dir + "Bikes.aspx?search=" + encodeURIComponent(q);
+        window.location.href = "<%= ResolveUrl("~/Client/Bikes.aspx") %>?search=" + encodeURIComponent(q);
     }
 
     function loadSuggestions(q) {
         $.ajax({
             type: "GET",
-            url: window.location.pathname.split("/").slice(0, -1).join("/") +
-                 "/SearchSuggestions.ashx?q=" + encodeURIComponent(q),
+            url: "<%= ResolveUrl("~/Client/SearchSuggestions.ashx") %>?q=" + encodeURIComponent(q),
             dataType: "json",
             success: function (data) {
                 renderSuggestions(data, q);
