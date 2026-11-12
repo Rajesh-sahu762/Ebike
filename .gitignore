@@ -408,3 +408,5 @@ FodyWeavers.xsd
 *.sln.iml
 *.config
 **/web.config
+# Ignore all SQL database and backup files
+*.sql
