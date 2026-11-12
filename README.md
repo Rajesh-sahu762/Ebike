@@ -1,321 +1,120 @@
-﻿<div align="center">
+<div align="center">
 
 # ⚡ EBikes Duniya
 
-### Multi-Vendor Electric Bike Marketplace Platform
+### A marketplace for electric bikes, parts, rentals, and more
 
-Discover • Compare • Enquire • Manage
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Website-0a7)](http://ebikes-duniya.runasp.net/)
 
-Built with ASP.NET Web Forms, C#, SQL Server
+[**http://ebikes-duniya.runasp.net/**](http://ebikes-duniya.runasp.net/)
 
----
+Built with ASP.NET Web Forms, C#, and SQL Server
 
-![ASP.NET](https://img.shields.io/badge/ASP.NET-WebForms-blue)
+![ASP.NET Web Forms](https://img.shields.io/badge/ASP.NET-Web%20Forms-blue)
 ![C#](https://img.shields.io/badge/C%23-.NET-green)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-Database-red)
-![Status](https://img.shields.io/badge/Status-Active-success)
-![License](https://img.shields.io/badge/License-MIT-orange)
+![SQL Server](https://img.shields.io/badge/Database-SQL%20Server-red)
 
 </div>
 
 ---
 
-# 📖 Overview
+## Overview
 
-EBikes Duniya is a complete multi-vendor electric bike marketplace designed to connect customers and electric bike dealers on a single platform.
+EBikes Duniya is a multi-vendor electric mobility marketplace. Customers can discover and compare electric bikes, contact vendors, browse parts, and explore rental and used-bike listings. Vendors manage listings and customer activity through a dedicated portal, while administrators manage marketplace content and operations.
 
-The platform allows users to explore electric bikes, compare specifications, calculate EMI, save favorites, and send enquiries directly to dealers.
+## Key features
 
-Dealers can manage their inventory, receive leads, and grow their business through a dedicated vendor dashboard.
+### Customer experience
 
-Administrators have full control over users, dealers, bikes, approvals, and marketplace operations.
+- Browse, search, and filter electric bikes; view specifications and reviews
+- Compare bikes and save favorites to a wishlist
+- Submit bike enquiries and review enquiry history
+- Browse parts, use the cart and checkout flow, and view order details
+- Explore rental bikes, manage rental bookings, and browse used-bike listings
+- Find charging stations and service centers
+- Register and sign in, verify accounts with OTP, and reset passwords
 
----
+### Vendor portal
 
-# ✨ Key Features
+- Register and manage a vendor profile
+- Add and manage bike listings, parts, charging stations, and service centers
+- Track customer leads, orders, and rental requests
+- View vendor analytics, earnings, and subscription information
 
-## 👤 Customer Module
+### Administration
 
-- User Registration & Login
-- Email Verification
-- OTP Verification
-- Browse Electric Bikes
-- Advanced Bike Search
-- Brand Filtering
-- Bike Comparison
-- Wishlist System
-- Recently Viewed Bikes
-- EMI Calculator
-- Lead Enquiry System
-- Responsive Design
+- Manage users, brands, leads, and site settings
+- Review vendor and bike approvals
+- Manage parts, charging stations, and service centers
+- Oversee rentals, settlements, subscription requests, and reports
 
----
+## Technology stack
 
-## 🏍 Bike Management
+- **Application:** ASP.NET Web Forms, C#, .NET Framework 4.5
+- **Data access:** ADO.NET (`System.Data.SqlClient`)
+- **Database:** Microsoft SQL Server / LocalDB
+- **UI:** HTML, CSS, JavaScript, jQuery, Bootstrap 5
+- **Web server:** IIS (or IIS Express for local development)
 
-- Dynamic Bike Listings
-- Detailed Bike Pages
-- Multiple Bike Images
-- Bike Specifications
-- Feature Highlights
-- Compare Bikes
-- SEO Friendly URLs
-- Performance Scoring
+The pages also load UI libraries and assets from CDNs, including Font Awesome.
 
----
+## Getting started
 
-## 🏪 Dealer Panel
+### Requirements
 
-- Dealer Registration
-- Dealer Approval Workflow
-- Add New Bikes
-- Manage Bike Inventory
-- Lead Management
-- Dealer Dashboard
-- Profile Management
+- Windows with Visual Studio and the .NET Framework 4.5 targeting/runtime components
+- SQL Server or SQL Server LocalDB
+- IIS or IIS Express
 
----
+### Setup
 
-## 🛠 Admin Panel
+1. Clone or download this repository.
+2. Create a database named `EBIke` (or choose another name and use it consistently).
+3. In SQL Server Management Studio, run **one** schema script against that database: `tables.sql` or `EBikesDuniya_Production.sql`. These scripts define the database tables; do not run both against the same empty database.
+4. Open `Web.config` and update the `Electronic` connection string for your SQL Server instance and database. Keep any credentials local and out of source control.
+5. In Visual Studio, use **File → Open → Web Site** and select the repository folder. Run the site with IIS Express, or configure the folder as an IIS application.
+6. Open the local URL provided by IIS Express or IIS.
 
-- Admin Authentication
-- Dealer Approval System
-- Bike Approval System
-- User Management
-- Brand Management
-- Lead Monitoring
-- Site Settings Management
-
----
-
-# 🚀 Advanced Features
-
-### 🔍 Smart Search
-
-- AJAX Based Search
-- Instant Suggestions
-- Dynamic Filtering
-
-### ❤️ Wishlist
-
-- Save Favorite Bikes
-- User Specific Wishlist
-
-### ⚖ Bike Comparison
-
-- Side-by-Side Bike Comparison
-- Performance Scoring
-- Feature Analysis
-
-### 📈 Lead Management
-
-- Customer Enquiries
-- Dealer Notifications
-- Lead Tracking
-
-### 🔒 Security
-
-- Password Hashing
-- Session Management
-- Role Based Authorization
-- Input Validation
-- Duplicate Bike Prevention
-
----
-
-# 🖥 Screenshots
-
-## Homepage
-
-![Homepage](/Uploads/images/home.png)
-
----
-
-## Bike Details
-
-![Bike Details](/Uploads/images/bike.png)
-
----
-
-## Spare Parts
-
-![Spare Parts](/Uploads/images/parts.png)
-
----
-
-## Dealer Dashboard
-
-![Dealer Dashboard](/Uploads/images/dealer.png)
-
-## Admin Dashboard
-
-![Admin Dashboard](/Uploads/images/admin.png)
-
-
----
-
-# 🏗 System Architecture
+## Project structure
 
 ```text
-Users
-│
-├── Customer Panel
-│   ├── Browse Bikes
-│   ├── Wishlist
-│   ├── Compare
-│   └── Enquiries
-│
-├── Dealer Panel
-│   ├── Add Bikes
-│   ├── Manage Bikes
-│   └── View Leads
-│
-└── Admin Panel
-    ├── Approvals
-    ├── Users
-    ├── Dealers
-    └── Settings
+.
+├── Admin/                    # Administration pages
+├── Client/                   # Customer-facing pages
+├── Vendor/                   # Vendor portal pages
+├── Uploads/                  # Uploaded and project images
+├── New folder/               # Bike image assets
+├── Web.config                # ASP.NET and database configuration
+├── tables.sql                # Database schema
+├── EBikesDuniya_Production.sql
+└── SQLQuery1.sql             # Additional database script
 ```
 
-# 🗄 Database Design
+## Screenshots
 
-## Core Tables
+### Homepage
 
-### Users
+![EBikes Duniya homepage](Uploads/images/home.png)
 
-```sql
-Users
-├── UserID
-├── FullName
-├── Email
-├── Mobile
-├── PasswordHash
-├── IsActive
-└── CreatedAt
-```
+### Bike details
 
-### Dealers
+![Bike details](Uploads/images/bike.png)
 
-```sql
-Dealers
-├── DealerID
-├── UserID
-├── ShopName
-├── GSTNo
-└── IsApproved
-```
+### Spare parts
 
-### Bikes
+![Spare parts](Uploads/images/parts.png)
 
-```sql
-Bikes
-├── BikeID
-├── DealerID
-├── BrandID
-├── ModelName
-├── Slug
-├── Price
-├── RangeKM
-├── TopSpeed
-├── BatteryType
-└── Images
-```
+### Vendor dashboard
 
-### Leads
+![Vendor dashboard](Uploads/images/dealer.png)
 
-```sql
-Leads
-├── LeadID
-├── BikeID
-├── UserID
-├── Message
-└── CreatedAt
-```
+### Admin dashboard
 
-# ⚙ Technology Stack
+![Admin dashboard](Uploads/images/admin.png)
 
-## Frontend
+## Developer
 
-- HTML5
-- CSS3
-- JavaScript
-- jQuery
-- Bootstrap
-
-## Backend
-
-- ASP.NET Web Forms
-- C#
-
-## Database
-
-- SQL Server
-
-## Server
-
-- IIS
-
-# 📂 Project Structure
-
-```text
-EBikes-Duniya
-│
-├── Admin
-├── Client
-├── Dealer
-├── Uploads
-├── App_Code
-├── CSS
-├── JS
-├── Images
-│
-├── Web.config
-└── Database Scripts
-```
-
-# 🎯 Business Model
-
-EBikes Duniya supports:
-
-### Lead Marketplace
-
-Customers submit enquiries and dealers receive leads.
-
-### Bike Rental Marketplace (Planned)
-
-Users can rent electric bikes.
-
-### Used Bike Marketplace (Planned)
-
-Dealers and users can sell used electric bikes.
-
-# 🔮 Future Enhancements
-
-- Online Bike Booking
-- Payment Gateway
-- Rental System
-- Used Bike Marketplace
-- Dealer Subscription Plans
-- AI Bike Recommendation Engine
-- Mobile Application
-
-# 👨‍💻 Developer
-
-## Rajesh Sahu
-
-ASP.NET Developer
-
-### Skills
-
-- ASP.NET Web Forms
-- C#
-- SQL Server
-- JavaScript
-- HTML/CSS
-
-# ⭐ Support
-
-If you found this project useful, please consider giving it a star.
+**Rajesh Sahu** — ASP.NET developer
 
 ---
 
